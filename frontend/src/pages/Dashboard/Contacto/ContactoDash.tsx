@@ -75,11 +75,12 @@ const ContactoDash: React.FC = () => {
 
   const getAllContactos = async () => {
     const res = await contactoServices.getAllContactos(page, filtro);
+    if (res.data.error) return;
     for (let i = 0; i < res.data.length; i++) {
       const newMensaje = res.data[i].mensaje.replace(/\n/g, "<br/>");
       res.data[i].mensaje = newMensaje;
     }
-    setContactos(res.data);
+    setContactos(res.data.contactos);
     setLoadContactos(true);
   };
 
@@ -184,12 +185,7 @@ const ContactoDash: React.FC = () => {
                     <></>
                   ) : (
                     <>
-                      <button
-                        onClick={() => {
-                          paginaAnterior();
-                        }}
-                        className="btn btn__blue"
-                      >
+                      <button onClick={() => { paginaAnterior(); }} className="btn btn__blue" >
                         <span aria-hidden="true">&laquo; Página Anterior</span>
                       </button>
                     </>
@@ -198,12 +194,7 @@ const ContactoDash: React.FC = () => {
                     <></>
                   ) : (
                     <>
-                      <button
-                        onClick={() => {
-                          paginaSiguiente();
-                        }}
-                        className="btn btn__blue ms-auto"
-                      >
+                      <button onClick={() => { paginaSiguiente(); }} className="btn btn__blue ms-auto" >
                         <span aria-hidden="true">Página Siguiente &raquo;</span>
                       </button>
                     </>

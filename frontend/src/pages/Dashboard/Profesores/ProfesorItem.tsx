@@ -21,7 +21,7 @@ interface Props {
   cargaDatos: () => void;
 }
 
-const ProfesorItem:React.FC<Props> = (props) => {
+const ProfesorItem: React.FC<Props> = (props) => {
   const history = useHistory();
 
   const ponerDatos = () => props.funcion(props.profesor);
@@ -30,12 +30,12 @@ const ProfesorItem:React.FC<Props> = (props) => {
     if (!window.confirm("¿Está seguro que desea habilitar/deshabilitar el usuario?")) return;
 
     const res = await profesorServices.eliminarProfesor(props.profesor.id_usuario?.toString());
-    if (res.data.success) {
-      props.cargaDatos();
-      return toast.success(res.data.success);
-    }
-    if (res.data.error) return toast.error(res.data.success);
+    if (res.data.error) return toast.error(res.data.error);
+
+    props.cargaDatos();
+    toast.success(res.data.success);
   };
+  
   return (
     <>
       <tr>

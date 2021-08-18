@@ -69,12 +69,9 @@ const ModuloItem: React.FC<Props> = (props) => {
     if (!window.confirm("¿Está seguro que desea eliminar el módulo?")) return;
 
     const res = await moduloServices.eliminarModulo(props.modulo);
-    if (res.data.success) {
-      toast.success(res.data.success);
-      props.load(params.id);
-      return;
-    }
     if (res.data.error) return toast.error(res.data.error);
+    toast.success(res.data.success);
+    props.load(params.id);
   };
 
   // Cambiando de estado al loadTemas para traer los datos de la bd cuando hacen click al ModuloItem
@@ -84,14 +81,16 @@ const ModuloItem: React.FC<Props> = (props) => {
 
   // trayendo los temas de la bd
   const getTemas = async () => {
-    const rows = await moduloServices.getTemasByModuloId(props.modulo.id_modulo + "");
-    setTemas(rows.data);
+    const res = await moduloServices.getTemasByModuloId(props.modulo.id_modulo + "");
+    if (res.data.error) return;
+    setTemas(res.data.temas);
   };
 
   //Trayendo las tareas de la bd
   const getTareas = async () => {
-    const rows = await tareaServices.getTareasByModuloId(props.modulo.id_modulo + "");
-    setTareas(rows.data);
+    const res = await tareaServices.getTareasByModuloId(props.modulo.id_modulo + "");
+    if (res.data.error) return;
+    setTareas(res.data.tareas);
   };
 
   //Limpieza cuando se desrenderice

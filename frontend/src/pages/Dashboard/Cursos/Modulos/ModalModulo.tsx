@@ -42,23 +42,20 @@ const ModalModulo: React.FC<Props> = (props) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => setModulo({ ...modulo, [e.target.name]: e.target.value });
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Crear
     if (!props.moduloModal.id_modulo) {
       const res = await moduloServices.crearModulo(modulo, params.id);
-      if (res.data.success) {
-        toast.success(res.data.success);
-        props.load(params.id);
-        return;
-      }
       if (res.data.error) return toast.error(res.data.error);
-      return;
-    }
-    const res = await moduloServices.actualizarModulo(modulo);
-    if (res.data.success) {
       toast.success(res.data.success);
-      props.load(params.id);
-      return;
+      return props.load(params.id);
     }
+
+    // Actualizar
+    const res = await moduloServices.actualizarModulo(modulo);
     if (res.data.error) return toast.error(res.data.error);
+    toast.success(res.data.success);
+    props.load(params.id);
   };
 
   return (

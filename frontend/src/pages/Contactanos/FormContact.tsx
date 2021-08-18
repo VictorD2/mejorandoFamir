@@ -29,12 +29,9 @@ const FormContact: React.FC = () => {
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const res = await contactoServices.createContacto(contacto);
-    if (res.data.success) {
-      swal({ title: "¡Hecho!", text: res.data.success, icon: "success" });
-      setContacto(initialState);
-      return;
-    }
     if (res.data.error) return swal({ title: "¡Ups!", text: res.data.error, icon: "error" });
+    swal({ title: "¡Hecho!", text: res.data.success, icon: "success" });
+    setContacto(initialState);
   };
 
   return (

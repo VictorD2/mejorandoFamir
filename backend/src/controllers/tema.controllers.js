@@ -5,68 +5,83 @@ const fs = require("fs-extra");
 
 //.get('/:id')
 ctrlTema.getTemaByModuloId = async (req, res) => {
-  const rows = await pool.query("SELECT * FROM tema WHERE id_modulo = ?", [req.params.id]);
-  return res.json(rows);
+  try {
+    const rows = await pool.query("SELECT * FROM tema WHERE id_modulo = ?", [req.params.id]);
+    return res.json({ success: "Datos obtenidos", temas: rows });
+  } catch (error) {
+    console.log(error);
+    return res.json({ error: "Ocurrió un error" });
+  }
 };
 
 //.get('/idTema/:id')
 ctrlTema.getTemaById = async (req, res) => {
-  const rows = await pool.query("SELECT * FROM tema WHERE id_tema = ?", [req.params.id]);
-  return res.json(rows[0]);
+  try {
+    const rows = await pool.query("SELECT * FROM tema WHERE id_tema = ?", [req.params.id]);
+    if (rows[0]) return res.json({ success: "Dato obtenido", tema: rows[0] });
+    return res.json({ error: "Ocurrió un error" });
+  } catch (error) {
+    console.log(error);
+    return res.json({ error: "Ocurrió un error" });
+  }
 };
 
 //.post('/')
 ctrlTema.createTema = async (req, res) => {
-  const { titulo, descripcion, id_modulo,url_video } = req.body;
+  try {
+    const { titulo, descripcion, id_modulo, url_video } = req.body;
 
-  const newTema = {
-    titulo,
-    descripcion,
-    url_video,
-    id_modulo,
-  };
+    const newTema = { titulo, descripcion, url_video, id_modulo };
 
-  const rows = await pool.query("INSERT INTO tema set ? ", [newTema]);
+    const rows = await pool.query("INSERT INTO tema set ? ", [newTema]);
 
-  if (rows.affectedRows === 1) return res.json({ success: "Tema creado" }); //Se logró registrar
+    if (rows.affectedRows === 1) return res.json({ success: "Tema creado" }); //Se logró registrar
 
-  return res.json({ error: "Ocurrió un error" });
+    return res.json({ error: "Ocurrió un error" });
+  } catch (error) {
+    console.log(error);
+    return res.json({ error: "Ocurrió un error" });
+  }
 };
 
 //.put('/:id')
 ctrlTema.actualizarTema = async (req, res) => {
-  const { titulo, descripcion, id_modulo, id_tema } = req.body;
-  const newTema = {
-    titulo,
-    descripcion,
-    id_modulo,
-    id_tema,
-  };
+  try {
+    const { titulo, descripcion, id_modulo, id_tema } = req.body;
+    const newTema = { titulo, descripcion, id_modulo, id_tema };
 
-  if (req.file) {
-    const tema = await pool.query("SELECT * FROM tema WHERE id_tema = ?", [id_tema]);
+    // if (req.file) {
+    //   const tema = await pool.query("SELECT * FROM tema WHERE id_tema = ?", [id_tema]);
 
-    if (tema[0].url_video.search(`/uploads/video/${req.file.filename}`) == -1) await fs.unlink(path.join(__dirname, "../" + tema[0].url_video));
+    //   if (tema[0].url_video.search(`/uploads/video/${req.file.filename}`) == -1) await fs.unlink(path.join(__dirname, "../" + tema[0].url_video));
 
-    newTema.url_video = `/uploads/video/${req.file.filename}`;
+    //   newTema.url_video = `/uploads/video/${req.file.filename}`;
+    // }
+
+    const rows = await pool.query("UPDATE tema set ? WHERE id_tema = ?", [newTema, newTema.id_tema]);
+
+    if (rows.affectedRows === 1) return res.json({ success: "Tema modificado correctamente" }); //Se logró registrar
+
+    return res.json({ error: "Ocurrió un error" });
+  } catch (error) {
+    console.log(error);
+    return res.json({ error: "Ocurrió un error" });
   }
-
-  const rows = await pool.query("UPDATE tema set ? WHERE id_tema = ?", [newTema, newTema.id_tema]);
-
-  if (rows.affectedRows === 1) return res.json({ success: "Tema modificado correctamente" }); //Se logró registrar
-
-  return res.json({ error: "Ocurrió un error" });
 };
 
 //.delete('/:id')
 ctrlTema.eliminarTema = async (req, res) => {
-  const tema = await pool.query("SELECT * FROM tema WHERE id_tema = ?", [req.params.id]);
-  await fs.unlink(path.join(__dirname, "../" + tema[0].url_video));
-  const rows = await pool.query("DELETE FROM tema WHERE id_tema = ?", [req.params.id]);
+  try {
+    // const tema = await pool.query("SELECT * FROM tema WHERE id_tema = ?", [req.params.id]);
+    // await fs.unlink(path.join(__dirname, "../" + tema[0].url_video));
+    const rows = await pool.query("DELETE FROM tema WHERE id_tema = ?", [req.params.id]);
+    if (rows.affectedRows === 1) return res.json({ success: "Tema eliminado" }); //Se logró registrar
 
-  if (rows.affectedRows === 1) return res.json({ success: "Tema eliminado" }); //Se logró registrar
-
-  return res.json({ error: "Ocurrió un error" });
+    return res.json({ error: "Ocurrió un error" });
+  } catch (error) {
+    console.log(error);
+    return res.json({ error: "Ocurrió un error" });
+  }
 };
 
 //.get('/video-lock')

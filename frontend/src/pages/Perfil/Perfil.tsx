@@ -7,7 +7,7 @@ import BotonPerfil from "./BotonPerfil";
 
 import { useUsuario } from "../../auth/UsuarioProvider";
 
-const Perfil:React.FC = () => {
+const Perfil: React.FC = () => {
   const { usuario } = useUsuario();
 
   useEffect(() => {
@@ -16,8 +16,7 @@ const Perfil:React.FC = () => {
   }, []);
 
   return (
-    <React.Fragment>
-
+    <>
       <Badge name="Perfil" />
 
       <div className="Main__container">
@@ -49,7 +48,7 @@ const Perfil:React.FC = () => {
           </div>
         </div>
       </div>
-    </React.Fragment>
+    </>
   );
 };
 

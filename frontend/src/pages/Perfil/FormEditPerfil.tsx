@@ -25,7 +25,7 @@ interface Pais {
   id_pais: string;
   url_foto_pais: string;
 }
-const FormEditPerfil: React.FC= () => {
+const FormEditPerfil: React.FC = () => {
   const { setUsuario } = useUsuario();
 
   const [usuarioPerfil, setUsuarioPerfil] = useState<Usuario>(initialState);
@@ -41,14 +41,15 @@ const FormEditPerfil: React.FC= () => {
   }, []);
 
   const getDatos = async () => {
-    const res = await axios.get(`${API}/api/v0/pais`);
-    setPaises(res.data);
     const datos = await axios.get(`${API}/api/v0/usuarios/whoami`);
     if (datos.data.user) {
       setUsuarioPerfil(datos.data.user);
       setPaisNaci({ ...paisNaci, url_foto_pais: datos.data.user.url_foto_nacimiento });
       setPaisResi({ ...paisResi, url_foto_pais: datos.data.user.url_foto_residencia });
     }
+    const res = await axios.get(`${API}/api/v0/pais`);
+    if (res.data.error) return;
+    setPaises(res.data.paises);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -83,16 +84,12 @@ const FormEditPerfil: React.FC= () => {
 
   const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await enviarDatos(usuarioPerfil, usuarioPerfil.id_usuario+"", paisNaci.url_foto_pais, paisResi.url_foto_pais);
-    if (res.data.success) {
-      swal({ title: "¡Hecho!", text: res.data.success, icon: "success" });
-      if (res.data.usuario) {
-        setUsuarioPerfil(res.data.usuario);
-        setUsuario(res.data.usuario);
-      }
-      // window.location.href = '/Perfil/Editar'
-    }
+    const res = await enviarDatos(usuarioPerfil, usuarioPerfil.id_usuario + "", paisNaci.url_foto_pais, paisResi.url_foto_pais);
     if (res.data.error) return swal({ title: "Ups!", text: res.data.error, icon: "error" });
+
+    swal({ title: "¡Hecho!", text: res.data.success, icon: "success" });
+    setUsuarioPerfil(res.data.usuario);
+    setUsuario(res.data.usuario);
   };
 
   return (

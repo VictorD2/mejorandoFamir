@@ -25,7 +25,7 @@ const initialStateTareaMaterial: MaterialTarea = {
   fecha_entrega: "",
   material: [new File([""], "filename")],
 };
-const TareaFullPage:React.FC = () => {
+const TareaFullPage: React.FC = () => {
   const refDescripcion = useRef<HTMLParagraphElement | null>();
   const refInput = useRef<HTMLInputElement | null>();
   const params = useParams<Params>();
@@ -41,9 +41,10 @@ const TareaFullPage:React.FC = () => {
 
   const getTarea = async () => {
     const res = await tareaServices.getTareasById(params.idTarea);
-    const newDescripcion = res.data[0].descripcion_tarea.replace(/\n/g, "<br/>");
+    if (res.data.error) return history.push("/");
+    const newDescripcion = res.data.tarea.descripcion_tarea.replace(/\n/g, "<br/>");
     if (refDescripcion.current) refDescripcion.current.innerHTML = newDescripcion;
-    setTarea(res.data[0]);
+    setTarea(res.data.tarea);
   };
   const authentificar = async () => {
     const datos = await axios.get(`${API}/api/v0/usuarios/whoami`);
@@ -66,15 +67,9 @@ const TareaFullPage:React.FC = () => {
     if (tareaMaterial.material) form.append("material_tarea", tareaMaterial.material[0]);
     form.append("id_tarea", tarea.id_tarea + "");
     const res = await tareaServices.crearMaterialTarea(form);
-    if (res.data.success) {
-      borrarInputFile(); //Borrando el valor del input file
-      swal({ title: "Hecho", text: res.data.success, icon: "success" });
-      return;
-    }
-    if (res.data.error) {
-      swal({ title: "Ups!", text: res.data.error, icon: "error" });
-      return;
-    }
+    if (res.data.error) return swal({ title: "Ups!", text: res.data.error, icon: "error" });
+    borrarInputFile(); //Borrando el valor del input file
+    swal({ title: "Hecho", text: res.data.success, icon: "success" });
   };
 
   return (

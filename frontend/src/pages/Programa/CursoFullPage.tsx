@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 
 //Componentes
 import Modulos from "./Modulos";
@@ -32,8 +32,10 @@ const initialState: Curso = {
   precio: 0,
   url_foto_curso: "",
 };
-const CursoFullPage:React.FC = () => {
+const CursoFullPage: React.FC = () => {
   const params = useParams<Params>();
+
+  const history = useHistory();
 
   const [curso, setCurso] = useState<Curso>(initialState);
   const [profesor, setProfesor] = useState<Usuario>({});
@@ -55,17 +57,22 @@ const CursoFullPage:React.FC = () => {
 
   const getCursoById = async () => {
     const res = await cursoServices.getCursoById(params.idCurso);
-    const newDescripcion = res.data.descripcion.replace(/\n/g, "<br/>");
-    res.data.descripcion = newDescripcion;
-    const resProfesor = await profesoresServices.getProfesorById(res.data.id_usuario);
+    if (res.data.error) return history.push("/");
+
+    const newDescripcion = res.data.curso.descripcion.replace(/\n/g, "<br/>");
+    res.data.curso.descripcion = newDescripcion;
+
+    const resProfesor = await profesoresServices.getProfesorById(res.data.curso.id_usuario);
+    if (resProfesor.data.error) return;
     const resModulos = await cursoServices.getAllModulesByCursoId(params.idCurso);
+    if (resModulos.data.error) return;
 
-    if (refDescripcion.current) refDescripcion.current.innerHTML = res.data.descripcion;
+    if (refDescripcion.current) refDescripcion.current.innerHTML = res.data.curso.descripcion;
 
-    setModulos(resModulos.data);
-    setProfesor(resProfesor.data);
+    setModulos(resModulos.data.modulos);
+    setProfesor(resProfesor.data.profesor);
     verificarSub();
-    setCurso(res.data);
+    setCurso(res.data.curso);
   };
   const verificarSub = async () => {
     const res = await cursoServices.verificarSuscribcion(params.idCurso);

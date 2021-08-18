@@ -16,14 +16,9 @@ const ListFavoritos: React.FC<Props> = (props) => {
 
   const setFavorito = async () => {
     const res = await comprobanteServices.setFavorito(props.curso.id_curso + "", usuario.id_usuario + "");
-    if (res.data.success) {
-      swal({ title: "Hecho", text: `${res.data.success}`, icon: "success" });
-      props.refresh();
-      return;
-    }
-    if (res.data.error) {
-      return swal({ title: "Ups!", text: `${res.data.error}`, icon: "error" });
-    }
+    if (res.data.error) return swal({ title: "Ups!", text: `${res.data.error}`, icon: "error" });
+    swal({ title: "Hecho", text: `${res.data.success}`, icon: "success" });
+    props.refresh();
   };
 
   return (

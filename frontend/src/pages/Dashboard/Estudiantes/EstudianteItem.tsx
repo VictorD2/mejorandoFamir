@@ -20,18 +20,16 @@ interface Props {
   cargaDatos: () => void;
 }
 
-const EstudianteItem:React.FC<Props> = (props) => {
+const EstudianteItem: React.FC<Props> = (props) => {
   const ponerDatos = () => props.funcion(props.estudiante);
 
   const deshabilitar = async () => {
     if (!window.confirm("¿Está seguro que desea habilitar/deshabilitar el usuario?")) return;
 
     const res = await estudiantesServices.eliminarEstudiante(props.estudiante.id_usuario?.toString());
-    if (res.data.success) {
-      props.cargaDatos();
-      return toast.success(res.data.success);
-    }
-    if (res.data.success) return toast.error(res.data.error);
+    if (res.data.error) return toast.error(res.data.error);
+    props.cargaDatos();
+    toast.success(res.data.success);
   };
 
   return (

@@ -47,7 +47,7 @@ interface Params {
   modalidad: string;
   tipo: string;
 }
-const VerCurso: React.FC= () => {
+const VerCurso: React.FC = () => {
   const params = useParams<Params>();
 
   const history = useHistory();
@@ -78,24 +78,26 @@ const VerCurso: React.FC= () => {
 
   const cargarCurso = async () => {
     const res = await cursoServices.getCursoById(params.idCurso);
+    if (res.data.error) return history.push("/Dashboard");
+
     // if (params.modalidad === "Sincronicos") {
     const resCount = await comprobanteServices.getCountUsuarioCursoByCursoId(params.idCurso);
     setInscritos(resCount.data);
     // }
-    if (res.data.error) return history.push("/Dashboard");
 
-    const newDescripcion = res.data.descripcion.replace(/\n/g, "<br/>");
-    res.data.descripcion = newDescripcion;
+    const newDescripcion = res.data.curso.descripcion.replace(/\n/g, "<br/>");
+    res.data.curso.descripcion = newDescripcion;
+    if (refDescripcion.current) refDescripcion.current.innerHTML = res.data.curso.descripcion;
 
-    if (refDescripcion.current) refDescripcion.current.innerHTML = res.data.descripcion;
+    setCurso(res.data.curso);
 
-    setCurso(res.data);
+    const resProfesor = await profesoresServices.getProfesorById(res.data.curso.id_usuario);
+    if (res.data.error) return;
+    setProfesor(resProfesor.data.profesor);
 
-    const resProfesor = await profesoresServices.getProfesorById(res.data.id_usuario);
-    setProfesor(resProfesor.data);
-
-    const resEstudiante = await comprobanteServices.getUsuarioCursoByIdCurso(res.data.id_curso);
-    setEstudiantes(resEstudiante.data);
+    const resEstudiante = await comprobanteServices.getUsuarioCursoByIdCurso(res.data.curso.id_curso);
+    if (resEstudiante.data.error) return;
+    setEstudiantes(resEstudiante.data.usuariosCursos);
   };
 
   return (
@@ -128,7 +130,7 @@ const VerCurso: React.FC= () => {
                       {params.tipo} {params.modalidad}
                     </Link>
                   </li>
-                  <li className="breadcrumb-item active">{curso.nombre_curso}</li>
+                  <li className="breadcrumb-item active text-truncate">{curso.nombre_curso.length > 15 ? <>{curso.nombre_curso.substring(0, 28) + "..."}</> : <>{curso.nombre_curso}</>}</li>
                 </ol>
               </div>
             </div>
@@ -161,8 +163,8 @@ const VerCurso: React.FC= () => {
                   <>
                     <div className="d-flex align-items-center mb-3">
                       <p className="m-0 card-text fw-bold">Enlace: </p>
-                      <a href={curso.enlace} className="m-0 ps-3 fw-normal text-decoration-none w-100" target="_BLANK" rel="noreferrer">
-                        {curso.enlace}
+                      <a href={curso.enlace} className="m-0 ps-3 fw-normal w-50" target="_BLANK" rel="noreferrer">
+                        <p className="m-0 text-truncate w-100">{curso.enlace}</p>
                       </a>
                     </div>
                     <div className="d-flex align-items-center mb-3">
@@ -219,6 +221,9 @@ const VerCurso: React.FC= () => {
                         <>
                           <tr>
                             <td>No hay estudiantes inscritos aún</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                           </tr>
                         </>
                       ) : (

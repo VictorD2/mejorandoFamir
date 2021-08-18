@@ -19,7 +19,8 @@ const CardCursosPerfil: React.FC = () => {
 
   const getCursosByEstudiante = async () => {
     const res = await cursosServices.getUsuarioCursoByIdEstudiante(usuario.id_usuario + "");
-    setCursos(res.data);
+    if (res.data.error) return;
+    setCursos(res.data.cursos);
   };
 
   useEffect(() => {

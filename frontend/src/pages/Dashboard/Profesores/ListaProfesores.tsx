@@ -55,7 +55,8 @@ const ListaProfesores: React.FC<Props> = (props) => {
   //Traer datos de la bd
   const loadProfesores = async () => {
     const res = await profesorServices.getAll(page, props.filtro);
-    setProfesores(res.data);
+    if (res.data.error) return;
+    setProfesores(res.data.profesores);
     setLoading(true);
   };
 
@@ -134,12 +135,7 @@ const ListaProfesores: React.FC<Props> = (props) => {
           <></>
         ) : (
           <>
-            <button
-              onClick={() => {
-                paginaAnterior();
-              }}
-              className="btn btn__blue"
-            >
+            <button onClick={() => { paginaAnterior(); }} className="btn btn__blue" >
               <span aria-hidden="true">&laquo; Página Anterior</span>
             </button>
           </>
@@ -148,12 +144,7 @@ const ListaProfesores: React.FC<Props> = (props) => {
           <></>
         ) : (
           <>
-            <button
-              onClick={() => {
-                paginaSiguiente();
-              }}
-              className="btn btn__blue ms-auto"
-            >
+            <button onClick={() => { paginaSiguiente(); }} className="btn btn__blue ms-auto" >
               <span aria-hidden="true">Página Siguiente &raquo;</span>
             </button>
           </>

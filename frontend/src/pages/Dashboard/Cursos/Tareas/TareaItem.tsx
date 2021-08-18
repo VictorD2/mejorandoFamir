@@ -24,7 +24,7 @@ interface Props {
   setModuloModal: (modulo: Modulo) => void;
   modulo: Modulo;
 }
-const TareaItem: React.FC<Props>= (props) => {
+const TareaItem: React.FC<Props> = (props) => {
   const params = useParams<Params>();
 
   const history = useHistory();
@@ -33,12 +33,10 @@ const TareaItem: React.FC<Props>= (props) => {
     if (!window.confirm("¿Está seguro que desea eliminar la tarea?")) return;
 
     const res = await tareaServices.eliminarTarea(props.tarea);
-    if (res.data.success) {
-      props.setcount(props.count + 1);
-      toast.success(res.data.success);
-      return;
-    }
     if (res.data.error) return toast.error(res.data.error);
+
+    props.setcount(props.count + 1);
+    toast.success(res.data.success);
   };
 
   return (
@@ -61,14 +59,7 @@ const TareaItem: React.FC<Props>= (props) => {
           {/* Editar tarea */}
           <li>
             <button
-              onClick={() => {
-                props.setTareaModal(props.tarea);
-                props.setModuloModal(props.modulo);
-              }}
-              data-bs-toggle="modal"
-              data-bs-target="#crearTarea"
-              className="dropdown-item"
-            >
+              onClick={() => { props.setTareaModal(props.tarea); props.setModuloModal(props.modulo); }} data-bs-toggle="modal" data-bs-target="#crearTarea" className="dropdown-item" >
               <FaEdit className="mb-1" /> Editar Tarea
             </button>
           </li>

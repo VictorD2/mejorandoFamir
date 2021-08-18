@@ -18,7 +18,7 @@ import * as materialServices from "../../../../services/MaterialServices";
 //Interfaces
 import { Tema } from "../../../../interfaces/Tema";
 import { MaterialClase } from "../../../../interfaces/MaterialClase";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 interface Params {
   idTema: string;
@@ -27,7 +27,8 @@ interface Params {
   id: string;
 }
 
-const VerTema:React.FC = () => {
+const VerTema: React.FC = () => {
+  const history = useHistory();
   const params = useParams<Params>();
   const refDesc = useRef<HTMLParagraphElement | null>();
 
@@ -50,21 +51,24 @@ const VerTema:React.FC = () => {
 
   const getTema = async () => {
     const res = await temaServices.getTemaById(params.idTema);
-    res.data.url_video = res.data.url_video.slice(8, res.data.url_video.length);
-    res.data.descripcion = res.data.descripcion.replace(/\n/g, "<br/>");
-    setTema(res.data);
-    
-    if (refDesc.current) refDesc.current.innerHTML = res.data.descripcion;
+    if (res.data.error) return history.push("/Dashboard");
+
+    res.data.tema.url_video = res.data.url_video.slice(8, res.data.tema.url_video.length);
+    res.data.tema.descripcion = res.data.tema.descripcion.replace(/\n/g, "<br/>");
+    setTema(res.data.tema);
+
+    if (refDesc.current) refDesc.current.innerHTML = res.data.tema.descripcion;
     setLoadingVideo(true);
   };
 
   const getMaterial = async () => {
     const res = await materialServices.getMaterialByTemaId(params.idTema);
-    setMaterial(res.data);
+    if (res.data.error) return;
+    setMaterial(res.data.material);
   };
 
   return (
-    <React.Fragment>
+    <>
       <div className="content-wrapper" style={{ minHeight: 643 }}>
         {/* Content Header (Page header) */}
         <div className="content-header">
@@ -146,7 +150,7 @@ const VerTema:React.FC = () => {
           </div>
         </section>
       </div>
-    </React.Fragment>
+    </>
   );
 };
 

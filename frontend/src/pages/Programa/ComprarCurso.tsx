@@ -77,10 +77,10 @@ const ComprarCurso: React.FC = () => {
   };
   const getCurso = async () => {
     const res = await cursoServices.getCursoById(params.idCurso);
+    if (res.data.error) return history.push("/");
     const resIns = await comprobanteServices.getCountUsuarioCursoByCursoId(params.idCurso);
     setCupos(res.data.capacidad - resIns.data);
-    if (res.data.error) return history.push("/");
-    setCurso(res.data);
+    setCurso(res.data.curso);
   };
 
   return (

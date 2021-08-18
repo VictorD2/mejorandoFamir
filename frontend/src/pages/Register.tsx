@@ -87,14 +87,13 @@ const Register: React.FC = () => {
 
   const getPaises = async () => {
     const res = await axios.get(`${API}/api/v0/pais`);
-    setPaises(res.data);
+    if (res.data.error) return;
+    setPaises(res.data.paises);
   };
 
   // onChange ReCAPTCHA
   const onChange = () => {
-    if (captcha.current?.getValue()) {
-      setCaptchaValidation(true);
-    }
+    if (captcha.current?.getValue()) setCaptchaValidation(true);
   };
 
   //Set state

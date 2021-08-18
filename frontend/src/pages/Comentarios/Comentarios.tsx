@@ -37,7 +37,7 @@ interface Params {
   idCurso: string;
   idTema: string;
 }
-const Comentarios:React.FC = () => {
+const Comentarios: React.FC = () => {
   const { usuario } = useUsuario();
 
   const params = useParams<Params>();
@@ -79,16 +79,15 @@ const Comentarios:React.FC = () => {
         return swal({ title: "Advertencia", text: `No se permiten este tipo de comentarios: ${element}`, icon: "warning" });
       }
     }
+
     const res = await comentariosServices.crearComentario(comentario, params.idCurso, params.idTema);
-    if (res.data.success) {
-      swal({ title: "Hecho!", text: `${res.data.success}`, icon: "success" });
-      toast.success(res.data.success);
-      getComentarios();
-      setTrigger(trigger + 1);
-      setComentario(initialState);
-      return;
-    }
-    swal({ title: "Ups!", text: `${res.data.error}`, icon: "error" });
+    if (res.data.error) return swal({ title: "Ups!", text: `${res.data.error}`, icon: "error" });
+
+    swal({ title: "Hecho!", text: `${res.data.success}`, icon: "success" });
+    toast.success(res.data.success);
+    getComentarios();
+    setTrigger(trigger + 1);
+    setComentario(initialState);
   };
 
   const getCantidad = async () => {
@@ -99,18 +98,20 @@ const Comentarios:React.FC = () => {
 
   const eliminarComentario = async (id?: number) => {
     if (!window.confirm("¿Está seguro que desea eliminar el comentario?")) return;
+
     const res = await comentariosServices.eliminarComentario(id + "");
-    if (res.data.success) {
-      getComentarios();
-      setTrigger(trigger + 1);
-      return toast.success(res.data.success);
-    }
-    toast.error(res.data.error);
+    if (res.data.error) return toast.error(res.data.error);
+
+    getComentarios();
+    setTrigger(trigger + 1);
+    toast.success(res.data.success);
   };
 
   const getComentarios = async () => {
     const res = await comentariosServices.getAll(page, params.idCurso, params.idTema);
-    setComentarios(res.data);
+    if (res.data.error) return;
+    
+    setComentarios(res.data.comentarios);
   };
 
   const handleTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

@@ -94,60 +94,55 @@ const Comprobantes: React.FC = () => {
 
   const getNuevosComprobantes = async () => {
     const res = await comprobanteServices.getComprobantes("NoVisto", pageNuevos);
-    setComprobantesNuevos(res.data);
+    if (res.data.error) return;
+    setComprobantesNuevos(res.data.comprobantes);
   };
   const getAceptadosComprobantes = async () => {
     const res = await comprobanteServices.getComprobantes("Aceptado", pageAceptados);
-    setComprobantesAceptados(res.data);
+    if (res.data.error) return;
+    setComprobantesAceptados(res.data.comprobantes);
   };
   const getRechazadosComprobantes = async () => {
     const res = await comprobanteServices.getComprobantes("Rechazado", pageRechazados);
-    setComprobantesRechazados(res.data);
+    if (res.data.error) return;
+    setComprobantesRechazados(res.data.comprobantes);
   };
 
   const cambiarDatosModal = async (id_comprobante?: number) => {
     const res = await comprobanteServices.getComprobanteById(id_comprobante);
-    setComprobante(res.data);
-    const resCurso = await cursoServices.getCursoById(res.data.id_curso);
-    setCurso(resCurso.data);
-    const resUsuario = await usuarioServices.getEstudianteById(res.data.id_usuario);
-    setEstudiante(resUsuario.data);
+    console.log(res);
+    if (res.data.error) return;
+    setComprobante(res.data.comprobante);
+
+    const resCurso = await cursoServices.getCursoById(res.data.comprobante.id_curso);
+    if (resCurso.data.error) return;
+    setCurso(resCurso.data.curso);
+
+    const resUsuario = await usuarioServices.getEstudianteById(res.data.comprobante.id_usuario);
+    if (resUsuario.data.error) return;
+    setEstudiante(resUsuario.data.estudiante);
   };
 
   const inscribirCurso = async () => {
     if (comprobante.id_curso === "") return toast.warning("No ha seleccionado un comprobante");
     const res = await comprobanteServices.crearInscripcion(comprobante);
-    if (res.data.success) {
-      setComprobante(initialStateComprobante);
-      setTriggerComprobante(triggerComprobante + 1);
-      if (refBtnClose.current) refBtnClose.current.click();
-      return toast.success(res.data.success);
-    }
     if (res.data.error) return toast.error(res.data.error);
+
+    setComprobante(initialStateComprobante);
+    setTriggerComprobante(triggerComprobante + 1);
+    if (refBtnClose.current) refBtnClose.current.click();
+    return toast.success(res.data.success);
   };
 
   const rechazarComprobante = async () => {
     const res = await comprobanteServices.actualizarComprobante(comprobante.id_comprobante + "", comprobante);
-    if (res.data.success) {
-      setComprobante(initialStateComprobante);
-      setTriggerComprobante(triggerComprobante + 1);
-      if (refBtnClose.current) refBtnClose.current.click();
-      return toast.success(res.data.success);
-    }
     if (res.data.error) return toast.error(res.data.error);
-  };
 
-  // const eliminarComprobante = async () => {
-  //     if (comprobante.id_curso === "") return toast.warning('No ha seleccionado un comprobante');
-  //     const res = await comprobanteServices.eliminarComprobante(comprobante.id_comprobante + "");
-  //     if (res.data.success) {
-  //         setComprobante(initialStateComprobante);
-  //         setTriggerComprobante(triggerComprobante + 1);
-  //         if (refBtnClose.current) refBtnClose.current.click();
-  //         return toast.success(res.data.success);
-  //     }
-  //     if (res.data.error) return toast.error(res.data.error);
-  // }
+    setComprobante(initialStateComprobante);
+    setTriggerComprobante(triggerComprobante + 1);
+    if (refBtnClose.current) refBtnClose.current.click();
+    return toast.success(res.data.success);
+  };
 
   return (
     <>

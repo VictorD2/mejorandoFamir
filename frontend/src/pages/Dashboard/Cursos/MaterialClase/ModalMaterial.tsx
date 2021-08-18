@@ -21,7 +21,7 @@ const initialState = {
   material: [new File([""], "filename")],
 };
 
-const ModalMaterial:React.FC<Props> = (props) => {
+const ModalMaterial: React.FC<Props> = (props) => {
   const [material, setMaterial] = useState<MaterialClase>(initialState);
 
   const refProgresss = useRef<HTMLDivElement | null>();
@@ -32,22 +32,16 @@ const ModalMaterial:React.FC<Props> = (props) => {
     const form = new FormData();
     form.append("id_tema", props.temaModal.id_tema + "");
 
-    for (let i = 0; i < material.material.length; i++) {
-      const element = material.material[i];
-      form.append("material", element);
-    }
+    for (let i = 0; i < material.material.length; i++) form.append("material", material.material[i]);
 
     const res = await materialServices.createMaterial(form, refProgresss.current);
-    if (res.data.success) {
-      if (refProgresss.current) {
-        refProgresss.current.innerHTML = "0%";
-        refProgresss.current.style.width = "0%";
-      }
-      borrarInputFile(); //Borrando el valor del input file
-      toast.success(res.data.success);
+    if (refProgresss.current) {
+      refProgresss.current.innerHTML = "0%";
+      refProgresss.current.style.width = "0%";
     }
-    if (res.data.error) toast.error(res.data.error);
-    return;
+    if (res.data.error) return toast.error(res.data.error);
+    borrarInputFile(); //Borrando el valor del input file
+    toast.success(res.data.success);
   };
 
   const borrarInputFile = () => {

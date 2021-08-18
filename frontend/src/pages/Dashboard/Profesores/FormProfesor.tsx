@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { useState, useEffect, FormEvent } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 //Components
 
@@ -29,15 +31,19 @@ interface Pais {
   nombre_pais: string;
   url_foto_pais: string;
 }
-const FormProfesor:React.FC = () => {
-  const initialState = {
+const FormProfesor: React.FC = () => {
+  const initialState: Usuario = {
     nombre: "",
     apellido: "",
     correo: "",
     profesion: "",
     rut: "",
     telefono: "",
+    id_pais_nacimiento: "AF",
+    id_pais_residencia: "AF",
   };
+
+  const history = useHistory();
   const [profesor, setProfesor] = useState<Usuario>(initialState);
   const [paises, setPaises] = useState<Pais[]>([]);
 
@@ -48,15 +54,18 @@ const FormProfesor:React.FC = () => {
     if (params.id) getProfesor(params.id); //Por si estoy en update
     return () => limpieza();
   }, [params.id]);
+
   const getPaises = async () => {
     const res = await axios.get(`${API}/api/v0/pais`);
-    setPaises(res.data);
+    if (res.data.error) return;
+    setPaises(res.data.paises);
   };
-  //Traer los datos del profesor si estça en update
+
+  //Traer los datos del profesor si está en update
   const getProfesor = async (id: string) => {
     const res = await profesorServices.getProfesorById(id);
-    if (res.data.error) return (window.location.href = "/Dashboard/Profesores");
-    setProfesor(res.data);
+    if (res.data.error) return history.push("/Dashboard/Profesores");
+    setProfesor(res.data.profesor);
   };
 
   const limpieza = () => setProfesor({});
@@ -65,15 +74,15 @@ const FormProfesor:React.FC = () => {
   //Evento submit
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!params.id) {
       const res = await profesorServices.crearProfesor(profesor);
-      if (res.data.success) toast.success(res.data.success);
-      if (res.data.error) toast.error(res.data.error);
-      return;
+      if (res.data.error) return toast.error(res.data.error);
+      return toast.success(res.data.success);
     }
     const res = await profesorServices.updateProfesor(params.id, profesor);
-    if (res.data.success) toast.success(res.data.success);
-    if (res.data.error) toast.error(res.data.error);
+    if (res.data.error) return toast.error(res.data.error);
+    toast.success(res.data.success);
   };
 
   return (
@@ -181,11 +190,11 @@ const FormProfesor:React.FC = () => {
                   <div className="mb-3">
                     {params.id ? (
                       <button className="btn btn__blue">
-                        <FaRegEdit className="fs-5 mb-1" /> Actualizar{" "}
+                        <FaRegEdit className="fs-5 mb-1" /> Actualizar
                       </button>
                     ) : (
                       <button className="btn btn__blue">
-                        <FaPlus className="fs-5 mb-1" /> Crear{" "}
+                        <FaPlus className="fs-5 mb-1" /> Crear
                       </button>
                     )}
                   </div>

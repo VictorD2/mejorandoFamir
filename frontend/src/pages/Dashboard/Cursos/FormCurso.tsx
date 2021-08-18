@@ -23,7 +23,7 @@ interface Params {
   modalidad?: string;
   tipo?: string;
 }
-const FormCurso: React.FC= () => {
+const FormCurso: React.FC = () => {
   const initialState = {
     nombre_curso: "",
     descripcion: "",
@@ -62,19 +62,20 @@ const FormCurso: React.FC= () => {
 
   const cargaProfesores = async () => {
     const res = await ProfesoresServices.getAll(0, "");
-    if (!params.id) setCurso({ ...curso, id_usuario: res.data[0].id_usuario }); //Por si estoy en create
-    setProfesores(res.data);
+    if (res.data.error) return;
+    if (!params.id) setCurso({ ...curso, id_usuario: res.data.profesores[0].id_usuario }); //Por si estoy en create
+    setProfesores(res.data.profesores);
   };
 
-  //Traer los datos del profesor si estça en update
+  //Traer los datos del curso si esta en update
   const getCurso = async (id: string) => {
     const res = await CursosServices.getCursoById(id);
-    if (res.data.error) window.location.href = "/Dashboard";
-    if (res.data.horario) {
-      const fecha = res.data.horario.replace(" ", "T");
-      res.data.horario = fecha;
+    if (res.data.error) return history.push("/Dashboard");
+    if (res.data.curso.horario) {
+      const fecha = res.data.curso.horario.replace(" ", "T");
+      res.data.curso.horario = fecha;
     }
-    setCurso(res.data);
+    setCurso(res.data.curso);
   };
 
   const limpieza = () => {
@@ -104,7 +105,6 @@ const FormCurso: React.FC= () => {
     form.append("horario", curso.horario);
     form.append("capacidad", curso.capacidad + "");
     form.append("id_usuario", curso.id_usuario + "");
-
     if (curso.foto_curso) form.append("fotoCurso", curso.foto_curso[0]);
 
     if (!params.id) {
@@ -113,14 +113,12 @@ const FormCurso: React.FC= () => {
       if (res.data.error) return toast.error(res.data.error);
 
       borrarInputFile();
-
       if (refProgresss.current) {
         refProgresss.current.innerHTML = "0%";
         refProgresss.current.style.width = "0%";
       }
 
-      history.push(`/Dashboard/${params.tipo}/${params.modalidad}`);
-      return;
+      return history.push(`/Dashboard/${params.tipo}/${params.modalidad}`);
     }
     const res = await CursosServices.updateCurso(params.id, form, refProgresss.current);
 

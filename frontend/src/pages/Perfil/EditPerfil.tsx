@@ -16,7 +16,7 @@ interface Password {
   confirmPassowrd: string;
 }
 
-const EditPerfil: React.FC= () => {
+const EditPerfil: React.FC = () => {
   const { usuario, setUsuario } = useUsuario();
 
   const [profileImg, setProfileImg] = useState<string | ArrayBuffer>(usuario.url_foto_usuario + "");
@@ -37,12 +37,10 @@ const EditPerfil: React.FC= () => {
     if (password.confirmPassowrd === "" || password.newPassword === "" || password.oldPassword === "") return swal({ title: "Advertencia", text: "Campos incompletos", icon: "warning" });
     if (password.newPassword !== password.confirmPassowrd) return swal({ title: "Advertencia", text: "Contraseñas no coinciden", icon: "warning" });
     const res = await axios.put(`${API}/api/v0/usuarios/password/${usuario.id_usuario}`, password);
-    if (res.data.success) {
-      setPassword({ newPassword: "", oldPassword: "", confirmPassowrd: "" });
-      swal({ title: "Hecho", text: res.data.success, icon: "success" });
-      return;
-    }
     if (res.data.error) return swal({ title: "Ups!", text: res.data.error, icon: "error" });
+
+    setPassword({ newPassword: "", oldPassword: "", confirmPassowrd: "" });
+    swal({ title: "Hecho", text: res.data.success, icon: "success" });
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -51,58 +49,44 @@ const EditPerfil: React.FC= () => {
   };
 
   const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
-    const tipos = ["image/gif", "image/png", "image/jpeg", "image/bmp", "image/webp"];
     e.preventDefault();
-    if (e.dataTransfer.files instanceof FileList) {
-      if (tipos.includes(e.dataTransfer.files[0].type)) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          if (reader.readyState === 2) {
-            if (reader.result) setProfileImg(reader.result);
-          }
-        };
-        reader.readAsDataURL(e.dataTransfer.files[0]);
-        const form = new FormData();
-        form.append("fotoPerfil", e.dataTransfer.files[0]);
-        const res = await axios.put(`${API}/api/v0/usuarios/img/${usuario.id_usuario}`, form);
-        if (res.data.success) {
-          swal({ title: "¡Hecho!", text: res.data.success, icon: "success" });
-          setUsuario({ ...usuario, url_foto_usuario: res.data.url_foto_usuario });
-        }
-        if (res.data.error) swal({ title: "Ups!", text: res.data.error, icon: "error" });
-      } else {
-        swal({ title: "Advertencia", text: "Subir un formato de imagen", icon: "warning" });
+    const tipos = ["image/gif", "image/png", "image/jpeg", "image/bmp", "image/webp"];
+    if (!(e.dataTransfer.files instanceof FileList)) return swal({ title: "Error", text: "Archivo no leido", icon: "error" });
+    if (!tipos.includes(e.dataTransfer.files[0].type)) return swal({ title: "Advertencia", text: "Subir un formato de imagen", icon: "warning" });
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        if (reader.result) setProfileImg(reader.result);
       }
-    } else {
-      swal({ title: "Error", text: "Archivo no leido", icon: "error" });
-    }
+    };
+    reader.readAsDataURL(e.dataTransfer.files[0]);
+    const form = new FormData();
+    form.append("fotoPerfil", e.dataTransfer.files[0]);
+    const res = await axios.put(`${API}/api/v0/usuarios/img/${usuario.id_usuario}`, form);
+
+    if (res.data.error) return swal({ title: "Ups!", text: res.data.error, icon: "error" });
+    swal({ title: "¡Hecho!", text: res.data.success, icon: "success" });
+    setUsuario({ ...usuario, url_foto_usuario: res.data.url_foto_usuario });
   };
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const tipos = ["image/gif", "image/png", "image/jpeg", "image/bmp", "image/webp"];
-    if (e.target.files instanceof FileList) {
-      if (tipos.includes(e.target.files[0].type)) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          if (reader.readyState === 2) {
-            if (reader.result) setProfileImg(reader.result);
-          }
-        };
-        reader.readAsDataURL(e.target.files[0]);
-        const form = new FormData();
-        form.append("fotoPerfil", e.target.files[0]);
-        const res = await axios.put(`${API}/api/v0/usuarios/img/${usuario.id_usuario}`, form);
-        if (res.data.success) {
-          swal({ title: "¡Hecho!", text: res.data.success, icon: "success" });
-          setUsuario({ ...usuario, url_foto_usuario: res.data.url_foto_usuario });
-        }
-        if (res.data.error) swal({ title: "Ups!", text: res.data.error, icon: "error" });
-      } else {
-        swal({ title: "Advertencia", text: "Subir un formato de imagen", icon: "warning" });
+    if (!(e.target.files instanceof FileList)) return swal({ title: "Error", text: "Archivo no leido", icon: "error" });
+    if (!tipos.includes(e.target.files[0].type)) return swal({ title: "Advertencia", text: "Subir un formato de imagen", icon: "warning" });
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        if (reader.result) setProfileImg(reader.result);
       }
-    } else {
-      swal({ title: "Error", text: "Archivo no leido", icon: "error" });
-    }
+    };
+    reader.readAsDataURL(e.target.files[0]);
+    const form = new FormData();
+    form.append("fotoPerfil", e.target.files[0]);
+    const res = await axios.put(`${API}/api/v0/usuarios/img/${usuario.id_usuario}`, form);
+    if (res.data.error) return swal({ title: "Ups!", text: res.data.error, icon: "error" });
+    swal({ title: "¡Hecho!", text: res.data.success, icon: "success" });
+    setUsuario({ ...usuario, url_foto_usuario: res.data.url_foto_usuario });
   };
 
   const changePassword = () => cardPass.current?.classList.toggle("d-none");

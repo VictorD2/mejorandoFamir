@@ -9,13 +9,14 @@ import * as materialServices from "../../../../services/MaterialServices";
 
 //Interfaces
 import { MaterialClase } from "../../../../interfaces/MaterialClase";
+import { toast } from "react-toastify";
 
 interface Props {
   material_clase: MaterialClase;
   setCountMaterial: (countMaterial: number) => void;
   countMaterial: number;
 }
-const MaterialClaseItem:React.FC<Props> = (props) => {
+const MaterialClaseItem: React.FC<Props> = (props) => {
   const [material, setMaterial] = useState<MaterialClase>();
 
   useEffect(() => {
@@ -29,7 +30,8 @@ const MaterialClaseItem:React.FC<Props> = (props) => {
 
   const eliminarMaterial = async () => {
     const res = await materialServices.eliminarMaterial(props.material_clase.id_material_clase + "");
-    if (res.data.success) props.setCountMaterial(props.countMaterial + 1);
+    if (res.data.error) return toast.error(res.data.error);
+    props.setCountMaterial(props.countMaterial + 1);
   };
 
   return (

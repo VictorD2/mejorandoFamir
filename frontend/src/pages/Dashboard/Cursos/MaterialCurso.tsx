@@ -58,7 +58,7 @@ const initialStateTarea = {
   descripcion_tarea: "",
   id_modulo: 0,
 };
-const MaterialCurso: React.FC= () => {
+const MaterialCurso: React.FC = () => {
   const modalidades = ["Sincronicos", "Asincronicos", "Talleres", "Cursos"];
 
   const params = useParams<Params>();
@@ -90,15 +90,16 @@ const MaterialCurso: React.FC= () => {
   //Traer los datos deModall curso
   const getCurso = async (idCurso: string) => {
     const res = await CursosServices.getCursoById(idCurso);
-    if (res.data.error) history.push(`/Dashboard/${params.tipo}/${params.modalidad}`);
-    setCurso(res.data);
+    if (res.data.error) return history.push(`/Dashboard/${params.tipo}/${params.modalidad}`);
+    setCurso(res.data.curso);
     getAllModulos(idCurso);
   };
 
   // Traer los modulos del curso
   const getAllModulos = async (idCurso: string) => {
-    const rows = await CursosServices.getAllModulesByCursoId(idCurso);
-    setModulos(rows.data);
+    const res = await CursosServices.getAllModulesByCursoId(idCurso);
+    if (res.data.error) return;
+    setModulos(res.data.modulos);
   };
 
   //Cuando se desrenderice

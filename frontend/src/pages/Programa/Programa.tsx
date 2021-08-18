@@ -19,7 +19,7 @@ interface Params {
   tipo: string;
 }
 
-const Programa:React.FC = () => {
+const Programa: React.FC = () => {
   const modalidades = ["Sincronicos", "Asincronicos", "Talleres", "Cursos"];
 
   const params = useParams<Params>();
@@ -38,8 +38,10 @@ const Programa:React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const getCursos = async () => {
     const res = await cursosServices.getAllCursos(params.tipo, params.modalidad, page, filtro);
+    if (res.data.error) return;
+
     for (let index = 0; index < res.data.length; index++) res.data[index].descripcion = formatingDescripcion(res.data[index].descripcion);
-    setCursos(res.data);
+    setCursos(res.data.cursos);
   };
   const formatingDescripcion = (descripcion: string): string => {
     return descripcion.replace(/\n/g, "<br/>");

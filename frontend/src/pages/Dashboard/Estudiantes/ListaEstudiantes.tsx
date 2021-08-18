@@ -36,7 +36,8 @@ const ListaEstudiantes: React.FC<Props> = (props) => {
   //Traer datos de la bd
   const loadEstudiantes = async () => {
     const res = await estudianteServices.getAll(page, props.filtro);
-    setEstudiantes(res.data);
+    if (res.data.error) return;
+    setEstudiantes(res.data.estudiantes);
     setLoading(true);
   };
   const getCantidad = async () => {
@@ -125,32 +126,38 @@ const ListaEstudiantes: React.FC<Props> = (props) => {
         </tbody>
       </table>
       <div className="d-flex justify-content-between">
-        {page === 1 ? (
+        {cantidadPaginas === 0 ? (
           <></>
         ) : (
           <>
-            <button
-              onClick={() => {
-                paginaAnterior();
-              }}
-              className="btn btn__blue"
-            >
-              <span aria-hidden="true">&laquo; Página Anterior</span>
-            </button>
-          </>
-        )}
-        {page === cantidadPaginas ? (
-          <></>
-        ) : (
-          <>
-            <button
-              onClick={() => {
-                paginaSiguiente();
-              }}
-              className="btn btn__blue ms-auto"
-            >
-              <span aria-hidden="true">Página Siguiente &raquo;</span>
-            </button>
+            {page === 1 ? (
+              <></>
+            ) : (
+              <>
+                <button
+                  onClick={() => {
+                    paginaAnterior();
+                  }}
+                  className="btn btn__blue"
+                >
+                  <span aria-hidden="true">&laquo; Página Anterior</span>
+                </button>
+              </>
+            )}
+            {page === cantidadPaginas ? (
+              <></>
+            ) : (
+              <>
+                <button
+                  onClick={() => {
+                    paginaSiguiente();
+                  }}
+                  className="btn btn__blue ms-auto"
+                >
+                  <span aria-hidden="true">Página Siguiente &raquo;</span>
+                </button>
+              </>
+            )}
           </>
         )}
       </div>

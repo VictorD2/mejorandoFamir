@@ -19,7 +19,7 @@ interface Props {
   modulo: Modulo;
   verificacion: boolean;
 }
-const Modulos:React.FC<Props> = (props) => {
+const Modulos: React.FC<Props> = (props) => {
   const [temas, setTemas] = useState<Tema[]>([]);
   const [tareas, setTareas] = useState<Tarea[]>([]);
 
@@ -33,13 +33,17 @@ const Modulos:React.FC<Props> = (props) => {
 
   const getTemas = async () => {
     const res = await moduloServices.getTemasByModuloId(props.modulo.id_modulo + "");
+    if (res.data.error) return;
+
     getTareas();
-    setTemas(res.data);
+    setTemas(res.data.temas);
   };
 
   const getTareas = async () => {
     const res = await tareaServices.getTareasByModuloId(props.modulo.id_modulo + "");
-    setTareas(res.data);
+    if (res.data.error) return;
+
+    setTareas(res.data.tareas);
   };
 
   if (props.verificacion) {

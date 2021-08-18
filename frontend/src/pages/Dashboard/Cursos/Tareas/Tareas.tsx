@@ -44,24 +44,23 @@ const Tareas: React.FC = () => {
   const getTarea = async () => {
     const res = await tareaServices.getTareasById(params.idTarea);
     if (res.data.error) return history.push(`/DashBoard/${params.tipo}/${params.modalidad}/Material/${params.id}`);
-    const resMaterial = await tareaServices.getMaterialTareasById(res.data[0].id_tarea);
-    setMaterialTarea(resMaterial.data);
-    const newDescripcion = res.data[0].descripcion_tarea.replace(/\n/g, "<br/>");
-    if (textRef.current) textRef.current.innerHTML = newDescripcion;
-    res.data[0].descripcion_tarea = newDescripcion;
-    setTarea(res.data[0]);
+
+    res.data.tarea.descripcion_tarea = res.data.tarea.descripcion_tarea.replace(/\n/g, "<br/>");
+    if (textRef.current) textRef.current.innerHTML = res.data.tarea.descripcion_tarea;
+    setTarea(res.data.tarea);
+
+    const resMaterial = await tareaServices.getMaterialTareasById(res.data.tarea.id_tarea);
+    if (resMaterial.data.error) return;
+    setMaterialTarea(resMaterial.data.material);
   };
 
   const eliminarMaterial = async (id: string) => {
     if (!window.confirm("¿Está seguro que desea eliminar la tarea?")) return;
 
     const res = await tareaServices.borrarMaterialTareasById(id);
-    if (res.data.success) {
-      setCount(count + 1);
-      toast.success(res.data.success);
-      return;
-    }
     if (res.data.error) return toast.error(res.data.error);
+    setCount(count + 1);
+    toast.success(res.data.success);
   };
 
   return (

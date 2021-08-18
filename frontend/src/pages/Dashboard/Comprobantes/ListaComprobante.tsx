@@ -97,32 +97,28 @@ const ListaComprobante: React.FC<Props> = (props) => {
             );
           })}
           <div className="d-flex justify-content-between">
-            {props.page === 1 ? (
+            {cantidadPaginas === 0 ? (
               <></>
             ) : (
               <>
-                <button
-                  onClick={() => {
-                    paginaAnterior();
-                  }}
-                  className="btn btn__blue"
-                >
-                  <span aria-hidden="true">&laquo; Página Anterior</span>
-                </button>
-              </>
-            )}
-            {props.page === cantidadPaginas ? (
-              <></>
-            ) : (
-              <>
-                <button
-                  onClick={() => {
-                    paginaSiguiente();
-                  }}
-                  className="btn btn__blue ms-auto"
-                >
-                  <span aria-hidden="true">Página Siguiente &raquo;</span>
-                </button>
+                {props.page === 1 ? (
+                  <></>
+                ) : (
+                  <>
+                    <button onClick={() => { paginaAnterior(); }} className="btn btn__blue"                    >
+                      <span aria-hidden="true">&laquo; Página Anterior</span>
+                    </button>
+                  </>
+                )}
+                {props.page === cantidadPaginas ? (
+                  <></>
+                ) : (
+                  <>
+                    <button onClick={() => { paginaSiguiente(); }} className="btn btn__blue ms-auto"                    >
+                      <span aria-hidden="true">Página Siguiente &raquo;</span>
+                    </button>
+                  </>
+                )}
               </>
             )}
           </div>

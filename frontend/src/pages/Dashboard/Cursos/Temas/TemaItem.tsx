@@ -31,23 +31,19 @@ interface Props {
   modulo: Modulo;
 }
 
-const TemaItem:React.FC<Props> = (props) => {
+const TemaItem: React.FC<Props> = (props) => {
   const params = useParams<Params>();
 
   const history = useHistory();
 
   //Funciones
-
   const eliminarTema = async () => {
     if (!window.confirm("¿Está seguro que desea eliminar el tema?")) return;
 
     const res = await temaServices.eliminarTema(props.tema.id_tema + "");
-    if (res.data.success) {
-      toast.success(res.data.success);
-      props.setcount(props.count + 1);
-      return;
-    }
     if (res.data.error) return toast.error(res.data.error);
+    toast.success(res.data.success);
+    props.setcount(props.count + 1);
   };
 
   const setModales = () => {
@@ -67,14 +63,7 @@ const TemaItem:React.FC<Props> = (props) => {
         <ul className="dropdown-menu">
           {/* Agregar Material */}
           <li>
-            <button
-              onClick={() => {
-                props.setTemaModal(props.tema);
-              }}
-              data-bs-toggle="modal"
-              data-bs-target="#crearMaterial"
-              className="dropdown-item"
-            >
+            <button onClick={() => { props.setTemaModal(props.tema); }} data-bs-toggle="modal" data-bs-target="#crearMaterial" className="dropdown-item" >
               <FaPlus className="mb-1" /> Agregar Material
             </button>
           </li>
@@ -88,14 +77,7 @@ const TemaItem:React.FC<Props> = (props) => {
 
           {/* Editar tema */}
           <li>
-            <button
-              onClick={() => {
-                setModales();
-              }}
-              data-bs-toggle="modal"
-              data-bs-target="#crearTema"
-              className="dropdown-item"
-            >
+            <button onClick={() => { setModales(); }} data-bs-toggle="modal" data-bs-target="#crearTema" className="dropdown-item" >
               <FaEdit className="mb-1" /> Editar Tema
             </button>
           </li>

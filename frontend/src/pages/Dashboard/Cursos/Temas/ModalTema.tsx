@@ -49,33 +49,35 @@ const ModalTema: React.FC<Props> = (props) => {
     let client = new Vimeo("72c9aa8a9e250995e93ecaa6a674f4be900f94d5", "CN9HBV8c4SysOm9ClGhvRWgYkPTph/dRjEjGfX7mdQHxcC37En73pNO1gOyxRA9WKI2EN+tihBVDl65bn0iT3rjk4JAuQWMjVNwQa75HkcpBliSDn/awvZgCWDGXNXo2", "8f13e445f1bb7a608fae8462eb419b86");
     let file_name = new File([""], "filename");
     if (tema.video) file_name = tema.video[0];
-    client.upload(
-      file_name,
-      {
-        name: tema.titulo,
-        description: tema.descripcion,
-      },
-      // Terminó de subirse
-      async function (uri) {
-        client.request(
-          { 
-            method: "PATCH",
-            path: uri,
-            query: {
-              privacy: {
-                view: "disable",
+    if (!props.temaModal.id_tema) {
+      client.upload(
+        file_name,
+        {
+          name: tema.titulo,
+          description: tema.descripcion,
+        },
+
+        // Terminó de subirse
+        async function (uri) {
+          client.request(
+            {
+              method: "PATCH",
+              path: uri,
+              query: {
+                privacy: {
+                  view: "disable",
+                },
               },
             },
-          },
-          function (error, body, status_code, headers) {
-            console.log(uri + " will now require a password to be viewed on Vimeo.");
-          }
-        );
-        form.append("url_video", "" + uri);
-        const res = await temaServices.crearTema(form);
-        props.setcount(props.count + 1);
+            function (error, body, status_code, headers) {
+              console.log(uri + " will now require a password to be viewed on Vimeo.");
+            }
+          );
+          form.append("url_video", "" + uri);
+          const res = await temaServices.crearTema(form);
+          props.setcount(props.count + 1);
 
-        if (res.data.success) {
+          if (res.data.error) return toast.error(res.data.error);
           borrarInputFile(); //Borrando el valor del input file
           if (refProgresss.current) {
             refProgresss.current.innerHTML = "0%";
@@ -84,54 +86,25 @@ const ModalTema: React.FC<Props> = (props) => {
           setTema(initialState);
           props.setcount(props.count + 1);
           toast.success(res.data.success);
+          return;
+        },
+
+        // Va cargando
+        function (bytes_uploaded, bytes_total) {
+          let percentage = ((bytes_uploaded / bytes_total) * 100).toFixed(2);
+          if (refProgresss.current) {
+            refProgresss.current.style.width = `${percentage}%`;
+            refProgresss.current.innerHTML = percentage;
+          }
+        },
+
+        // Error
+        function (error) {
+          toast.error(error);
+          console.log("Failed because: " + error);
         }
-
-        if (res.data.error) toast.error(res.data.error);
-        return;
-      },
-
-      // Va cargando
-      function (bytes_uploaded, bytes_total) {
-        let percentage = ((bytes_uploaded / bytes_total) * 100).toFixed(2);
-        if (refProgresss.current) {
-          refProgresss.current.style.width = `${percentage}%`;
-          refProgresss.current.innerHTML = percentage;
-        }
-        console.log(bytes_uploaded, bytes_total, percentage + "%");
-      },
-
-      // Error
-      function (error) {
-        toast.error(error);
-        console.log("Failed because: " + error);
-      }
-    );
-
-    // e.preventDefault();
-    // const form = new FormData();
-    // form.append("titulo", tema.titulo);
-    // form.append("descripcion", tema.descripcion);
-    // form.append("id_modulo", "" + props.moduloModal.id_modulo);
-    // if (tema.video) form.append("video", tema.video[0]);
-
-    if (!props.temaModal.id_tema) {
+      );
       return;
-      //Por si no hay tema se pone en crear
-      // const res = await temaServices.crearTema(form, refProgresss.current);
-      // const res = await temaServices.crearTema(form);
-      // props.setcount(props.count + 1);
-      // if (res.data.success) {
-      //   borrarInputFile(); //Borrando el valor del input file
-      //   if (refProgresss.current) {
-      //     refProgresss.current.innerHTML = "0%";
-      //     refProgresss.current.style.width = "0%";
-      //   }
-      //   setTema(initialState);
-      //   props.setcount(props.count + 1);
-      //   toast.success(res.data.success);
-      // }
-      // if (res.data.error) toast.error(res.data.error);
-      // return;
     }
 
     //Editar
@@ -139,15 +112,13 @@ const ModalTema: React.FC<Props> = (props) => {
     const res = await temaServices.editarTema(props.temaModal.id_tema + "", form);
     props.setcount(props.count + 1);
     if (refInput.current) refInput.current.value = "";
-    if (res.data.success) {
-      borrarInputFile(); //Borrando el valor del input file
-      if (refProgresss.current) {
-        refProgresss.current.innerHTML = "0%";
-        refProgresss.current.style.width = "0%";
-      }
-      toast.success(res.data.success);
+    if (res.data.error) return toast.error(res.data.error);
+    borrarInputFile(); //Borrando el valor del input file
+    if (refProgresss.current) {
+      refProgresss.current.innerHTML = "0%";
+      refProgresss.current.style.width = "0%";
     }
-    if (res.data.error) toast.error(res.data.error);
+    toast.success(res.data.success);
   };
 
   const borrarInputFile = () => {

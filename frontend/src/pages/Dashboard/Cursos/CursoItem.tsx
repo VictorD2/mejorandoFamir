@@ -34,7 +34,6 @@ const CursoItem: React.FC<Props> = (props) => {
     if (!window.confirm("¿Está seguro que desea habilitar/deshabilitar el curso?")) return;
 
     const res = await CursosServices.eliminarCurso(props.curso.id_curso?.toString());
-
     if (res.data.error) return toast.error(res.data.error);
 
     props.cargaDatos();

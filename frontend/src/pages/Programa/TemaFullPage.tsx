@@ -52,6 +52,7 @@ const TemaFullPage: React.FC = () => {
   const params = useParams<Params>();
 
   const history = useHistory();
+
   const [tema, setTema] = useState<Tema>();
 
   const refDesc = useRef<HTMLParagraphElement | null>();
@@ -61,16 +62,20 @@ const TemaFullPage: React.FC = () => {
   const [settings, setSettings] = useState<VideoJsPlayerOptions>(initialVideoState);
 
   const getTema = async () => {
+
     const res = await temaServices.getTemaById(params.idTema);
-    const resMaterial = await materialServices.getMaterialByTemaId(params.idTema);
-    setMaterial(resMaterial.data);
-    const newDescripcion = res.data.descripcion.replace(/\n/g, "<br/>");
-    res.data.descripcion = newDescripcion;
-    if (refDesc.current) refDesc.current.innerHTML = res.data.descripcion;
-    setTema(res.data);
-    // setSettings({ ...settings, sources: [{ src: res.data.url_video, type: "video/mp4" }] });
-    setSettings({ ...settings, sources: [{ src: `${API}/video-lock?key=1v4g8h6vcesm&Tema=${res.data.url_video}`, type: "video/mp4" }] });
+    if (res.data.error) return history.push("/");
+
+    res.data.tema.descripcion = res.data.tema.descripcion.replace(/\n/g, "<br/>");
+    if (refDesc.current) refDesc.current.innerHTML = res.data.tema.descripcion;
+    setTema(res.data.tema);
+    
+    setSettings({ ...settings, sources: [{ src: `${API}/video-lock?key=1v4g8h6vcesm&Tema=${res.data.tema.url_video}`, type: "video/mp4" }] });
     setLoadingVideo(true);
+
+    const resMaterial = await materialServices.getMaterialByTemaId(params.idTema);
+    if (res.data.error) return;
+    setMaterial(resMaterial.data.material);
   };
   const authentificar = async () => {
     const datos = await axios.get(`${API}/api/v0/usuarios/whoami`);

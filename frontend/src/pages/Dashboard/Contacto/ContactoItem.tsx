@@ -26,16 +26,14 @@ interface Props {
   getAllContactos: (page: number) => void;
 }
 
-const ContactoItem: React.FC<Props>= (props) => {
+const ContactoItem: React.FC<Props> = (props) => {
   const eliminarContacto = async () => {
     if (!window.confirm("¿Está seguro de eliminar el mensaje?")) return;
     const res = await contactoServices.deleteContacto(props.contacto.id_contacto + "");
-    if (res.data.success) {
-      props.getAllContactos(props.page);
-      props.getCantidad();
-      return toast.success(res.data.success);
-    }
-    if (res.data.error) return toast.success(res.data.error);
+    if (res.data.error) return toast.error(res.data.error);
+    props.getAllContactos(props.page);
+    props.getCantidad();
+    return toast.success(res.data.success);
   };
 
   return (

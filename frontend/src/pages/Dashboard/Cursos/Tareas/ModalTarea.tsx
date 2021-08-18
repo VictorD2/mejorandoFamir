@@ -21,7 +21,7 @@ const initialStateTarea: Tarea = {
   id_modulo: 0,
 };
 
-const ModalTarea:React.FC<Props> = (props) => {
+const ModalTarea: React.FC<Props> = (props) => {
   const [tarea, setTarea] = useState(initialStateTarea);
 
   useEffect(() => {
@@ -37,22 +37,15 @@ const ModalTarea:React.FC<Props> = (props) => {
     e.preventDefault();
     if (!props.tareaModal.id_tarea) {
       const res = await tareaServices.crearTarea(tarea, props.moduloModal.id_modulo + "");
-      if (res.data.success) {
-        props.setcount(props.count + 1);
-        toast.success(res.data.success);
-        return;
-      }
       if (res.data.error) return toast.error(res.data.error);
-      return
-    }
-    const res = await tareaServices.actualizarTarea(tarea);
-    if (res.data.success) {
       props.setcount(props.count + 1);
       toast.success(res.data.success);
       return;
     }
+    const res = await tareaServices.actualizarTarea(tarea);
     if (res.data.error) return toast.error(res.data.error);
-    return;
+    props.setcount(props.count + 1);
+    toast.success(res.data.success);
   };
 
   return (
