@@ -53,7 +53,7 @@ const VerTema: React.FC = () => {
     const res = await temaServices.getTemaById(params.idTema);
     if (res.data.error) return history.push("/Dashboard");
 
-    res.data.tema.url_video = res.data.url_video.slice(8, res.data.tema.url_video.length);
+    res.data.tema.url_video = res.data.tema.url_video.slice(8, res.data.tema.url_video.length);
     res.data.tema.descripcion = res.data.tema.descripcion.replace(/\n/g, "<br/>");
     setTema(res.data.tema);
 

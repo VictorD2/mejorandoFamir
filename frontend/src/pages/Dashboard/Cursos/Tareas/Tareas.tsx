@@ -43,6 +43,7 @@ const Tareas: React.FC = () => {
 
   const getTarea = async () => {
     const res = await tareaServices.getTareasById(params.idTarea);
+    console.log(res);
     if (res.data.error) return history.push(`/DashBoard/${params.tipo}/${params.modalidad}/Material/${params.id}`);
 
     res.data.tarea.descripcion_tarea = res.data.tarea.descripcion_tarea.replace(/\n/g, "<br/>");

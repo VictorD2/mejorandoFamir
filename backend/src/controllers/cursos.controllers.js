@@ -75,7 +75,7 @@ ctrlCursos.getCursoById = async (req, res) => {
 //.get('/sub/:id_curso')
 ctrlCursos.verificarSub = async (req, res) => {
   try {
-    if (!req.user) return res.json(true);
+    if (!req.user) return res.json(false);
     if (req.user.id_rango === 1 || req.user.id_rango === 3) return res.json(true);
     
     const rows = await pool.query("SELECT * FROM usuario_curso WHERE id_curso = ? AND id_usuario = ?", [req.params.id_curso, req.user.id_usuario]);

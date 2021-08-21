@@ -5,7 +5,7 @@ const ctrlTarea = {};
 ctrlTarea.getTareaById = async (req, res) => {
   try {
     const rows = await pool.query("SELECT * FROM tarea WHERE id_tarea = ?", [req.params.id]);
-    if (rows[0]) return res.json({ error: "No existe tal tarea" });
+    if (!rows[0]) return res.json({ error: "No existe tal tarea" });
     return res.json({ success: "Dato obtenido", tarea: rows[0] });
   } catch (error) {
     console.log(error);

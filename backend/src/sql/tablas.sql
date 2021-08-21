@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-08-2021 a las 21:14:42
+-- Tiempo de generación: 21-08-2021 a las 23:11:32
 -- Versión del servidor: 10.4.14-MariaDB
 -- Versión de PHP: 7.4.10
 
@@ -36,6 +36,11 @@ CREATE TABLE `comentario` (
   `id_tema` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `comentario`
+--
+
+
 -- --------------------------------------------------------
 
 --
@@ -55,17 +60,6 @@ CREATE TABLE `comprobante` (
 -- Volcado de datos para la tabla `comprobante`
 --
 
-INSERT INTO `comprobante` (`id_comprobante`, `id_usuario`, `id_curso`, `url_foto_comprobante`, `fecha_enviado`, `estado`) VALUES
-(85, 85, 43, '/uploads/fotosComprobantes/2-7-2021-115432Tableau-Editado.png', '2021-08-02 11:54:32', 'Aceptado'),
-(86, 85, 45, '/uploads/fotosComprobantes/2-7-2021-183716fondito.jpg', '2021-08-02 18:37:16', 'Aceptado'),
-(87, 84, 51, '/uploads/fotosComprobantes/2-7-2021-184122codigos.PNG', '2021-08-02 18:41:22', 'Aceptado'),
-(88, 85, 51, '/uploads/fotosComprobantes/2-7-2021-191231defaultProfile.PNG', '2021-08-02 19:12:31', 'Aceptado'),
-(89, 87, 43, '/uploads/fotosComprobantes/2-7-2021-19159fondito.jpg', '2021-08-02 19:15:09', 'Aceptado'),
-(90, 87, 46, '/uploads/fotosComprobantes/2-7-2021-192038fondito.jpg', '2021-08-02 19:20:38', 'Aceptado'),
-(91, 87, 50, '/uploads/fotosComprobantes/2-7-2021-192121codigos.PNG', '2021-08-02 19:21:21', 'Aceptado'),
-(92, 85, 46, '/uploads/fotosComprobantes/2-7-2021-19245defaultProfile.PNG', '2021-08-02 19:24:05', 'Aceptado'),
-(93, 85, 50, '/uploads/fotosComprobantes/2-7-2021-19428codigos.PNG', '2021-08-02 19:42:08', 'Aceptado');
-
 -- --------------------------------------------------------
 
 --
@@ -78,14 +72,6 @@ CREATE TABLE `contactos` (
   `correo` varchar(100) NOT NULL,
   `mensaje` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `contactos`
---
-
-INSERT INTO `contactos` (`id_contacto`, `nombre`, `correo`, `mensaje`) VALUES
-(35, 'xddd', 'admin@gmail.com', 'xdd'),
-(39, 'Victor Hernandez', 'victor-2027@hotmail.com', 'xdddd');
 
 -- --------------------------------------------------------
 
@@ -114,14 +100,6 @@ CREATE TABLE `curso` (
 -- Volcado de datos para la tabla `curso`
 --
 
-INSERT INTO `curso` (`id_curso`, `nombre_curso`, `descripcion`, `capacidad`, `calificacion`, `precio`, `horario`, `url_foto_curso`, `tipo`, `modalidad`, `enlace`, `habilitado`, `duracion`, `id_usuario`) VALUES
-(43, 'PHP Desde Cero', 'Aprende PHP, el lenguaje de programación backend más importante de toda la web.', 0, NULL, 15000, '0000-00-00 00:00:00', '/uploads/fotosCursos/2-7-2021-72824php.jpg', 'Taller', 'Asincrónico', 'null', 1, 0, 4),
-(45, 'Interfaces gráficas en Java', 'Implementa interfaces gráficas en tus proyectos con Java.', 0, NULL, 12000, '0000-00-00 00:00:00', '/uploads/fotosCursos/2-7-2021-72913java.jpg', 'Taller', 'Asincrónico', 'null', 1, 0, 4),
-(46, 'Laravel 8', 'Domina el framework más usado y amigable de PHP en su última versión.', 30, NULL, 94000, '2021-06-11 16:08:00', '/uploads/fotosCursos/2-7-2021-64416Laravel 8.png', 'Taller', 'Sincrónico', 'https://us04web.zoom.us/j/4751858299?pwd=NXRwWHJlOWUyMnJoSnRpZmJQM25PZz09', 1, 6, 47),
-(47, 'Concurrencia en Go', 'Aprende como funciona la concurrencia en Go y a implementarla con buenas prácticas para mejorar el rendimiento de tus aplicaciones.', 0, NULL, 12555, '0000-00-00 00:00:00', '/uploads/fotosCursos/2-7-2021-7306go.png', 'Taller', 'Asincrónico', 'null', 1, 0, 4),
-(49, 'Preparación y limpieza de datos para análisis', 'Usa Python y Google Colab para preparar y limpiar los datos de diversas fuentes y asegura su calidad para su posterior análisis.', 50, NULL, 12311, '2021-06-26 05:36:00', '/uploads/fotosCursos/2-7-2021-7014Base de Datos.png', 'Taller', 'Sincrónico', 'https://zoom.us/j/7624548251?pwd=aEtlZWV5SFJBTzMzdlF3MU9ERGY0UT09&uname=pirulin+pinpon', 1, 2, 47),
-(50, 'Dart desde cero', 'Aprende a programar en el único lenguaje de Google para desarrollo móvil, web y escritorio.', 30, NULL, 15000, '2021-06-18 21:18:00', '/uploads/fotosCursos/2-7-2021-72514dart.png', 'Taller', 'Sincrónico', 'https://zoom.us/j/7624548251?pwd=aEtlZWV5SFJBTzMzdlF3MU9ERGY0UT09&uname=pirulin+pinpon', 1, 5, 47),
-(51, 'Algoritmos en la programación', 'Desarrolla el pensamiento lógico y aprende a resolver problemas como un programador.', 0, NULL, 15000, '0000-00-00 00:00:00', '/uploads/fotosCursos/2-7-2021-82121algoritmos.png', 'Taller', 'Asincrónico', 'null', 1, 0, 47);
 
 -- --------------------------------------------------------
 
@@ -135,6 +113,10 @@ CREATE TABLE `material_clase` (
   `nombre_material` varchar(255) NOT NULL,
   `id_tema` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `material_clase`
+--
 
 -- --------------------------------------------------------
 
@@ -167,16 +149,6 @@ CREATE TABLE `modulo` (
 -- Volcado de datos para la tabla `modulo`
 --
 
-INSERT INTO `modulo` (`id_modulo`, `titulo`, `id_curso`) VALUES
-(59, 'Conceptos y Claves', 43),
-(60, 'Formación Socioemocional', 43),
-(61, 'Conflictos', 43),
-(62, 'Estrategias de Disciplina Formativa', 43),
-(63, 'Introducción', 46),
-(64, 'Introducción', 45),
-(65, 'Conceptos y Claves', 46),
-(66, 'Introducción', 51),
-(67, 'Introducción', 47);
 
 -- --------------------------------------------------------
 
@@ -236,7 +208,7 @@ INSERT INTO `pais` (`id_pais`, `nombre_pais`, `url_foto_pais`) VALUES
 ('CF', 'Central African Republic', '/uploads/paises/CentralAfricanRepublic.png'),
 ('CG', 'Congo', '/uploads/paises/Congo.png'),
 ('CH', 'Switzerland', '/uploads/paises/Switzerland.png'),
-('CI', "Cote D\ 'Ivoire", '/uploads/paises/CoteDIvoire.svg'),
+('CI', 'Cote D\'Ivoire', '/uploads/paises/CoteDIvoire.svg'),
 ('CK', 'Cook Islands', '/uploads/paises/CookIslands.png'),
 ('CL', 'Chile', '/uploads/paises/Chile.png'),
 ('CM', 'Cameroon', '/uploads/paises/Cameroon.png'),
@@ -316,7 +288,7 @@ INSERT INTO `pais` (`id_pais`, `nombre_pais`, `url_foto_pais`) VALUES
 ('KW', 'Kuwait', '/uploads/paises/Kuwait.svg'),
 ('KY', 'Cayman Islands', '/uploads/paises/CaymanIslands.svg'),
 ('KZ', 'Kazakhstan', '/uploads/paises/Kazakhstan.svg'),
-('LA', "Lao People\'s Democratic Republic", "/uploads/paises/LaoPeople\'sDemocraticRepublic.png"),
+('LA', 'Lao People\'s Democratic Republic', '/uploads/paises/LaoPeople\'sDemocraticRepublic.png'),
 ('LB', 'Lebanon', '/uploads/paises/Lebanon.jpg'),
 ('LC', 'Saint Lucia', '/uploads/paises/SaintLucia.svg'),
 ('LI', 'Liechtenstein', '/uploads/paises/Liechtenstein.svg'),
@@ -471,9 +443,6 @@ CREATE TABLE `sessions` (
 -- Volcado de datos para la tabla `sessions`
 --
 
-INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('GwWzS5RoynkHjjjDIj6ZNc77edF9Ycl8', 1628078664, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"passport\":{}}');
-
 -- --------------------------------------------------------
 
 --
@@ -490,11 +459,6 @@ CREATE TABLE `tarea` (
 --
 -- Volcado de datos para la tabla `tarea`
 --
-
-INSERT INTO `tarea` (`id_tarea`, `titulo_tarea`, `descripcion_tarea`, `id_modulo`) VALUES
-(8, 'Tarea 1', 'Estimados Estudiantes\n\nCompletar el análisis interno considerando la guía proporcionada en la sesión del dia jueves 24 , haciendo énfasis en el proceso para definir situaciones esperadas o lineamientos y el instrumento que permita obtener las respuestas a partir de lasd cuales se identifiquen  fortalezas y debilidades asociadas al objeto de estudio u organización ', 63),
-(10, 'Tarea 2', 'Subir material', 63),
-(11, 'Tarea 1', 'xd', 67);
 
 -- --------------------------------------------------------
 
@@ -513,12 +477,6 @@ CREATE TABLE `tema` (
 --
 -- Volcado de datos para la tabla `tema`
 --
-
-INSERT INTO `tema` (`id_tema`, `titulo`, `descripcion`, `url_video`, `id_modulo`) VALUES
-(150, 'Conceptos y Claves', 'xdddd', '/videos/582494685', 65),
-(151, 'Introducción', 'xddddd', '/videos/582637581', 65),
-(152, 'tema 2', 'xdddddd', '/videos/582639246', 65),
-(153, 'tema 1 xdddddddd', 'xddd', '/videos/582640180', 65);
 
 -- --------------------------------------------------------
 
@@ -547,13 +505,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `profesion`, `correo`, `telefono`, `rut`, `habilitado_u`, `url_foto_usuario`, `password`, `id_rango`, `id_pais_nacimiento`, `id_pais_residencia`) VALUES
-(4, 'Marco', 'Antonio', '123', 'marco@gmail.com', '123', '123', 1, '/defaultProfile.PNG', '$2a$10$C43Y0JBtLdWQAIOZFF/vbeACtytacVmg3LAJ4ylVNqQwlz.HMMPfy', 3, 'AT', 'BD'),
-(45, 'Administrador', 'admin', 'admin', 'admin@gmail.com', '999999999', '99999999', 1, '/defaultProfile.PNG', '$2a$10$Qklryy2ZkeRuz29DQQGUKeqx3.0mRPmpbXi.srCGD3lvgpKRYjqTO', 1, 'BE', 'ZA'),
-(47, 'Victor Antonio', 'Villacorta', 'xd', 'villa-2027@gmail.com', '+51990978736', '121', 1, '/defaultProfile.PNG', '$2a$10$reYkiic2jnB11/p5TKKXH.Kb9LoJXhE/Rdxo0IeVnRA5eP7JOEspa', 3, 'BB', 'BS'),
-(84, 'Victor', 'Hernández Villalobos', '', 'victorhv2729@gmail.com', '', '', 1, 'https://lh3.googleusercontent.com/a-/AOh14GjENB-7MZUeTukpsAyY9ONQLZXKZoSIDNAOWY9UyQ=s96-c', '', 2, 'AU', 'BD'),
-(85, 'Victor Gabriel', 'Hernandez Villalobos', 'Ing. Sistemas', 'vhernandezv1@upao.edu.pe', '990978736', '77071945', 1, 'https://lh3.googleusercontent.com/a-/AOh14GjhQEQDcAMvXSkW53gz9a8_B6pwwnmaZBbJ1LCL=s96-c', '', 2, 'PE', 'PE'),
-(86, 'Victor ', 'Hernandez', 'Ing Sistemas', 'victor-2027@hotmail.com', '990978736', '77071945', 1, '/defaultProfile.PNG', '$2a$10$PiiCSc15h5eHfAZgHvJrteYgWvbDUTrWI8mAOpLmfB8rQUsfc26o2', 2, 'PE', 'PE'),
-(87, 'Joseph', 'De La Cruz Rivas', 'Ing Sistemas', 'razorij20@gmail.com', '990978736', '77071945', 1, '/defaultProfile.PNG', '$2a$10$3QaNoagbbQ3VQZLcxAmjs.jq.6xCozfm4l70CAaGXN4xDlepN9NeK', 2, 'AL', 'PE');
+(1, 'Administrador', 'admin', 'admin', 'admin@gmail.com', '999999999', '99999999', 1, '/defaultProfile.PNG', '$2a$10$JASgHsEzLjtjbkD7SMga8uCzsYyTFxtmOAZNOjeHV6Cj1YFQ0sZRO', 1, 'CV', 'ZA');
 
 -- --------------------------------------------------------
 
@@ -572,17 +524,6 @@ CREATE TABLE `usuario_curso` (
 --
 -- Volcado de datos para la tabla `usuario_curso`
 --
-
-INSERT INTO `usuario_curso` (`id_usuario_curso`, `favorito`, `url_comprobante`, `id_usuario`, `id_curso`) VALUES
-(51, 0, '/uploads/fotosComprobantes/2-7-2021-115432Tableau-Editado.png', 85, 43),
-(52, 0, '/uploads/fotosComprobantes/2-7-2021-183716fondito.jpg', 85, 45),
-(53, 0, '/uploads/fotosComprobantes/2-7-2021-184122codigos.PNG', 84, 51),
-(54, 0, '/uploads/fotosComprobantes/2-7-2021-191231defaultProfile.PNG', 85, 51),
-(55, 0, '/uploads/fotosComprobantes/2-7-2021-19159fondito.jpg', 87, 43),
-(56, 0, '/uploads/fotosComprobantes/2-7-2021-192038fondito.jpg', 87, 46),
-(57, 0, '/uploads/fotosComprobantes/2-7-2021-192121codigos.PNG', 87, 50),
-(58, 0, '/uploads/fotosComprobantes/2-7-2021-19245defaultProfile.PNG', 85, 46),
-(60, 0, '/uploads/fotosComprobantes/2-7-2021-19428codigos.PNG', 85, 50);
 
 --
 -- Índices para tablas volcadas
@@ -699,7 +640,7 @@ ALTER TABLE `usuario_curso`
 -- AUTO_INCREMENT de la tabla `comentario`
 --
 ALTER TABLE `comentario`
-  MODIFY `id_comentario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+  MODIFY `id_comentario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
 
 --
 -- AUTO_INCREMENT de la tabla `comprobante`
@@ -723,7 +664,7 @@ ALTER TABLE `curso`
 -- AUTO_INCREMENT de la tabla `material_clase`
 --
 ALTER TABLE `material_clase`
-  MODIFY `id_material_clase` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=173;
+  MODIFY `id_material_clase` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
 
 --
 -- AUTO_INCREMENT de la tabla `material_tarea`
@@ -753,13 +694,13 @@ ALTER TABLE `tarea`
 -- AUTO_INCREMENT de la tabla `tema`
 --
 ALTER TABLE `tema`
-  MODIFY `id_tema` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
+  MODIFY `id_tema` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario_curso`
