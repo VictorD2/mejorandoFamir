@@ -288,9 +288,7 @@ code {
 /* Footer */
 
 .footer {
-  background-color: var(--azul-oscuro);
-  background: -webkit-linear-gradient(to left, var(--azul-claro), var(--azul-claro));
-  background: linear-gradient(to left, var(--azul-claro), var(--azul-oscuro));
+  background-color: #232323;
   display: flex;
   margin: 0;
   flex-direction: row;
@@ -337,6 +335,11 @@ code {
 .ftr__list {
   list-style: none;
   padding-left: 0;
+}
+
+.ftr__list li a:hover {
+  transition-duration: 0.5s;
+  color: var(--azul-claro) !important;
 }
 
 /*Inicio de estilos de Sobre Nosotros, Contactanos, Register and Login*/

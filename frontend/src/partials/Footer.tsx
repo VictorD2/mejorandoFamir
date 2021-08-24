@@ -14,39 +14,42 @@ import { AiOutlinePhone } from "react-icons/ai";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="footer p-4 p-md-5 p-lg-5 row">
+    <>
+    <div style={{background: "#232323"}}>
+   <div className="container">
+    <footer className="footer py-4 py-md-5 py-lg-5 row">
       {/* Primera Fila */}
-      <div className="col-12 col-md-6 col-lg-3 my-4 my-md-2 my-lg-3 footer-section">
-        <div className="img-logo mx-auhref mb-5">
+      <div className="col-12 col-md-6 col-lg-4 my-4 my-md-2 my-lg-3 footer-section">
+        <div className="img-logo mx-auhref mb-4">
           <a href="/" className="text-decoration-none">
             <img className="img-fluid sombra-blanca" src={logo} alt="Logo Famir Centro" />
           </a>
         </div>
-        <p className="footer-text text-white-50 mt-5 mt-md-4 mt-lg-3 lh-lg pe-0 pe-lg-5" style={{ textAlign: "justify" }}>
+        <p className="footer-text text-white-50 mt-5 mt-md-4 mt-lg-3 lh-lg pe-0 pe-md-4 pe-lg-4" style={{ textAlign: "justify" }}>
           FAMIR Centro se conforma por un equipo multidisciplinario que realiza capacitaciones y charlas con el objetivo de potenciar sus aprendizajes y entregar herramientas teóricas y prácticas relacionadas al ámbito educativo desde una mirada Psicológica y Psicopedagógica.
         </p>
         <ul className="footer-social-list d-flex">
           <li className="footer-social-list-item mx-2 fs-3">
             <a href="https://www.facebook.com/famircentro" target="_BLANK" rel="noreferrer" className="text-decoration-none">
-              <FiFacebook className="mb-2" />
+              <FiFacebook className="mb-2 fs-4" />
             </a>
           </li>
           <li className="footer-social-list-item mx-2 fs-3">
             <a href="https://www.instagram.com/famircentro/" target="_BLANK" rel="noreferrer" className="text-decoration-none">
-              <FontAwesomeIcon icon={faInstagram} />
+              <FontAwesomeIcon icon={faInstagram} className="fs-4" />
             </a>
           </li>
           <li className="footer-social-list-item mx-2 fs-3">
             <a href="https://whatsapp.com" target="_BLANK" rel="noreferrer" className="text-decoration-none">
-              <FontAwesomeIcon icon={faWhatsapp} />
+              <FontAwesomeIcon icon={faWhatsapp} className="fs-4" />
             </a>
           </li>
         </ul>
       </div>
       {/* Segunda Fila */}
-      <div className="col-12 col-md-6 col-lg-3 my-4 my-md-2 my-lg-3 footer-section">
+      <div className="col-12 col-md-6 col-lg-2 my-4 my-md-2 my-lg-3 footer-section">
         <h6 className="footer-subtitle text-white fs-6 text-uppercase"> ENLACES </h6>
-        <ul className="footer-as-list ftr__list">
+        <ul style={{fontSize: "14px"}} className="footer-as-list ftr__list">
           <li className="footer-as-list-item my-3 my-md-2 my-lg-4">
             <Link className="text-white-50 text-decoration-none text-uppercase" to="/">
               Inicio
@@ -73,16 +76,22 @@ const Footer: React.FC = () => {
       <div className="col-12 col-md-6 col-lg-3 my-4 my-md-2 my-lg-3 footer-section">
         <h6 className="footer-subtitle text-white text-uppercase">Cursos</h6>
         <div className="row px-2">
-          <div className="col-4 col-sm-3 col-md-3 col-lg-3 my-3 my-md-2 my-lg-1">
+          <div className="col-4 col-sm-4 col-md-4 col-lg-4 my-3 my-md-2 my-lg-1">
             <img className="img-fluid img-thumbnail" src={logo} alt="Logo Famir Centro" />
           </div>
-          <div className="col-4 col-sm-3 col-md-3 col-lg-3 my-3 my-md-2 my-lg-1">
+          <div className="col-4 col-sm-4 col-md-4 col-lg-4 my-3 my-md-2 my-lg-1">
             <img className="img-fluid img-thumbnail" src={logo} alt="Logo Famir Centro" />
           </div>
-          <div className="col-4 col-sm-3 col-md-3 col-lg-3 my-3 my-md-2 my-lg-1">
+          <div className="col-4 col-sm-4 col-md-4 col-lg-4 my-3 my-md-2 my-lg-1">
             <img className="img-fluid img-thumbnail" src={logo} alt="Logo Famir Centro" />
           </div>
-          <div className="col-4 col-sm-3 col-md-3 col-lg-3 my-3 my-md-2 my-lg-1">
+          <div className="col-4 col-sm-4 col-md-4 col-lg-4 my-3 my-md-2 my-lg-1">
+            <img className="img-fluid img-thumbnail" src={logo} alt="Logo Famir Centro" />
+          </div>
+          <div className="col-4 col-sm-4 col-md-4 col-lg-4 my-3 my-md-2 my-lg-1">
+            <img className="img-fluid img-thumbnail" src={logo} alt="Logo Famir Centro" />
+          </div>
+          <div className="col-4 col-sm-4 col-md-4 col-lg-4 my-3 my-md-2 my-lg-1">
             <img className="img-fluid img-thumbnail" src={logo} alt="Logo Famir Centro" />
           </div>
         </div>
@@ -91,14 +100,14 @@ const Footer: React.FC = () => {
       <div className="col-12 col-md-6 col-lg-3 my-4 my-lg-3 my-md-2 footer-section">
         <h6 className="footer-subtitle text-white text-uppercase">CONTACTO</h6>
         <div className="footer-contact">
-          <p className="text-white-50 d-flex justify-content-start align-items-center">
-            <IoLocationOutline className="mx-2 fs-4" />
-            4127/ 5B-C Mislane Road, Gibraltar, UK
+          <p className="text-white-50 my-5 d-flex justify-content-start align-items-center">
+            <IoLocationOutline color={"#7ed958"} className="mx-2 fs-4" />
+            4127/ 5B-C Mislane<br /> Road, Gibraltar, UK
           </p>
         </div>
         <div className="footer-contact">
-          <p className="text-white-50 d-flex justify-content-start align-items-center">
-            <AiOutlinePhone className="mx-2 fs-4" />
+          <p className="text-white-50 my-5 d-flex justify-content-start align-items-center">
+            <AiOutlinePhone color={"#7ed958"} className="mx-2 fs-4" />
             Main: 203-808-8613
             <br />
             Office: 203-808-8648
@@ -106,12 +115,21 @@ const Footer: React.FC = () => {
         </div>
         <div className="footer-contact">
           <p className="text-white-50 d-flex justify-content-start align-items-center">
-            <CgMail className="mx-2 fs-4" />
+            <CgMail color={"#7ed958"} className="mx-2 fs-4" />
             centrofamir@gmail.com
           </p>
         </div>
       </div>
     </footer>
+    </div>
+    </div>
+
+    <div style={{background: "#232323", color: "#FFFFFF80", height: "84px", borderTop: "1px solid #FFFFFF80 "}}>
+      <div className="container h-100 d-flex justify-content-center align-items-center">
+        <p className="m-0">© 2021 <span style={{color: "#7ed958"}}>NAZ-TEC</span>. All right reserved.</p>
+      </div>
+    </div>
+    </>
   );
 };
 
