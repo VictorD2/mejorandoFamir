@@ -49,7 +49,7 @@ const CursoItem: React.FC<Props> = (props) => {
         {props.curso.modalidad === "Sincrónico" ? (
           <>
             <td>{props.curso.capacidad}</td>
-            <td>{props.curso.horario}</td>
+            <td>{new Date(props.curso.horario).toLocaleString()}</td>
             <td>{props.curso.duracion} horas</td>
           </>
         ) : (

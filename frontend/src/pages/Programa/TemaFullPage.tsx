@@ -20,7 +20,7 @@ import { ToastContainer } from "react-toastify";
 import * as temaServices from "../../services/TemaServices";
 import * as materialServices from "../../services/MaterialServices";
 import * as cursosServices from "../../services/CursosServices";
-import axios from "axios";
+// import axios from "axios";
 
 //Interfaces
 import { VideoJsPlayerOptions } from "video.js";
@@ -78,9 +78,9 @@ const TemaFullPage: React.FC = () => {
     setMaterial(resMaterial.data.material);
   };
   const authentificar = async () => {
-    const datos = await axios.get(`${API}/api/v0/usuarios/whoami`);
-    if (datos.data.error) return history.push("/Iniciar");
-    if (!datos.data.user.authenticate) return history.push("/Iniciar"); //Poner ! en produccion
+    // const datos = await axios.get(`${API}/api/v0/usuarios/whoami`);
+    // if (datos.data.error) return history.push("/Iniciar");
+    // if (!datos.data.user.authenticate) return history.push("/Iniciar"); //Poner ! en produccion
     const res = await cursosServices.verificarSuscribcion(params.idCurso);
     if (!res.data) history.push(`/Clase/${params.idCurso}`); //Poner ! en produccion
   };

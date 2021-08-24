@@ -23,7 +23,7 @@ ctrlTareaMaterial.createTareaMaterial = async (req, res) => {
       id_tarea,
       url_material: url_material_tarea,
       id_usuario: req.user.id_usuario,
-      fecha_entrega: new Date(),
+      fecha_entrega: req.body.fecha_entrega,
       nombre_material_tarea: req.files.material_tarea[0].originalname,
     };
     const rows = await pool.query("INSERT INTO material_tarea set ?", [newTarea]);

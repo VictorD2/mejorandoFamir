@@ -69,17 +69,17 @@ const ComprarCurso: React.FC = () => {
     const form = new FormData();
     if (comprobante.comprobateFoto) form.append("fotoComprobante", comprobante.comprobateFoto[0]);
     const res = await comprobanteServices.crearComprobante(form, params.idCurso, usuario.id_usuario);
-    if (res.data.success) {
-      if (refInput.current) refInput.current.value = "";
-      swal({ title: "Enviado", text: `${res.data.success}`, icon: "success" });
-    }
     if (res.data.error) return swal({ title: "Advertencia", text: `${res.data.error}`, icon: "warning" });
+    if (refInput.current) refInput.current.value = "";
+    swal({ title: "Enviado", text: `${res.data.success}`, icon: "success" });
   };
+
+
   const getCurso = async () => {
     const res = await cursoServices.getCursoById(params.idCurso);
     if (res.data.error) return history.push("/");
     const resIns = await comprobanteServices.getCountUsuarioCursoByCursoId(params.idCurso);
-    setCupos(res.data.capacidad - resIns.data);
+    setCupos(res.data.curso.capacidad - resIns.data);
     setCurso(res.data.curso);
   };
 

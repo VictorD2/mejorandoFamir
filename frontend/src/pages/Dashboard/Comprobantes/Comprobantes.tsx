@@ -232,7 +232,7 @@ const Comprobantes: React.FC = () => {
                           <img src={comprobante.url_foto_comprobante} className="w-100" alt="..." />
                           <p>
                             <span className="text-uppercase fw-bold">Fecha Enviado: </span>
-                            {comprobante?.fecha_enviado}
+                            {new Date(comprobante.fecha_enviado).toLocaleString()}
                           </p>
                         </div>
                         <div className="col-md-6">

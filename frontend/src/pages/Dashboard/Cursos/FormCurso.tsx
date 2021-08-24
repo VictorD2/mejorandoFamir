@@ -72,8 +72,13 @@ const FormCurso: React.FC = () => {
     const res = await CursosServices.getCursoById(id);
     if (res.data.error) return history.push("/Dashboard");
     if (res.data.curso.horario) {
-      const fecha = res.data.curso.horario.replace(" ", "T");
-      res.data.curso.horario = fecha;
+      // const fecha = res.data.curso.horario.replace(" ", "T");
+      const fecha = new Date(res.data.curso.horario);
+      let cero = ``;
+      if (!(fecha.getMonth() + 1 === 10 || fecha.getMonth() + 1 === 11 || fecha.getMonth() + 1 === 12)) cero = `0`;
+      const horario = `${fecha.getFullYear()}-${cero}${fecha.getMonth() + 1}-${fecha.getDate()}T${fecha.getHours()}:${fecha.getMinutes()}`;
+      console.log(horario);
+      res.data.curso.horario = horario;
     }
     setCurso(res.data.curso);
   };
@@ -102,7 +107,7 @@ const FormCurso: React.FC = () => {
     form.append("precio", curso.precio + "");
     form.append("duracion", curso.duracion + "");
     form.append("enlace", curso.enlace);
-    form.append("horario", curso.horario);
+    form.append("horario", new Date(curso.horario).toString());
     form.append("capacidad", curso.capacidad + "");
     form.append("id_usuario", curso.id_usuario + "");
     if (curso.foto_curso) form.append("fotoCurso", curso.foto_curso[0]);

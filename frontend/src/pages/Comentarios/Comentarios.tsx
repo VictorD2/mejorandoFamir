@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useUsuario } from "../../auth/UsuarioProvider";
-import malasPalabras from "naughty-words/es.json";
 
 //Iconos
 import { FaEnvelope, FaTimes } from "react-icons/fa";
@@ -38,6 +37,115 @@ interface Params {
   idTema: string;
 }
 const Comentarios: React.FC = () => {
+  const badWords = [
+    "Asesinato",
+    "asno",
+    "bastardo",
+    "bastarda",
+    "Bichotazo",
+    "Bollera",
+    "Bruto",
+    "Bruta",
+    "Cabrón",
+    "Caca",
+    "Cagada",
+    "Carajo",
+    "Crj",
+    "Chupada",
+    "Chupapollas",
+    "Chupetón",
+    "concha",
+    "Concha de tu madre",
+    "Cojudo",
+    "Coño",
+    "Conero",
+    "Coprofagía",
+    "Culo",
+    "csm",
+    "csmr",
+    "csmre",
+    "ctmre",
+    "ctmr",
+    "ctm",
+    "Drogas",
+    "Esperma",
+    "Fiesta de salchichas",
+    "Follador",
+    "Follar",
+    "Gilipichis",
+    "Gilipollas",
+    "Hacer una paja",
+    "Haciendo el amor",
+    "Heroína",
+    "Hija de puta",
+    "Hijaputa",
+    "Hijo de puta",
+    "Hijoputa",
+    "Huevón",
+    "Huevon",
+    "Idiota",
+    "Imbécil",
+    "infierno",
+    "Jilipollas",
+    "Joputa",
+    "Kapullo",
+    "Lameculos",
+    "Maciza",
+    "Macizorra",
+    "maldito",
+    "mal nacido",
+    "malnacido",
+    "Mamada",
+    "Marica",
+    "Maricón",
+    "Maricon",
+    "Mariconazo",
+    "martillo",
+    "Mierda",
+    "Mrd",
+    "Mierdoso",
+    "Musaraña",
+    "Nazi",
+    "Negra de mierda",
+    "Negro de mierda",
+    "Orina",
+    "Paja",
+    "Pedo",
+    "Pendejo",
+    "Pervertido",
+    "Perra",
+    "Pezón",
+    "Pinche",
+    "Pis",
+    "Prostituta",
+    "Puta",
+    "Pucta",
+    "Ptmr",
+    "Ptm",
+    "Ptmre",
+    "Puto",
+    "Racista",
+    "Ramera",
+    "Sádico",
+    "Semen",
+    "Sexo",
+    "Sexo oral",
+    "Soplagaitas",
+    "Soplapollas",
+    "Soplón",
+    "Soplon",
+    "Tetas grandes",
+    "Tarado",
+    "Tía buena",
+    "Travesti",
+    "Trio",
+    "Verga",
+    "Vagina",
+    "vete a la mierda",
+    "Vulva",
+    "Zorra",
+  ];
+
   const { usuario } = useUsuario();
 
   const params = useParams<Params>();
@@ -71,15 +179,14 @@ const Comentarios: React.FC = () => {
     e.preventDefault();
     if (comentario.comentario === "") return toast.warning("No ha escrito un comentario");
     const vocales = ["a", "e", "i", "o", "u"];
-    for (let i = 0; i < malasPalabras.length; i++) {
-      const element = malasPalabras[i];
+    for (let i = 0; i < badWords.length; i++) {
+      const element = badWords[i];
       let elemento = element;
       if (vocales.includes(elemento.charAt(elemento.length - 1))) elemento = element.slice(0, element.length - 1);
       if (comentario.comentario.toLowerCase().includes(element.toLowerCase()) || comentario.comentario.toLowerCase().includes(elemento.toLowerCase())) {
         return swal({ title: "Advertencia", text: `No se permiten este tipo de comentarios: ${element}`, icon: "warning" });
       }
     }
-
     const res = await comentariosServices.crearComentario(comentario, params.idCurso, params.idTema);
     if (res.data.error) return swal({ title: "Ups!", text: `${res.data.error}`, icon: "error" });
 
@@ -110,7 +217,7 @@ const Comentarios: React.FC = () => {
   const getComentarios = async () => {
     const res = await comentariosServices.getAll(page, params.idCurso, params.idTema);
     if (res.data.error) return;
-    
+
     setComentarios(res.data.comentarios);
   };
 
@@ -153,7 +260,7 @@ const Comentarios: React.FC = () => {
                     ) : (
                       <></>
                     )}
-                    <TimeAgo style={{ fontSize: "12px" }} className="text-black-50" datetime={comentarioItem.fecha} live={false} locale="vi" />
+                    <TimeAgo style={{ fontSize: "12px" }} className="text-black-50" datetime={new Date(comentarioItem.fecha)} live={false} locale="vi" />
                   </div>
                   {usuario.id_rango === 1 ? (
                     <>

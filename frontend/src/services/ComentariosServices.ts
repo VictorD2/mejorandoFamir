@@ -12,6 +12,7 @@ export const getCount = async (idCurso: string, idTema?: string) => {
 };
 
 export const crearComentario = async (comentario: Comentario, idCurso: string, idTema: string) => {
+  comentario.fecha = new Date().toString();
   comentario.id_tema = parseInt(idTema);
   comentario.id_curso = parseInt(idCurso);
   return await axios.post(`${api}/${idCurso}/${idTema}`, comentario);

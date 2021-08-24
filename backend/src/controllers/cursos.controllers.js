@@ -6,13 +6,19 @@ const path = require("path");
 //.get('/:tipo/:modalidad')
 ctrlCursos.getCursos = async (req, res) => {
   try {
+    let habilitado = "";
+    if (!req.user) {
+      habilitado = "AND habilitado = '1'";
+    } else {
+      req.user.id_rango == "1" ? (habilitado = "") : (habilitado = "AND habilitado = '1'");
+    }
     const tipo = req.params.tipo == "Talleres" ? "Taller" : "Curso";
     const modalidad = req.params.modalidad == "Asincronicos" ? "Asincrónico" : "Sincrónico";
     let datosSQL = "*";
     datosSQL = "nombre,apellido,descripcion,duracion,enlace,horario,id_curso,modalidad,precio,tipo,capacidad,url_foto_curso,nombre_curso,habilitado";
 
     if (req.query.keyword && req.query.page) {
-      const data = await pool.query(`SELECT ${datosSQL} FROM curso JOIN usuario ON usuario.id_usuario = curso.id_usuario WHERE (tipo = '${tipo}' AND modalidad = '${modalidad}') AND (nombre_curso LIKE '%${req.query.keyword}%')`);
+      const data = await pool.query(`SELECT ${datosSQL} FROM curso JOIN usuario ON usuario.id_usuario = curso.id_usuario WHERE (tipo = '${tipo}' AND modalidad = '${modalidad}') AND (nombre_curso LIKE '%${req.query.keyword}%' ${habilitado})`);
       for (let i = 0; i < data.length; i++) delete data[i].password;
       const cantidadDatos = 12;
       const pagina = (parseInt(req.query.page) - 1) * cantidadDatos;
@@ -20,7 +26,7 @@ ctrlCursos.getCursos = async (req, res) => {
     }
 
     if (req.query.keyword) {
-      const data = await pool.query(`SELECT ${datosSQL} FROM curso JOIN usuario ON usuario.id_usuario = curso.id_usuario WHERE (tipo = '${tipo}' AND modalidad = '${modalidad}') AND (nombre_curso LIKE '%${req.query.keyword}%')`);
+      const data = await pool.query(`SELECT ${datosSQL} FROM curso JOIN usuario ON usuario.id_usuario = curso.id_usuario WHERE (tipo = '${tipo}' AND modalidad = '${modalidad}') AND (nombre_curso LIKE '%${req.query.keyword}%' ${habilitado})`);
       for (let i = 0; i < data.length; i++) delete data[i].password;
       return res.json({ success: "Datos obtenidos", cursos: data });
     }
@@ -28,11 +34,11 @@ ctrlCursos.getCursos = async (req, res) => {
     if (req.query.page) {
       const cantidadDatos = 12;
       const pagina = (parseInt(req.query.page) - 1) * cantidadDatos;
-      const data = await pool.query(`SELECT ${datosSQL} FROM curso JOIN usuario ON usuario.id_usuario = curso.id_usuario WHERE tipo = '${tipo}' AND modalidad = '${modalidad}'`);
+      const data = await pool.query(`SELECT ${datosSQL} FROM curso JOIN usuario ON usuario.id_usuario = curso.id_usuario WHERE tipo = '${tipo}' AND modalidad = '${modalidad}' ${habilitado}`);
       for (let i = 0; i < data.length; i++) delete data[i].password;
       return res.json({ success: "Datos obtenidos", cursos: data.splice(pagina, cantidadDatos) });
     }
-    const data = await pool.query(`SELECT ${datosSQL} FROM curso JOIN usuario ON usuario.id_usuario = curso.id_usuario WHERE tipo = '${tipo}' AND modalidad = '${modalidad}'`);
+    const data = await pool.query(`SELECT ${datosSQL} FROM curso JOIN usuario ON usuario.id_usuario = curso.id_usuario WHERE tipo = '${tipo}' AND modalidad = '${modalidad}' ${habilitado}`);
     for (let i = 0; i < data.length; i++) delete data[i].password;
     res.json({ success: "Datos obtenidos", cursos: data });
   } catch (error) {
@@ -44,14 +50,20 @@ ctrlCursos.getCursos = async (req, res) => {
 //.get('/count/:tipo/:modalidad')
 ctrlCursos.getCount = async (req, res) => {
   try {
+    let habilitado = "";
+    if (!req.user) {
+      habilitado = "AND habilitado = '1'";
+    } else {
+      req.user.id_rango == "1" ? (habilitado = "") : (habilitado = "AND habilitado = '1'");
+    }
     const tipo = req.params.tipo == "Talleres" ? "Taller" : "Curso";
     const modalidad = req.params.modalidad == "Asincronicos" ? "Asincrónico" : "Sincrónico";
     if (req.query.keyword) {
-      const data = await pool.query(`SELECT COUNT(*) FROM curso WHERE (tipo = ? AND modalidad = ?) AND (nombre_curso LIKE '%${req.query.keyword}%')`, [tipo, modalidad]);
+      const data = await pool.query(`SELECT COUNT(*) FROM curso WHERE (tipo = ? AND modalidad = ?) AND (nombre_curso LIKE '%${req.query.keyword}%') ${habilitado}`, [tipo, modalidad]);
       if (data[0]["COUNT(*)"]) return res.json(data[0]["COUNT(*)"]);
       return res.json(0);
     }
-    const rows = await pool.query("SELECT COUNT(*) FROM curso WHERE tipo = ? AND modalidad = ?", [tipo, modalidad]);
+    const rows = await pool.query(`SELECT COUNT(*) FROM curso WHERE tipo = ? AND modalidad = ? ${habilitado}`, [tipo, modalidad]);
     if (rows[0]["COUNT(*)"]) return res.json(rows[0]["COUNT(*)"]);
     return res.json(0);
   } catch (error) {
@@ -63,7 +75,13 @@ ctrlCursos.getCount = async (req, res) => {
 //.get('/:id')
 ctrlCursos.getCursoById = async (req, res) => {
   try {
-    const rows = await pool.query("SELECT * FROM curso WHERE id_curso = ?", [req.params.id]);
+    let habilitado = "";
+    if (!req.user) {
+      habilitado = "AND habilitado = '1'";
+    } else {
+      req.user.id_rango == "1" ? (habilitado = "") : (habilitado = "AND habilitado = '1'");
+    }
+    const rows = await pool.query(`SELECT * FROM curso WHERE id_curso = ? ${habilitado}`, [req.params.id]);
     if (rows.length === 0) return res.json({ error: "No existe tal curso" });
     return res.json({ success: "Dato obtenido", curso: rows[0] });
   } catch (error) {
@@ -77,10 +95,10 @@ ctrlCursos.verificarSub = async (req, res) => {
   try {
     if (!req.user) return res.json(false);
     if (req.user.id_rango === 1 || req.user.id_rango === 3) return res.json(true);
-    
+
     const rows = await pool.query("SELECT * FROM usuario_curso WHERE id_curso = ? AND id_usuario = ?", [req.params.id_curso, req.user.id_usuario]);
     if (rows[0]) return res.json(true);
-    
+
     return res.json(false);
   } catch (error) {
     console.log(error);
@@ -127,7 +145,6 @@ ctrlCursos.updateCurso = async (req, res) => {
 
       newCurso.url_foto_curso = `/uploads/fotosCursos/${req.file.filename}`;
     }
-
     const rows = await pool.query("UPDATE curso set ? WHERE id_curso = ?", [newCurso, req.params.id]);
     if (rows.affectedRows === 1) return res.json({ success: "Curso actualizado" }); //Se logró actualizar
     return res.json({ error: "Ocurrió un error" });

@@ -15,6 +15,7 @@ export const getComprobanteById = async (id?: number) => {
 };
 // CREAR
 export const crearComprobante = async (form: FormData, idCurso: string, idUsuario?: string) => {
+  form.append("fecha_enviado", new Date().toString());
   form.append("id_curso", idCurso);
   form.append("id_usuario", idUsuario + "");
   return await axios.post(`${api}`, form, {

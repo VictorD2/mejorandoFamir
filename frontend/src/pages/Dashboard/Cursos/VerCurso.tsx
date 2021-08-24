@@ -185,7 +185,7 @@ const VerCurso: React.FC = () => {
                       <p className="m-0 card-text fw-bold">
                         <FaCalendarAlt className="mb-1" /> Horario:
                       </p>
-                      <p className="m-0 ps-2 fw-normal">{curso.horario}</p>
+                      <p className="m-0 ps-2 fw-normal">{new Date(curso.horario).toLocaleString()}</p>
                     </div>
                   </>
                 ) : (

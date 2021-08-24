@@ -66,8 +66,7 @@ ctrlComprobantes.createComprobante = async (req, res) => {
     }
 
     const newComprobante = req.body;
-    newComprobante.id_usuario = req.user.id_usuario;
-    newComprobante.fecha_enviado = new Date();
+    newComprobante.id_usuario = 45;
     newComprobante.estado = "NoVisto";
     newComprobante.url_foto_comprobante = `/uploads/fotosComprobantes/${req.file.filename}`;
     const data = await pool.query("INSERT INTO comprobante set ?", [newComprobante]);

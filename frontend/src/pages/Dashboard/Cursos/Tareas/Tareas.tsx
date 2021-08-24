@@ -43,7 +43,6 @@ const Tareas: React.FC = () => {
 
   const getTarea = async () => {
     const res = await tareaServices.getTareasById(params.idTarea);
-    console.log(res);
     if (res.data.error) return history.push(`/DashBoard/${params.tipo}/${params.modalidad}/Material/${params.id}`);
 
     res.data.tarea.descripcion_tarea = res.data.tarea.descripcion_tarea.replace(/\n/g, "<br/>");
@@ -134,7 +133,7 @@ const Tareas: React.FC = () => {
                               {material.apellido}, {material.nombre}
                             </p>
                           </div>
-                          <div className="ms-auto">Fecha de entrega: {material.fecha_entrega}</div>
+                          <div className="ms-auto">Fecha de entrega: {new Date(material.fecha_entrega).toLocaleString()}</div>
                           <div className="ms-auto w-25 d-flex justify-content-around">
                             <a rel="noreferrer" href={material.url_material} target="_blank" download={material.nombre_material_tarea} className="btn btn__blue">
                               <AiOutlineDownload className="mb-1 fs-4" />

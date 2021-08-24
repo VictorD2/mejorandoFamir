@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import { useHistory, useParams } from "react-router-dom";
 import { Tarea } from "../../interfaces/Tarea";
 import { FiSend } from "react-icons/fi";
@@ -8,7 +7,6 @@ import * as tareaServices from "../../services/TareaServices";
 import * as cursosServices from "../../services/CursosServices";
 import { MaterialTarea } from "../../interfaces/MaterialTarea";
 import swal from "sweetalert";
-import { API } from "../../config/config";
 interface Params {
   idTarea: string;
   idCurso: string;
@@ -47,9 +45,6 @@ const TareaFullPage: React.FC = () => {
     setTarea(res.data.tarea);
   };
   const authentificar = async () => {
-    const datos = await axios.get(`${API}/api/v0/usuarios/whoami`);
-    if (datos.data.error) return history.push("/Iniciar");
-    if (!datos.data.user.authenticate) return history.push("/Iniciar"); //Poner ! en produccion
     const res = await cursosServices.verificarSuscribcion(params.idCurso);
     if (!res.data) history.push(`/Clase/${params.idCurso}`); //Poner ! en produccion
   };
@@ -65,6 +60,7 @@ const TareaFullPage: React.FC = () => {
     e.preventDefault();
     const form = new FormData();
     if (tareaMaterial.material) form.append("material_tarea", tareaMaterial.material[0]);
+    form.append("fecha_entrega", new Date().toString());
     form.append("id_tarea", tarea.id_tarea + "");
     const res = await tareaServices.crearMaterialTarea(form);
     if (res.data.error) return swal({ title: "Ups!", text: res.data.error, icon: "error" });

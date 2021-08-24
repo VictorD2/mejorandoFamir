@@ -7,7 +7,7 @@ import Modulos from "./Modulos";
 
 //Iconos
 import { GiTeacher } from "react-icons/gi";
-import { FaDollarSign } from "react-icons/fa";
+import { FaCalendarAlt, FaDollarSign } from "react-icons/fa";
 import { GrShop } from "react-icons/gr";
 
 //Imagenes
@@ -20,6 +20,7 @@ import * as profesoresServices from "../../services/ProfesoresServices";
 import { Curso } from "../../interfaces/Curso";
 import { Usuario } from "../../interfaces/Usuario";
 import { Modulo } from "../../interfaces/Modulo";
+import { FiClock } from "react-icons/fi";
 
 interface Params {
   idCurso: string;
@@ -71,12 +72,12 @@ const CursoFullPage: React.FC = () => {
 
     setModulos(resModulos.data.modulos);
     setProfesor(resProfesor.data.profesor);
-    verificarSub();
+
+    const resV = await cursoServices.verificarSuscribcion(params.idCurso);
+    setVerificacionSub(resV.data);
+    if (!resV.data) delete res.data.curso.enlace;
+
     setCurso(res.data.curso);
-  };
-  const verificarSub = async () => {
-    const res = await cursoServices.verificarSuscribcion(params.idCurso);
-    setVerificacionSub(res.data);
   };
 
   return (
@@ -88,6 +89,9 @@ const CursoFullPage: React.FC = () => {
               <img src={curso.url_foto_curso} className="img-fluid ancho-img" alt={`Curso`} />
             </div>
             <div className="column-detail">
+              <h3 className="fw-bold">
+                {curso.tipo} {curso.modalidad}
+              </h3>
               <h3 className="fw-bold">{curso.nombre_curso}</h3>
               <div className="row mt-3 mt-lg-5">
                 <div className="d-flex align-items-center">
@@ -100,14 +104,39 @@ const CursoFullPage: React.FC = () => {
                   <FaDollarSign className="me-2" />
                   <span className="me-1">Precio: {curso.precio}</span>
                 </div>
+                {curso.modalidad === "Sincrónico" ? (
+                  <>
+                    <div className="d-flex align-items-center mt-2">
+                      <FaCalendarAlt className="me-2" />
+                      <span className="me-1">Horario: {new Date(curso.horario).toLocaleString()}</span>
+                    </div>
+                    <div className="d-flex align-items-center mt-2">
+                      <FiClock className="me-2" />
+                      <span className="me-1">Duración: {curso.duracion} horas</span>
+                    </div>
+                    {verificacionSub ? (
+                      <>
+                        <div className="d-flex align-items-center mt-2">
+                          <span className="me-1">Enlace: <a href={curso.enlace}>{curso.enlace}</a></span>
+                        </div>
+                      </>
+                    ) : null}
+                  </>
+                ) : null}
               </div>
               <p className="m-0 mt-2 fw-bold">Descripción:</p>
               <p ref={(node) => (refDescripcion.current = node)} style={{ textAlign: "justify" }} className="m-0"></p>
               <div className="row mt-5">
-                <Link to={`/Comprar/${params.idCurso}`} className="btn btn-warning btn-width d-flex justify-content-center align-items-center">
-                  <GrShop className="me-2 text-danger" />
-                  Comprar curso
-                </Link>
+                {verificacionSub ? (
+                  <></>
+                ) : (
+                  <>
+                    <Link to={`/Comprar/${params.idCurso}`} className="btn btn-warning btn-width d-flex justify-content-center align-items-center">
+                      <GrShop className="me-2 text-danger" />
+                      Comprar curso
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
