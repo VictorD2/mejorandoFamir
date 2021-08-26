@@ -9,8 +9,8 @@ const ListaTopCursos:React.FC = () => {
         <div className="row">
           <div className="col-12">
             <div className="top-cursos-heading">
-              <span className="show">The best</span>
-              <h3 className="show">Top Popular Courses</h3>
+              <span className="show">Lo mejor</span>
+              <h3 className="show">Nuestros Cursos</h3>
             </div>
           </div>
         </div>

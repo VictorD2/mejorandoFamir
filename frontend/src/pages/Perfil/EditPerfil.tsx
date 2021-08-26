@@ -101,7 +101,7 @@ const EditPerfil: React.FC = () => {
             <div className="col-12 col-lg-5 col-md-12">
               <div draggable="true" className="cuadroEditPerfil" onDragOver={handleDragOver} onDrop={handleDrop}>
                 <figure className="editProfile-img">
-                  <img id="avatar" src={profileImg.toString()} alt="Mi avatar" width="200" height="200" />
+                  <img id="avatar" src={profileImg.toString()} className="loadPerfil img-fluid" alt="Mi avatar" width="200" height="200" />
                 </figure>
                 <div style={{ color: "#696969" }}>
                   <input type="file" id="inputFile" style={{ display: "none" }} onChange={handleChange} />

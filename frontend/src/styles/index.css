@@ -583,8 +583,15 @@ code {
   border-radius: 50%;
   background: #a3a3a3;
   margin-right: 0.5rem;
-  width: 110px;
-  height: 110px;
+  width: 6.875rem;
+  height: 6.875rem;
+  border-style: solid;
+  border-color: var(--verde-oscuro);
+}
+
+.loadPerfil {
+  width: 12.5rem;
+  height: 12.5rem;
   border-style: solid;
   border-color: var(--verde-oscuro);
 }

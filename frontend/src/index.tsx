@@ -1,6 +1,5 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom";
-import App from "./app/App";
 import reportWebVitals from "./reportWebVitals";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,11 +12,17 @@ import "admin-lte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css";
 import "admin-lte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js";
 import "admin-lte/dist/js/adminlte.min.js";
 
-
 import "./styles/index.css";
+
+import PageLoading from "./partials/PageLoading";
+
+const App = lazy(() => import('./app/App'));
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Suspense fallback={<PageLoading />}>
+      <App />
+    </Suspense>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -17,8 +17,8 @@ const ListaOpiniones: React.FC = () => {
         <div className="row">
           <div className="col-12">
             <div className="opinions-heading">
-              <span className="show">Our Testimonials</span>
-              <h3 className="show">See what our satisfied customers are saying about us</h3>
+              <span className="show">Nuestros Testimonios</span>
+              <h3 className="show">Vea lo que dicen nuestros clientes satisfechos sobre nosotros</h3>
             </div>
           </div>
         </div>
