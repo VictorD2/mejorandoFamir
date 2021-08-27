@@ -1,4 +1,11 @@
-import React, { ChangeEvent, FormEvent, useState, useRef, RefObject, useEffect } from "react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useState,
+  useRef,
+  RefObject,
+  useEffect,
+} from "react";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
@@ -15,6 +22,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "animate.css/animate.min.css";
 
 import { useUsuario } from "../auth/UsuarioProvider";
+import exprRegular from "../encrypt/regularExpr";
 
 // Interfaces
 interface Usuario {
@@ -51,16 +59,6 @@ const Register: React.FC = () => {
     verifyPassword: "",
   });
 
-  // const validacion = ['password', 'verifyPassword'];
-
-  const exprRegular = {
-    usuario: /^[a-zA-Z0-9_-]{4,16}$/, // Letras, numeros, guion y guion_bajo
-    nombre: /^[a-zA-ZÀ-ÿ.\s]{1,40}$/, // Letras y espacios, pueden llevar acentos.
-    password: /^.{4,12}$/, // 4 a 12 digitos.
-    correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, // name@example.com
-    telefono: /^\d{9,14}$/, // 7 a 14 numeros.
-  };
-
   // CAPTCHA State
   const [captchaValidation, setCaptchaValidation] = useState<Boolean>();
 
@@ -70,14 +68,23 @@ const Register: React.FC = () => {
   const parrafoName = useRef<HTMLParagraphElement>(null);
   const parrafoSurname = useRef<HTMLParagraphElement>(null);
   const parrafoEmail = useRef<HTMLInputElement>(null);
-  const parrafoProfesion = useRef<HTMLInputElement>(null);
-  const parrafoTelephone = useRef<HTMLInputElement>(null);
+  const parrafoProfesion = useRef<HTMLParagraphElement>(null);
+  const parrafoTelephone = useRef<HTMLParagraphElement>(null);
+  const parrafoRut = useRef<HTMLParagraphElement>(null);
 
   const refPasswordVerify = useRef<HTMLInputElement>(null);
   const refPassword = useRef<HTMLInputElement>(null);
   const [paises, setPaises] = useState<Pais[]>([]);
-  const [paisNaci, setPaisNaci] = useState<Pais>({ nombre_pais: "Afganistan", id_pais: "AF", url_foto_pais: "/uploads/paises/afganistan.png" });
-  const [paisResi, setPaisResi] = useState<Pais>({ nombre_pais: "Afganistan", id_pais: "AF", url_foto_pais: "/uploads/paises/afganistan.png" });
+  const [paisNaci, setPaisNaci] = useState<Pais>({
+    nombre_pais: "Afganistan",
+    id_pais: "AF",
+    url_foto_pais: "/uploads/paises/afganistan.png",
+  });
+  const [paisResi, setPaisResi] = useState<Pais>({
+    nombre_pais: "Afganistan",
+    id_pais: "AF",
+    url_foto_pais: "/uploads/paises/afganistan.png",
+  });
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -96,24 +103,54 @@ const Register: React.FC = () => {
     if (captcha.current?.getValue()) setCaptchaValidation(true);
   };
 
-  //Set state
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  // Validación de campos
+  const validation = (
+    expr: RegExp,
+    input: EventTarget & (HTMLInputElement | HTMLSelectElement),
+    msg: RefObject<HTMLParagraphElement>
+  ) => {
+    if (expr.test(input.value)) {
+      input.classList.remove("is-invalid");
+      msg.current?.classList.add("d-none");
+      return;
+    }
+    input.classList.add("is-invalid");
+    msg.current?.classList.remove("d-none");
+  };
+
+  const validationPassword = () => {
+    if (refPassword.current?.value === refPasswordVerify.current?.value) {
+      refPassword.current?.classList.remove("is-invalid");
+      refPasswordVerify.current?.classList.remove("is-invalid");
+      return;
+    }
+    refPassword.current?.classList.add("is-invalid");
+    refPasswordVerify.current?.classList.add("is-invalid");
+  };
+
+  // Change Event
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setUsuarioR({ ...usuarioR, [e.target.name]: e.target.value });
     switch (e.target.name) {
       case "name":
-        validation(exprRegular.nombre, e.target.value, e.target, parrafoName);
+        validation(exprRegular.nombre, e.target, parrafoName);
         break;
       case "surname":
-        validation(exprRegular.nombre, e.target.value, e.target, parrafoSurname);
+        validation(exprRegular.nombre, e.target, parrafoSurname);
         break;
       case "email":
-        validation(exprRegular.correo, e.target.value, e.target, parrafoEmail);
+        validation(exprRegular.correo, e.target, parrafoEmail);
         break;
       case "profesion":
-        validation(exprRegular.nombre, e.target.value, e.target, parrafoProfesion);
+        validation(exprRegular.nombre, e.target, parrafoProfesion);
         break;
       case "telefono":
-        validation(exprRegular.telefono, e.target.value, e.target, parrafoTelephone);
+        validation(exprRegular.telefono, e.target, parrafoTelephone);
+        break;
+      case "rut":
+        validation(exprRegular.rut, e.target, parrafoRut);
         break;
       case "password":
         validationPassword();
@@ -142,7 +179,11 @@ const Register: React.FC = () => {
     }
   };
 
-  const enviarDatos = async (user: any, url_foto_residencia: string, url_foto_nacimiento: string) => {
+  const enviarDatos = async (
+    user: any,
+    url_foto_residencia: string,
+    url_foto_nacimiento: string
+  ) => {
     user.url_foto_residencia = url_foto_residencia;
     user.url_foto_nacimiento = url_foto_nacimiento;
     return await axios.post(`${API}/signup`, user);
@@ -152,10 +193,22 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (captcha.current?.getValue()) {
-      // console.log('El usuario no es un Robot');
-      // if (usuario.password !== usuario.verifyPassword) return toast.error('Las contraseña nos coinciden');
-      if (exprRegular.nombre.test(usuarioR.name) && exprRegular.nombre.test(usuarioR.surname) && usuarioR.password === usuarioR.verifyPassword && exprRegular.correo.test(usuarioR.email) && exprRegular.telefono.test(usuarioR.telefono)) {
-        const datos = await enviarDatos(usuarioR, paisResi.url_foto_pais, paisNaci.url_foto_pais);
+      if (
+        exprRegular.nombre.test(usuarioR.name) &&
+        exprRegular.nombre.test(usuarioR.surname) &&
+        usuarioR.password === usuarioR.verifyPassword &&
+        exprRegular.correo.test(usuarioR.email) &&
+        exprRegular.nombre.test(usuarioR.profesion) &&
+        exprRegular.telefono.test(usuarioR.telefono) &&
+        usuarioR.id_pais_nacimiento &&
+        usuarioR.id_pais_residencia &&
+        exprRegular.rut.test(usuarioR.rut)
+      ) {
+        const datos = await enviarDatos(
+          usuarioR,
+          paisResi.url_foto_pais,
+          paisNaci.url_foto_pais
+        );
         if (datos.data.success) {
           setUsuario(datos.data.user);
           auth.setRango(datos.data.user.id_rango);
@@ -166,30 +219,10 @@ const Register: React.FC = () => {
         setCaptchaValidation(true);
         return;
       }
+      return swal("Oops!", "Campos invalidos", "error");
     } else {
       setCaptchaValidation(false);
     }
-  };
-
-  // Validación de campos
-  const validation = (expr: RegExp, valor: string, input: EventTarget & (HTMLInputElement | HTMLSelectElement), msg: RefObject<HTMLParagraphElement>) => {
-    if (expr.test(valor)) {
-      input.classList.remove("is-invalid");
-      msg.current?.classList.add("d-none");
-      return;
-    }
-    input.classList.add("is-invalid");
-    msg.current?.classList.remove("d-none");
-  };
-
-  const validationPassword = () => {
-    if (refPassword.current?.value === refPasswordVerify.current?.value) {
-      refPassword.current?.classList.remove("is-invalid");
-      refPasswordVerify.current?.classList.remove("is-invalid");
-      return;
-    }
-    refPassword.current?.classList.add("is-invalid");
-    refPasswordVerify.current?.classList.add("is-invalid");
   };
 
   return (
@@ -203,13 +236,27 @@ const Register: React.FC = () => {
         <div className="card-body">
           <div className="row">
             <div className="col-12 rgt__form">
-              <form className="needs-validation" noValidate onSubmit={handleSubmit}>
+              <form
+                className="needs-validation"
+                noValidate
+                onSubmit={handleSubmit}
+              >
                 <div className="row">
                   <div className="col-md-6">
                     <div className="mb-3">
                       <label className="form-label">Nombres</label>
-                      <input value={usuarioR.name} onChange={handleInputChange} className="form-control rgt__form-control" type="text" name="name" />
-                      <p className="text-danger fw-light d-none mt-2" ref={parrafoName} style={{ fontSize: "0.75rem" }}>
+                      <input
+                        value={usuarioR.name}
+                        onChange={handleInputChange}
+                        className="form-control rgt__form-control"
+                        type="text"
+                        name="name"
+                      />
+                      <p
+                        className="text-danger fw-light d-none mt-2"
+                        ref={parrafoName}
+                        style={{ fontSize: "0.75rem" }}
+                      >
                         El nombre solo puede contener letras y espacios.
                       </p>
                     </div>
@@ -217,8 +264,18 @@ const Register: React.FC = () => {
                   <div className="col-md-6">
                     <div className="mb-3">
                       <label className="form-label">Apellidos</label>
-                      <input value={usuarioR.surname} onChange={handleInputChange} className="form-control rgt__form-control" type="text" name="surname" />
-                      <p className="text-danger fw-light d-none mt-2" ref={parrafoSurname} style={{ fontSize: "0.75rem" }}>
+                      <input
+                        value={usuarioR.surname}
+                        onChange={handleInputChange}
+                        className="form-control rgt__form-control"
+                        type="text"
+                        name="surname"
+                      />
+                      <p
+                        className="text-danger fw-light d-none mt-2"
+                        ref={parrafoSurname}
+                        style={{ fontSize: "0.75rem" }}
+                      >
                         El apellido solo puede contener letras y espacios.
                       </p>
                     </div>
@@ -226,8 +283,19 @@ const Register: React.FC = () => {
                   <div className="col-md-6">
                     <div className="mb-3">
                       <label className="form-label">Correo</label>
-                      <input value={usuarioR.email} onChange={handleInputChange} className="form-control rgt__form-control" type="email" name="email" placeholder="name@example.com" />
-                      <p className="text-danger fw-light d-none mt-2" ref={parrafoEmail} style={{ fontSize: "0.75rem" }}>
+                      <input
+                        value={usuarioR.email}
+                        onChange={handleInputChange}
+                        className="form-control rgt__form-control"
+                        type="email"
+                        name="email"
+                        placeholder="name@example.com"
+                      />
+                      <p
+                        className="text-danger fw-light d-none mt-2"
+                        ref={parrafoEmail}
+                        style={{ fontSize: "0.75rem" }}
+                      >
                         El email debe tener formato name@example.com
                       </p>
                     </div>
@@ -235,8 +303,18 @@ const Register: React.FC = () => {
                   <div className="col-md-6">
                     <div className="mb-3">
                       <label className="form-label">Profesión</label>
-                      <input value={usuarioR.profesion} onChange={handleInputChange} className="form-control rgt__form-control" type="text" name="profesion" />
-                      <p className="text-danger fw-light d-none mt-2" ref={parrafoProfesion} style={{ fontSize: "0.75rem" }}>
+                      <input
+                        value={usuarioR.profesion}
+                        onChange={handleInputChange}
+                        className="form-control rgt__form-control"
+                        type="text"
+                        name="profesion"
+                      />
+                      <p
+                        className="text-danger fw-light d-none mt-2"
+                        ref={parrafoProfesion}
+                        style={{ fontSize: "0.75rem" }}
+                      >
                         La profesion debe contener letras y espacios
                       </p>
                     </div>
@@ -244,10 +322,23 @@ const Register: React.FC = () => {
                   <div className="col-md-6">
                     <div className="input-group mb-3">
                       <p className="w-100 mb-0">Pais de Nacimiento</p>
-                      <label className="input-group-text" htmlFor="inputGroupSelect01">
-                        <img src={paisNaci.url_foto_pais} className="img__pais register" alt="" />
+                      <label
+                        className="input-group-text"
+                        htmlFor="inputGroupSelect01"
+                      >
+                        <img
+                          src={paisNaci.url_foto_pais}
+                          className="img__pais register"
+                          alt=""
+                        />
                       </label>
-                      <select value={usuarioR.id_pais_nacimiento} onChange={handleInputChange} className="form-control rgt__form-control" name="id_pais_nacimiento" id="inputGroupSelect01">
+                      <select
+                        value={usuarioR.id_pais_nacimiento}
+                        onChange={handleInputChange}
+                        className="form-control rgt__form-control"
+                        name="id_pais_nacimiento"
+                        id="inputGroupSelect01"
+                      >
                         {paises.map((pais) => {
                           return (
                             <option key={pais.id_pais} value={pais.id_pais}>
@@ -261,10 +352,23 @@ const Register: React.FC = () => {
                   <div className="col-md-6">
                     <div className="input-group mb-3">
                       <p className="w-100 mb-0"> Pais de Residencia</p>
-                      <label className="input-group-text" htmlFor="inputGroupSelect02">
-                        <img src={paisResi.url_foto_pais} className="img__pais register" alt="" />
+                      <label
+                        className="input-group-text"
+                        htmlFor="inputGroupSelect02"
+                      >
+                        <img
+                          src={paisResi.url_foto_pais}
+                          className="img__pais register"
+                          alt=""
+                        />
                       </label>
-                      <select value={usuarioR.id_pais_residencia} onChange={handleInputChange} className="form-control rgt__form-control" name="id_pais_residencia" id="inputGroupSelect02">
+                      <select
+                        value={usuarioR.id_pais_residencia}
+                        onChange={handleInputChange}
+                        className="form-control rgt__form-control"
+                        name="id_pais_residencia"
+                        id="inputGroupSelect02"
+                      >
                         {paises.map((pais) => {
                           return (
                             <option key={pais.id_pais} value={pais.id_pais}>
@@ -279,8 +383,19 @@ const Register: React.FC = () => {
                   <div className="col-md-6">
                     <div className="mb-3">
                       <label className="form-label">Teléfono</label>
-                      <input value={usuarioR.telefono} onChange={handleInputChange} className="form-control rgt__form-control" type="text" name="telefono" placeholder="Telefono" />
-                      <p className="text-danger fw-light d-none mt-2" ref={parrafoTelephone} style={{ fontSize: "0.75rem" }}>
+                      <input
+                        value={usuarioR.telefono}
+                        onChange={handleInputChange}
+                        className="form-control rgt__form-control"
+                        type="text"
+                        name="telefono"
+                        placeholder="Telefono"
+                      />
+                      <p
+                        className="text-danger fw-light d-none mt-2"
+                        ref={parrafoTelephone}
+                        style={{ fontSize: "0.75rem" }}
+                      >
                         El telefono solo debe tener 9 a 14 numeros
                       </p>
                     </div>
@@ -288,28 +403,71 @@ const Register: React.FC = () => {
                   <div className="col-md-6">
                     <div className="mb-3">
                       <label className="form-label">RUT / DNI</label>
-                      <input value={usuarioR.rut} onChange={handleInputChange} className="form-control rgt__form-control" type="text" name="rut" placeholder="RUT o DNI" />
+                      <input
+                        value={usuarioR.rut}
+                        onChange={handleInputChange}
+                        className="form-control rgt__form-control"
+                        type="text"
+                        name="rut"
+                        placeholder="RUT o DNI"
+                      />
+                      <p
+                        className="text-danger fw-light d-none mt-2"
+                        ref={parrafoRut}
+                        style={{ fontSize: "0.75rem" }}
+                      >
+                        El rut/dni solo debe tener 8 o 9 digitos
+                      </p>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="mb-3">
                       <label className="form-label">Contraseña</label>
-                      <input value={usuarioR.password} onChange={handleInputChange} ref={refPassword} className="form-control rgt__form-control" type="password" name="password" />
+                      <input
+                        value={usuarioR.password}
+                        onChange={handleInputChange}
+                        ref={refPassword}
+                        className="form-control rgt__form-control"
+                        type="password"
+                        name="password"
+                      />
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="mb-3">
-                      <label className="form-label"> Confirmar contraseña </label>
-                      <input value={usuarioR.verifyPassword} onChange={handleInputChange} ref={refPasswordVerify} className="form-control rgt__form-control" type="password" name="verifyPassword" />
+                      <label className="form-label">
+                        {" "}
+                        Confirmar contraseña{" "}
+                      </label>
+                      <input
+                        value={usuarioR.verifyPassword}
+                        onChange={handleInputChange}
+                        ref={refPasswordVerify}
+                        className="form-control rgt__form-control"
+                        type="password"
+                        name="verifyPassword"
+                      />
                     </div>
                   </div>
                   <div className="recaptcha d-flex justify-content-center">
-                    <ReCAPTCHA ref={captcha} sitekey="6LejHikbAAAAADWr-hPzdVv7v7pU4m0M_ceI_6SB" onChange={onChange} />
+                    <ReCAPTCHA
+                      ref={captcha}
+                      sitekey="6LejHikbAAAAADWr-hPzdVv7v7pU4m0M_ceI_6SB"
+                      onChange={onChange}
+                    />
                   </div>
-                  {captchaValidation === false && <div className="text-center text-danger mt-2">Por favor acepta el captcha</div>}
+                  {captchaValidation === false && (
+                    <div className="text-center text-danger mt-2">
+                      Por favor acepta el captcha
+                    </div>
+                  )}
                   <div className="col-md-12">
                     <div className="rgt__button">
-                      <button type="submit" className="btn btn__more" style={{ padding: "0.7rem 2rem" }}>
+                      <button
+                        type="submit"
+                        className="btn btn__more"
+                        style={{ padding: "0.7rem 2rem" }}
+                      >
                         Registrar
                       </button>
                     </div>
