@@ -40,6 +40,7 @@ const initialStateCurso = {
   enlace: "",
   id_usuario: 0,
   url_foto_curso: "",
+  uri_carpeta_vimeo:""
 };
 
 const initialStateModulo = {
@@ -171,7 +172,7 @@ const MaterialCurso: React.FC = () => {
         </section>
       </div>
       <ModalModulo load={getAllModulos} moduloModal={moduloModal} />
-      <ModalTema count={count} setcount={setcount} moduloModal={moduloModal} temaModal={temaModal} />
+      <ModalTema curso={curso} count={count} setcount={setcount} moduloModal={moduloModal} temaModal={temaModal} />
       <ModalMaterial count={count} setcount={setcount} temaModal={temaModal} />
       <ModalTarea count={count} setcount={setcount} tareaModal={tareaModal} moduloModal={moduloModal} />
     </>

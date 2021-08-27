@@ -21,11 +21,13 @@ import { Curso } from "../../interfaces/Curso";
 import { Usuario } from "../../interfaces/Usuario";
 import { Modulo } from "../../interfaces/Modulo";
 import { FiClock } from "react-icons/fi";
+import { AiOutlineLink } from "react-icons/ai";
 
 interface Params {
   idCurso: string;
 }
 const initialState: Curso = {
+  uri_carpeta_vimeo:"",
   descripcion: "",
   enlace: "",
   nombre_curso: "",
@@ -82,9 +84,9 @@ const CursoFullPage: React.FC = () => {
 
   return (
     <>
-      <div className="p-5" style={{ marginTop: "5rem", background: "#eef3f6" }}>
+      <div className="p-1 p-lg-5 mb-5" style={{ marginTop: "5rem", background: "#eef3f6" }}>
         <div className="row flex-lg-row">
-          <div className="col-12 ps-5 col-sm-12 col-lg-5 col-md-12 mb-2 mb-lg-5 mt-sm-5 mt-lg-0">
+          <div className="col-12 ps-3 ps-lg-5 col-sm-12 col-lg-5 col-md-12 mb-2 mb-lg-5 mt-sm-5 mt-lg-0">
             <div className="my-auto d-lg-none d-flex">
               <img src={curso.url_foto_curso} className="img-fluid ancho-img" alt={`Curso`} />
             </div>
@@ -117,7 +119,11 @@ const CursoFullPage: React.FC = () => {
                     {verificacionSub ? (
                       <>
                         <div className="d-flex align-items-center mt-2">
-                          <span className="me-1">Enlace: <a href={curso.enlace}>{curso.enlace}</a></span>
+                          <AiOutlineLink className="me-2" />
+                          <span className="me-0"> Enlace: </span>
+                          <a className="w-75" href={curso.enlace}>
+                            <p className="w-100 text-truncate mb-0">{curso.enlace}</p>
+                          </a>
                         </div>
                       </>
                     ) : null}

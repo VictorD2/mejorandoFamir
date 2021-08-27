@@ -1,6 +1,7 @@
 export interface Curso {
   id_curso?: number;
   nombre_curso: string;
+  uri_carpeta_vimeo:string;
   descripcion: string;
   calificacion?: number;
   url_foto_curso: string;

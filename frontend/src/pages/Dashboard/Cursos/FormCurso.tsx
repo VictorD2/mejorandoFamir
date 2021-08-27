@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { useParams, useHistory, Link } from "react-router-dom";
+import { Vimeo } from "vimeo";
+import VimeoKeys from "../../../interfaces/Vimeo";
 
 //Icons
 import { FaPlus, FaRegEdit } from "react-icons/fa";
@@ -26,6 +28,7 @@ interface Params {
 const FormCurso: React.FC = () => {
   const initialState = {
     nombre_curso: "",
+    uri_carpeta_vimeo: "",
     descripcion: "",
     precio: 0,
     duracion: 0,
@@ -69,15 +72,19 @@ const FormCurso: React.FC = () => {
 
   //Traer los datos del curso si esta en update
   const getCurso = async (id: string) => {
+    const numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const res = await CursosServices.getCursoById(id);
     if (res.data.error) return history.push("/Dashboard");
     if (res.data.curso.horario) {
       // const fecha = res.data.curso.horario.replace(" ", "T");
       const fecha = new Date(res.data.curso.horario);
       let cero = ``;
+      let ceroHora = ``;
+      let ceroDia = ``;
+      if (numeros.includes(fecha.getDate())) ceroDia = "0";
       if (!(fecha.getMonth() + 1 === 10 || fecha.getMonth() + 1 === 11 || fecha.getMonth() + 1 === 12)) cero = `0`;
-      const horario = `${fecha.getFullYear()}-${cero}${fecha.getMonth() + 1}-${fecha.getDate()}T${fecha.getHours()}:${fecha.getMinutes()}`;
-      console.log(horario);
+      if (!(fecha.getHours() === 10 || fecha.getHours() === 11 || fecha.getHours() === 12)) ceroHora = `0`;
+      const horario = `${fecha.getFullYear()}-${cero}${fecha.getMonth() + 1}-${ceroDia}${fecha.getDate()}T${ceroHora}${fecha.getHours()}:${fecha.getMinutes()}`;
       res.data.curso.horario = horario;
     }
     setCurso(res.data.curso);
@@ -101,6 +108,7 @@ const FormCurso: React.FC = () => {
   //Evento submit
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    let client = new Vimeo(VimeoKeys.CLIENT_ID, VimeoKeys.CLIENT_SECRET, VimeoKeys.CLIENT_TOKEN);
     const form = new FormData();
     form.append("nombre_curso", curso.nombre_curso);
     form.append("descripcion", curso.descripcion);
@@ -110,32 +118,36 @@ const FormCurso: React.FC = () => {
     form.append("horario", new Date(curso.horario).toString());
     form.append("capacidad", curso.capacidad + "");
     form.append("id_usuario", curso.id_usuario + "");
-    if (curso.foto_curso) form.append("fotoCurso", curso.foto_curso[0]);
-
+    // Nuevo
     if (!params.id) {
-      const res = await CursosServices.crearCurso(form, tipo, modalidad, refProgresss.current);
+      client.request({ method: "POST", path: "me/projects", query: { name: curso.nombre_curso } }, async (error, body, status_code, headers) => {
+        if (error) return toast.error(error);
+        form.append("uri_carpeta_vimeo", body.uri);
+        if (curso.foto_curso) form.append("fotoCurso", curso.foto_curso[0]);
+        const res = await CursosServices.crearCurso(form, tipo, modalidad, refProgresss.current);
+        if (res.data.error) return toast.error(res.data.error);
+        borrarInputFile();
+        if (refProgresss.current) {
+          refProgresss.current.innerHTML = "0%";
+          refProgresss.current.style.width = "0%";
+        }
+        return history.push(`/Dashboard/${params.tipo}/${params.modalidad}`);
+      });
+    }
 
+    // Editar
+    client.request({ method: "PATCH", path: curso.uri_carpeta_vimeo, query: { name: curso.nombre_curso } }, async (error, body, status_code, headers) => {
+      if (error) return toast.error(error);
+      form.append("uri_carpeta_vimeo", body.uri);
+      const res = await CursosServices.updateCurso(params.id, form, refProgresss.current);
       if (res.data.error) return toast.error(res.data.error);
-
+      toast.success(res.data.success);
       borrarInputFile();
       if (refProgresss.current) {
         refProgresss.current.innerHTML = "0%";
         refProgresss.current.style.width = "0%";
       }
-
-      return history.push(`/Dashboard/${params.tipo}/${params.modalidad}`);
-    }
-    const res = await CursosServices.updateCurso(params.id, form, refProgresss.current);
-
-    if (res.data.error) return toast.error(res.data.error);
-
-    toast.success(res.data.success);
-    borrarInputFile();
-
-    if (refProgresss.current) {
-      refProgresss.current.innerHTML = "0%";
-      refProgresss.current.style.width = "0%";
-    }
+    });
   };
 
   return (

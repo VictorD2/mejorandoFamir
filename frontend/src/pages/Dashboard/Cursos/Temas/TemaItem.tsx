@@ -1,4 +1,6 @@
 import React from "react";
+import { Vimeo } from "vimeo";
+import VimeoKeys from "../../../../interfaces/Vimeo";
 
 //Icons
 import { FaEdit, FaEye, FaPlus, FaTimes } from "react-icons/fa";
@@ -39,11 +41,14 @@ const TemaItem: React.FC<Props> = (props) => {
   //Funciones
   const eliminarTema = async () => {
     if (!window.confirm("¿Está seguro que desea eliminar el tema?")) return;
-
-    const res = await temaServices.eliminarTema(props.tema.id_tema + "");
-    if (res.data.error) return toast.error(res.data.error);
-    toast.success(res.data.success);
-    props.setcount(props.count + 1);
+    let client = new Vimeo(VimeoKeys.CLIENT_ID, VimeoKeys.CLIENT_SECRET, VimeoKeys.CLIENT_TOKEN);
+    client.request({ method: "DELETE", path: props.tema.url_video }, async (error, body, status_code, headers) => {
+      if (error) return toast.error(error);
+      const res = await temaServices.eliminarTema(props.tema.id_tema + "");
+      if (res.data.error) return toast.error(res.data.error);
+      toast.success(res.data.success);
+      props.setcount(props.count + 1);
+    });
   };
 
   const setModales = () => {
@@ -63,7 +68,14 @@ const TemaItem: React.FC<Props> = (props) => {
         <ul className="dropdown-menu">
           {/* Agregar Material */}
           <li>
-            <button onClick={() => { props.setTemaModal(props.tema); }} data-bs-toggle="modal" data-bs-target="#crearMaterial" className="dropdown-item" >
+            <button
+              onClick={() => {
+                props.setTemaModal(props.tema);
+              }}
+              data-bs-toggle="modal"
+              data-bs-target="#crearMaterial"
+              className="dropdown-item"
+            >
               <FaPlus className="mb-1" /> Agregar Material
             </button>
           </li>
@@ -77,7 +89,14 @@ const TemaItem: React.FC<Props> = (props) => {
 
           {/* Editar tema */}
           <li>
-            <button onClick={() => { setModales(); }} data-bs-toggle="modal" data-bs-target="#crearTema" className="dropdown-item" >
+            <button
+              onClick={() => {
+                setModales();
+              }}
+              data-bs-toggle="modal"
+              data-bs-target="#crearTema"
+              className="dropdown-item"
+            >
               <FaEdit className="mb-1" /> Editar Tema
             </button>
           </li>

@@ -7,7 +7,6 @@ import { API } from "../../config/config";
 import { FaDownload } from "react-icons/fa";
 
 //Componentes
-import VideoReproductor from "../../components/VideoReproductor";
 import Comentarios from "../Comentarios/Comentarios";
 
 //Poster video
@@ -53,7 +52,7 @@ const TemaFullPage: React.FC = () => {
 
   const history = useHistory();
 
-  const [tema, setTema] = useState<Tema>();
+  const [tema, setTema] = useState<Tema>({ titulo: "", descripcion: "", url_video: "" });
 
   const refDesc = useRef<HTMLParagraphElement | null>();
 
@@ -62,14 +61,14 @@ const TemaFullPage: React.FC = () => {
   const [settings, setSettings] = useState<VideoJsPlayerOptions>(initialVideoState);
 
   const getTema = async () => {
-
     const res = await temaServices.getTemaById(params.idTema);
     if (res.data.error) return history.push("/");
+    res.data.tema.url_video = res.data.tema.url_video.slice(8, res.data.tema.url_video.length);
 
     res.data.tema.descripcion = res.data.tema.descripcion.replace(/\n/g, "<br/>");
     if (refDesc.current) refDesc.current.innerHTML = res.data.tema.descripcion;
     setTema(res.data.tema);
-    
+
     setSettings({ ...settings, sources: [{ src: `${API}/video-lock?key=1v4g8h6vcesm&Tema=${res.data.tema.url_video}`, type: "video/mp4" }] });
     setLoadingVideo(true);
 
@@ -103,9 +102,10 @@ const TemaFullPage: React.FC = () => {
         <div className="row">
           <div className="col-12 col-sm-7 col-lg-7 mb-5">
             {loadingVideo ? (
+              // width="550" height="470"
               <>
-                <div className="border border-blue">
-                  <VideoReproductor settings={settings} />
+                <div className="w-100">
+                  <iframe className="w-100 bg-white d-flex align-items-center video__reproductor" title={tema.titulo} src={`https://player.vimeo.com/video/${tema.url_video}`} frameBorder={0} allowFullScreen />
                 </div>
               </>
             ) : (

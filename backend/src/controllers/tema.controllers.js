@@ -50,19 +50,8 @@ ctrlTema.actualizarTema = async (req, res) => {
     const { titulo, descripcion, id_modulo, id_tema } = req.body;
     const newTema = { titulo, descripcion, id_modulo, id_tema };
 
-    // if (req.file) {
-    //   const tema = await pool.query("SELECT * FROM tema WHERE id_tema = ?", [id_tema]);
-
-    //   if (tema[0].url_video.search(`/uploads/video/${req.file.filename}`) == -1) await fs.unlink(path.join(__dirname, "../" + tema[0].url_video));
-
-    //   newTema.url_video = `/uploads/video/${req.file.filename}`;
-    // }
-
-    const rows = await pool.query("UPDATE tema set ? WHERE id_tema = ?", [newTema, newTema.id_tema]);
-
-    if (rows.affectedRows === 1) return res.json({ success: "Tema modificado correctamente" }); //Se logró registrar
-
-    return res.json({ error: "Ocurrió un error" });
+    await pool.query("UPDATE tema set ? WHERE id_tema = ?", [newTema, newTema.id_tema]);
+    return res.json({ success: "Tema modificado correctamente" }); //Se logró registrar
   } catch (error) {
     console.log(error);
     return res.json({ error: "Ocurrió un error" });

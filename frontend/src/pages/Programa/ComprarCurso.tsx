@@ -26,6 +26,7 @@ interface Params {
   idCurso: string;
 }
 const initialState: Curso = {
+  uri_carpeta_vimeo:"",
   descripcion: "",
   enlace: "",
   horario: "",

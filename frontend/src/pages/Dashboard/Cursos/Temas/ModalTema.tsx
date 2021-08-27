@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { Vimeo } from "vimeo";
-
+import VimeoKeys from "../../../../interfaces/Vimeo";
 //
 import * as temaServices from "../../../../services/TemaServices";
 
@@ -13,8 +14,10 @@ import { toast } from "react-toastify";
 // Interfaces
 import { Modulo } from "../../../../interfaces/Modulo";
 import { Tema } from "../../../../interfaces/Tema";
+import { Curso } from "../../../../interfaces/Curso";
 
 interface Props {
+  curso: Curso;
   count: number;
   setcount: (count: number) => void;
   moduloModal: Modulo;
@@ -29,6 +32,7 @@ const initialState = {
 };
 
 const ModalTema: React.FC<Props> = (props) => {
+  const refBtnClose = useRef<HTMLButtonElement | null>();
   const refInput = useRef<HTMLInputElement | null>();
   const refProgresss = useRef<HTMLDivElement | null>();
 
@@ -46,7 +50,7 @@ const ModalTema: React.FC<Props> = (props) => {
     form.append("titulo", tema.titulo);
     form.append("descripcion", tema.descripcion);
     form.append("id_modulo", "" + props.moduloModal.id_modulo);
-    let client = new Vimeo("72c9aa8a9e250995e93ecaa6a674f4be900f94d5", "CN9HBV8c4SysOm9ClGhvRWgYkPTph/dRjEjGfX7mdQHxcC37En73pNO1gOyxRA9WKI2EN+tihBVDl65bn0iT3rjk4JAuQWMjVNwQa75HkcpBliSDn/awvZgCWDGXNXo2", "8f13e445f1bb7a608fae8462eb419b86");
+    let client = new Vimeo(VimeoKeys.CLIENT_ID, VimeoKeys.CLIENT_SECRET, VimeoKeys.CLIENT_TOKEN);
     let file_name = new File([""], "filename");
     if (tema.video) file_name = tema.video[0];
     if (!props.temaModal.id_tema) {
@@ -55,29 +59,55 @@ const ModalTema: React.FC<Props> = (props) => {
         {
           name: tema.titulo,
           description: tema.descripcion,
-        },
-
-        // Terminó de subirse
-        async function (uri) {
-          client.request(
-            {
-              method: "PATCH",
-              path: uri,
-              query: {
-                privacy: {
-                  view: "disable",
-                },
+          // opciones embebidas
+          embed: {
+            buttons: {
+              like: false, //Me gusta
+              watchlater: false, //Ver despues
+              share: false, //Compartir
+              embed: false, //Insertar
+              hd: true,
+              fullscreen: true,
+              scaling: true,
+            },
+            logos: {
+              vimeo: false, //Logo de vimeo
+              custom: {
+                active: true,
+                link: "https://www.facebook.com/famircentro",
+                sticky: false,
               },
             },
-            function (error, body, status_code, headers) {
-              console.log(uri + " will now require a password to be viewed on Vimeo.");
-            }
-          );
+            title: {
+              name: "hide",
+              owner: "hide",
+              portrait: "hide",
+            },
+            privacy: {
+              download: false,
+            },
+          },
+        },
+        // Terminó de subirse
+        async function (uri) {
+          // Privacidad del video
+          client.request({ method: "PATCH", path: uri, query: { privacy: { view: "disable" } } }, function (error, body, status_code, headers) {});
+
+          // Whitelist
+          client.request({ method: "PUT", path: uri + "/privacy/domains/estudioochoamaldonado.com" }, function (error, body, status_code, headers) {
+            client.request({ method: "PATCH", path: uri, query: { privacy: { embed: "whitelist" } } }, function (error, body, status_code, headers) {});
+          });
+
+          // Meter el video en su carpeta correspondiente
+          client.request({ method: "PUT", path: props.curso.uri_carpeta_vimeo + "/" + uri }, (error, body, status_code, headers) => {});
+
+          // Own DB
           form.append("url_video", "" + uri);
           const res = await temaServices.crearTema(form);
           props.setcount(props.count + 1);
-
           if (res.data.error) return toast.error(res.data.error);
+
+          if (refBtnClose.current) refBtnClose.current.click();
           borrarInputFile(); //Borrando el valor del input file
           if (refProgresss.current) {
             refProgresss.current.innerHTML = "0%";
@@ -97,7 +127,6 @@ const ModalTema: React.FC<Props> = (props) => {
             refProgresss.current.innerHTML = percentage;
           }
         },
-
         // Error
         function (error) {
           toast.error(error);
@@ -108,17 +137,62 @@ const ModalTema: React.FC<Props> = (props) => {
     }
 
     //Editar
-    form.append("id_tema", "" + tema.id_tema);
-    const res = await temaServices.editarTema(props.temaModal.id_tema + "", form);
-    props.setcount(props.count + 1);
-    if (refInput.current) refInput.current.value = "";
-    if (res.data.error) return toast.error(res.data.error);
-    borrarInputFile(); //Borrando el valor del input file
-    if (refProgresss.current) {
-      refProgresss.current.innerHTML = "0%";
-      refProgresss.current.style.width = "0%";
+    if (tema.video) {
+      //Si hay un video
+      client.replace(
+        file_name, //Archivo
+        tema.url_video, //Id del video a reemplazar
+        { name: tema.titulo, description: tema.descripcion }, //Descripcion
+        async function (uri) {
+          // Own DB
+          form.append("url_video", "" + uri);
+          const res = await temaServices.editarTema(tema.id_tema + "", form);
+          props.setcount(props.count + 1);
+          if (res.data.error) return toast.error(res.data.error);
+
+          client.request({ method: "PATCH", path: uri, query: {} }, function (error, body, status_code, headers) {
+            // console.log(uri + " will now require a password to be viewed on Vimeo.");
+          });
+          if (refBtnClose.current) refBtnClose.current.click();
+          borrarInputFile(); //Borrando el valor del input file
+          if (refProgresss.current) {
+            refProgresss.current.innerHTML = "0%";
+            refProgresss.current.style.width = "0%";
+          }
+          setTema(initialState);
+          props.setcount(props.count + 1);
+          toast.success(res.data.success);
+          return;
+        },
+
+        // Va cargando
+        function (bytes_uploaded, bytes_total) {
+          let percentage = ((bytes_uploaded / bytes_total) * 100).toFixed(2);
+          if (refProgresss.current) {
+            refProgresss.current.style.width = `${percentage}%`;
+            refProgresss.current.innerHTML = percentage;
+          }
+        },
+        // Error
+        function (error) {
+          toast.error(error);
+          console.log("Failed because: " + error);
+        }
+      );
+    } else {
+      form.append("id_tema", "" + tema.id_tema);
+      const res = await temaServices.editarTema(props.temaModal.id_tema + "", form);
+      props.setcount(props.count + 1);
+      if (refInput.current) refInput.current.value = "";
+      if (res.data.error) return toast.error(res.data.error);
+      if (refBtnClose.current) refBtnClose.current.click();
+      borrarInputFile(); //Borrando el valor del input file
+      if (refProgresss.current) {
+        refProgresss.current.innerHTML = "0%";
+        refProgresss.current.style.width = "0%";
+      }
+      toast.success(res.data.success);
     }
-    toast.success(res.data.success);
   };
 
   const borrarInputFile = () => {
@@ -185,7 +259,7 @@ const ModalTema: React.FC<Props> = (props) => {
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+              <button type="button" ref={(node) => (refBtnClose.current = node)} className="btn btn-secondary" data-bs-dismiss="modal">
                 Cerrar
               </button>
               {props.temaModal.id_tema ? (

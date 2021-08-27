@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
+import { Vimeo } from "vimeo";
+import VimeoKeys from "../../../../interfaces/Vimeo";
 // import { API } from "../../../config/config";
 // import { Vimeo } from "vimeo";
 //Iconos
@@ -36,6 +38,7 @@ const VerTema: React.FC = () => {
   const [tema, setTema] = useState<Tema>({ titulo: "", descripcion: "", url_video: "" });
   const [material, setMaterial] = useState<MaterialClase[]>([]);
   const [loadingVideo, setLoadingVideo] = useState<boolean>(false);
+  const [transcode, setTranscode] = useState<boolean>(false);
 
   useEffect(() => {
     getTema();
@@ -52,7 +55,19 @@ const VerTema: React.FC = () => {
   const getTema = async () => {
     const res = await temaServices.getTemaById(params.idTema);
     if (res.data.error) return history.push("/Dashboard");
-
+    let client = new Vimeo(VimeoKeys.CLIENT_ID, VimeoKeys.CLIENT_SECRET, VimeoKeys.CLIENT_TOKEN);
+    client.request(res.data.tema.url_video + "?fields=transcode.status", function (error, body, status_code, headers) {
+      if (error) return console.log(error);
+      if (body) {
+        if (body.transcode.status === "complete") {
+          setTranscode(true);
+        } else if (body.transcode.status === "in_progress") {
+          setTranscode(false);
+        } else {
+          console.log("Your video encountered an error during transcoding.");
+        }
+      }
+    });
     res.data.tema.url_video = res.data.tema.url_video.slice(8, res.data.tema.url_video.length);
     res.data.tema.descripcion = res.data.tema.descripcion.replace(/\n/g, "<br/>");
     setTema(res.data.tema);
@@ -118,9 +133,20 @@ const VerTema: React.FC = () => {
                   <div className="col-12">
                     {loadingVideo ? (
                       <>
-                        <div className="w-100">
-                          <iframe title={tema.titulo} src={`https://player.vimeo.com/video/${tema.url_video}`} width="540" height="310" frameBorder={0} allowFullScreen />
-                        </div>
+                        {transcode ? (
+                          <>
+                            <div className="w-100 contenedor__video">
+                              <iframe className="w-100 d-flex align-items-center video__reproductor bg-white" title={tema.titulo} src={`https://player.vimeo.com/video/${tema.url_video}`} frameBorder={0} allowFullScreen />
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="d-flex flex-column justify-content-center align-items-center bg-dark w-100" style={{ height: 430 }}>
+                              <div className="loader mb-3"></div>
+                              El video está siendo procesado aún
+                            </div>
+                          </>
+                        )}
                       </>
                     ) : (
                       <>

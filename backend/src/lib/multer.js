@@ -6,7 +6,7 @@ const storageVideos = multer.diskStorage({
   destination: path.join(__dirname, "../uploads/video"),
   filename: (req, file, cb) => {
     const fecha = new Date();
-    cb(null, `${fecha.getDate()}-${fecha.getMonth()}-${fecha.getFullYear()}-${fecha.getHours()}${fecha.getMinutes()}${fecha.getSeconds()}${file.originalname}`);
+    cb(null, `${fecha.getDate()}-${fecha.getMonth()+1}-${fecha.getFullYear()}-${fecha.getHours()}${fecha.getMinutes()}${fecha.getSeconds()}${file.originalname}`);
   },
 });
 const filterVideos = (req, file, cb) => {
@@ -23,21 +23,21 @@ const storageFotosPerfil = multer.diskStorage({
   destination: path.join(__dirname, "../build/uploads/fotosPerfil"),
   filename: (req, file, cb) => {
     const fecha = new Date();
-    cb(null, `${fecha.getDate()}-${fecha.getMonth()}-${fecha.getFullYear()}-${fecha.getHours()}${fecha.getMinutes()}${fecha.getSeconds()}${file.originalname}`);
+    cb(null, `${fecha.getDate()}-${fecha.getMonth()+1}-${fecha.getFullYear()}-${fecha.getHours()}${fecha.getMinutes()}${fecha.getSeconds()}${file.originalname}`);
   },
 });
 const storageFotosCursos = multer.diskStorage({
   destination: path.join(__dirname, "../build/uploads/fotosCursos"),
   filename: (req, file, cb) => {
     const fecha = new Date();
-    cb(null, `${fecha.getDate()}-${fecha.getMonth()}-${fecha.getFullYear()}-${fecha.getHours()}${fecha.getMinutes()}${fecha.getSeconds()}${file.originalname}`);
+    cb(null, `${fecha.getDate()}-${fecha.getMonth()+1}-${fecha.getFullYear()}-${fecha.getHours()}${fecha.getMinutes()}${fecha.getSeconds()}${file.originalname}`);
   },
 });
 const storageFotosComprobantes = multer.diskStorage({
   destination: path.join(__dirname, "../build/uploads/fotosComprobantes"),
   filename: (req, file, cb) => {
     const fecha = new Date();
-    cb(null, `${fecha.getDate()}-${fecha.getMonth()}-${fecha.getFullYear()}-${fecha.getHours()}${fecha.getMinutes()}${fecha.getSeconds()}${file.originalname}`);
+    cb(null, `${fecha.getDate()}-${fecha.getMonth()+1}-${fecha.getFullYear()}-${fecha.getHours()}${fecha.getMinutes()}${fecha.getSeconds()}${file.originalname}`);
   },
 });
 const filterFotos = async (req, file, cb) => {
@@ -52,14 +52,14 @@ const storageArchivos = multer.diskStorage({
   destination: path.join(__dirname, "../build/uploads/material"),
   filename: (req, file, cb) => {
     const fecha = new Date();
-    cb(null, `${fecha.getDate()}-${fecha.getMonth()}-${fecha.getFullYear()}-${fecha.getHours()}${fecha.getMinutes()}${fecha.getSeconds()}${file.originalname}`);
+    cb(null, `${fecha.getDate()}-${fecha.getMonth()+1}-${fecha.getFullYear()}-${fecha.getHours()}${fecha.getMinutes()}${fecha.getSeconds()}${file.originalname}`);
   },
 });
 const storageTareas = multer.diskStorage({
   destination: path.join(__dirname, "../build/uploads/tareas"),
   filename: (req, file, cb) => {
     const fecha = new Date();
-    cb(null, `${fecha.getDate()}-${fecha.getMonth()}-${fecha.getFullYear()}-${fecha.getHours()}${fecha.getMinutes()}${fecha.getSeconds()}${file.originalname}`);
+    cb(null, `${fecha.getDate()}-${fecha.getMonth()+1}-${fecha.getFullYear()}-${fecha.getHours()}${fecha.getMinutes()}${fecha.getSeconds()}${file.originalname}`);
   },
 });
 multerCtrl.videos = multer({ storage: storageVideos, fileFilter: filterVideos });

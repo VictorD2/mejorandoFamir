@@ -93,7 +93,7 @@ ctrlCursos.getCursoById = async (req, res) => {
 //.get('/sub/:id_curso')
 ctrlCursos.verificarSub = async (req, res) => {
   try {
-    if (!req.user) return res.json(false);
+    if (!req.user) return res.json(true);
     if (req.user.id_rango === 1 || req.user.id_rango === 3) return res.json(true);
 
     const rows = await pool.query("SELECT * FROM usuario_curso WHERE id_curso = ? AND id_usuario = ?", [req.params.id_curso, req.user.id_usuario]);
@@ -109,8 +109,8 @@ ctrlCursos.verificarSub = async (req, res) => {
 //.post('/')
 ctrlCursos.createCurso = async (req, res) => {
   try {
-    const { nombre_curso, descripcion, precio, duracion, horario, enlace, tipo, modalidad, capacidad, id_usuario } = req.body;
-    const newCurso = { nombre_curso, descripcion, precio, capacidad, duracion, horario, enlace, tipo, modalidad, id_usuario, habilitado: 1 };
+    const { nombre_curso, descripcion, precio, duracion, horario, enlace, tipo, modalidad, capacidad, id_usuario,uri_carpeta_vimeo } = req.body;
+    const newCurso = { nombre_curso, descripcion, precio, capacidad, duracion, horario, enlace, tipo, modalidad, id_usuario,uri_carpeta_vimeo, habilitado: 1 };
 
     if (modalidad === "Asincrónico") {
       delete newCurso.duracion;

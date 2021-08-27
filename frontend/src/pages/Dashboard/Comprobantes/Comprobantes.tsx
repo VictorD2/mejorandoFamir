@@ -40,6 +40,7 @@ const initialStateCurso: Curso = {
   nombre_curso: "",
   precio: 0,
   url_foto_curso: "",
+  uri_carpeta_vimeo:"",
 };
 
 const Comprobantes: React.FC = () => {

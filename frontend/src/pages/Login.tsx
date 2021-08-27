@@ -58,15 +58,6 @@ const Login: React.FC = () => {
             <h5 className="rgt__title">FAMIR CENTRO</h5>
           </Link>
           <div className="card-body px-4">
-            <div className="row pt-2">
-              {/* <div className="col-12">
-                <a href="auth/facebook" className="btn btn-primary w-100 icon__social">
-                  <FontAwesomeIcon icon={faFacebook} className="fs-3" />
-                  <span className="ms-3">Iniciar sesión con Facebook</span>
-                </a>
-              </div> */}
-            </div>
-
             <div className="row">
               <div className="col-12">
                 <form onSubmit={handleForm}>

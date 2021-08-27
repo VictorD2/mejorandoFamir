@@ -24,6 +24,7 @@ import { FiClock } from "react-icons/fi";
 
 const initialState: Curso = {
   nombre_curso: "",
+  uri_carpeta_vimeo:"",
   descripcion: "",
   precio: 0,
   duracion: 0,

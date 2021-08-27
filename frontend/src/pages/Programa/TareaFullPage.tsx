@@ -70,23 +70,27 @@ const TareaFullPage: React.FC = () => {
 
   return (
     <>
-      <div className="p-5" style={{ marginTop: "5rem", background: "#eef3f6" }}>
+      <div className="p-1 p-lg-5 mb-5" style={{ marginTop: "5rem", background: "#eef3f6" }}>
         <div className="row">
-          <div className="col-12 ps-5 col-sm-12 col-lg-12 mb-5">
+          <div className="col-12 ps-3 ps-lg-5 col-sm-12 col-lg-12 mb-5">
             <div className="column-detail">
               <h3 className="fw-bold">{tarea.titulo_tarea}</h3>
               <p className="m-0 mt-5 fw-bold">Instrucciones:</p>
               <p ref={(node) => (refDescripcion.current = node)} style={{ textAlign: "justify" }} className="m-0"></p>
               <div className="row mt-5">
                 <form onSubmit={handleFormSubmit}>
-                  <label htmlFor="formFile" className="form-label">
-                    Suba su archivo
-                  </label>
-                  <div className="mb-3 input-group w-50">
-                    <input required name="material" onChange={handleFile} ref={(node) => (refInput.current = node)} id="formFile" type="file" className="form-control" />
-                    <button type="submit" className="btn btn__blue">
-                      <FiSend /> Enviar
-                    </button>
+                  <div className="row">
+                    <div className="col-12 col-lg-6">
+                      <label htmlFor="formFile" className="form-label">
+                        Suba su archivo
+                      </label>
+                      <div className="mb-3 d-flex flex-lg-column flex-column align-items-start">
+                        <input required name="material" onChange={handleFile} ref={(node) => (refInput.current = node)} id="formFile" type="file" className="form-control" />
+                        <button type="submit" className="btn btn__blue mt-lg-3 mt-3">
+                          <FiSend /> Enviar
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </form>
               </div>
