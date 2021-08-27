@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "animate.css/animate.min.css";
 
 import { useUsuario } from "../auth/UsuarioProvider";
+import exprRegular from "../encrypt/regularExpr";
 
 // Interfaces
 interface Usuario {
@@ -51,16 +52,6 @@ const Register: React.FC = () => {
     verifyPassword: "",
   });
 
-  // const validacion = ['password', 'verifyPassword'];
-
-  const exprRegular = {
-    usuario: /^[a-zA-Z0-9_-]{4,16}$/, // Letras, numeros, guion y guion_bajo
-    nombre: /^[a-zA-ZÀ-ÿ.\s]{1,40}$/, // Letras y espacios, pueden llevar acentos.
-    password: /^.{4,12}$/, // 4 a 12 digitos.
-    correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, // name@example.com
-    telefono: /^\d{9,14}$/, // 7 a 14 numeros.
-  };
-
   // CAPTCHA State
   const [captchaValidation, setCaptchaValidation] = useState<Boolean>();
 
@@ -70,14 +61,23 @@ const Register: React.FC = () => {
   const parrafoName = useRef<HTMLParagraphElement>(null);
   const parrafoSurname = useRef<HTMLParagraphElement>(null);
   const parrafoEmail = useRef<HTMLInputElement>(null);
-  const parrafoProfesion = useRef<HTMLInputElement>(null);
-  const parrafoTelephone = useRef<HTMLInputElement>(null);
+  const parrafoProfesion = useRef<HTMLParagraphElement>(null);
+  const parrafoTelephone = useRef<HTMLParagraphElement>(null);
+  const parrafoRut = useRef<HTMLParagraphElement>(null);
 
   const refPasswordVerify = useRef<HTMLInputElement>(null);
   const refPassword = useRef<HTMLInputElement>(null);
   const [paises, setPaises] = useState<Pais[]>([]);
-  const [paisNaci, setPaisNaci] = useState<Pais>({ nombre_pais: "Afganistan", id_pais: "AF", url_foto_pais: "/uploads/paises/afganistan.png" });
-  const [paisResi, setPaisResi] = useState<Pais>({ nombre_pais: "Afganistan", id_pais: "AF", url_foto_pais: "/uploads/paises/afganistan.png" });
+  const [paisNaci, setPaisNaci] = useState<Pais>({
+    nombre_pais: "Afganistan",
+    id_pais: "AF",
+    url_foto_pais: "/uploads/paises/afganistan.png",
+  });
+  const [paisResi, setPaisResi] = useState<Pais>({
+    nombre_pais: "Afganistan",
+    id_pais: "AF",
+    url_foto_pais: "/uploads/paises/afganistan.png",
+  });
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -96,24 +96,48 @@ const Register: React.FC = () => {
     if (captcha.current?.getValue()) setCaptchaValidation(true);
   };
 
-  //Set state
+  // Validación de campos
+  const validation = (expr: RegExp, input: EventTarget & (HTMLInputElement | HTMLSelectElement), msg: RefObject<HTMLParagraphElement>) => {
+    if (expr.test(input.value)) {
+      input.classList.remove("is-invalid");
+      msg.current?.classList.add("d-none");
+      return;
+    }
+    input.classList.add("is-invalid");
+    msg.current?.classList.remove("d-none");
+  };
+
+  const validationPassword = () => {
+    if (refPassword.current?.value === refPasswordVerify.current?.value) {
+      refPassword.current?.classList.remove("is-invalid");
+      refPasswordVerify.current?.classList.remove("is-invalid");
+      return;
+    }
+    refPassword.current?.classList.add("is-invalid");
+    refPasswordVerify.current?.classList.add("is-invalid");
+  };
+
+  // Change Event
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setUsuarioR({ ...usuarioR, [e.target.name]: e.target.value });
     switch (e.target.name) {
       case "name":
-        validation(exprRegular.nombre, e.target.value, e.target, parrafoName);
+        validation(exprRegular.nombre, e.target, parrafoName);
         break;
       case "surname":
-        validation(exprRegular.nombre, e.target.value, e.target, parrafoSurname);
+        validation(exprRegular.nombre, e.target, parrafoSurname);
         break;
       case "email":
-        validation(exprRegular.correo, e.target.value, e.target, parrafoEmail);
+        validation(exprRegular.correo, e.target, parrafoEmail);
         break;
       case "profesion":
-        validation(exprRegular.nombre, e.target.value, e.target, parrafoProfesion);
+        validation(exprRegular.nombre, e.target, parrafoProfesion);
         break;
       case "telefono":
-        validation(exprRegular.telefono, e.target.value, e.target, parrafoTelephone);
+        validation(exprRegular.telefono, e.target, parrafoTelephone);
+        break;
+      case "rut":
+        validation(exprRegular.rut, e.target, parrafoRut);
         break;
       case "password":
         validationPassword();
@@ -152,9 +176,7 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (captcha.current?.getValue()) {
-      // console.log('El usuario no es un Robot');
-      // if (usuario.password !== usuario.verifyPassword) return toast.error('Las contraseña nos coinciden');
-      if (exprRegular.nombre.test(usuarioR.name) && exprRegular.nombre.test(usuarioR.surname) && usuarioR.password === usuarioR.verifyPassword && exprRegular.correo.test(usuarioR.email) && exprRegular.telefono.test(usuarioR.telefono)) {
+      if (exprRegular.nombre.test(usuarioR.name) && exprRegular.nombre.test(usuarioR.surname) && usuarioR.password === usuarioR.verifyPassword && exprRegular.correo.test(usuarioR.email) && exprRegular.nombre.test(usuarioR.profesion) && exprRegular.telefono.test(usuarioR.telefono) && usuarioR.id_pais_nacimiento && usuarioR.id_pais_residencia && exprRegular.rut.test(usuarioR.rut)) {
         const datos = await enviarDatos(usuarioR, paisResi.url_foto_pais, paisNaci.url_foto_pais);
         if (datos.data.success) {
           setUsuario(datos.data.user);
@@ -166,30 +188,10 @@ const Register: React.FC = () => {
         setCaptchaValidation(true);
         return;
       }
+      return swal("Oops!", "Campos invalidos", "error");
     } else {
       setCaptchaValidation(false);
     }
-  };
-
-  // Validación de campos
-  const validation = (expr: RegExp, valor: string, input: EventTarget & (HTMLInputElement | HTMLSelectElement), msg: RefObject<HTMLParagraphElement>) => {
-    if (expr.test(valor)) {
-      input.classList.remove("is-invalid");
-      msg.current?.classList.add("d-none");
-      return;
-    }
-    input.classList.add("is-invalid");
-    msg.current?.classList.remove("d-none");
-  };
-
-  const validationPassword = () => {
-    if (refPassword.current?.value === refPasswordVerify.current?.value) {
-      refPassword.current?.classList.remove("is-invalid");
-      refPasswordVerify.current?.classList.remove("is-invalid");
-      return;
-    }
-    refPassword.current?.classList.add("is-invalid");
-    refPasswordVerify.current?.classList.add("is-invalid");
   };
 
   return (
