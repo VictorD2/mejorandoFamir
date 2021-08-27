@@ -225,7 +225,7 @@ const NavBar:React.FC = () => {
           <div className="icon-phone">
             <AiOutlinePhone className="fs-3" />
           </div>
-          <p className="phone">56973952562</p>
+          <p className="phone">+56 973-952-562</p>
         </div>
       </nav>
 

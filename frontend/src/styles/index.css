@@ -296,9 +296,7 @@ code {
 /* Footer */
 
 .footer {
-  background-color: var(--azul-oscuro);
-  background: -webkit-linear-gradient(to left, var(--azul-claro), var(--azul-claro));
-  background: linear-gradient(to left, var(--azul-claro), var(--azul-oscuro));
+  background-color: #232323;
   display: flex;
   margin: 0;
   flex-direction: row;
@@ -345,6 +343,11 @@ code {
 .ftr__list {
   list-style: none;
   padding-left: 0;
+}
+
+.ftr__list li a:hover {
+  transition-duration: 0.5s;
+  color: var(--azul-claro) !important;
 }
 
 /*Inicio de estilos de Sobre Nosotros, Contactanos, Register and Login*/
@@ -588,8 +591,15 @@ code {
   border-radius: 50%;
   background: #a3a3a3;
   margin-right: 0.5rem;
-  width: 110px;
-  height: 110px;
+  width: 6.875rem;
+  height: 6.875rem;
+  border-style: solid;
+  border-color: var(--verde-oscuro);
+}
+
+.loadPerfil {
+  width: 12.5rem;
+  height: 12.5rem;
   border-style: solid;
   border-color: var(--verde-oscuro);
 }

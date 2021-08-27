@@ -8,7 +8,7 @@ import FormContact from "./FormContact";
 import ScrollReveal from "scrollreveal";
 
 // Icons
-import { faInstagram } from "@fortawesome/free-brands-svg-icons";
+import { faInstagram, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IoLocationOutline } from "react-icons/io5";
 import { AiOutlinePhone } from "react-icons/ai";
@@ -16,13 +16,13 @@ import { CgMail } from "react-icons/cg";
 import { FiFacebook } from "react-icons/fi";
 
 const Contactanos: React.FC = () => {
-  
+
   useEffect(() => {
     window.scrollTo({ top: 0 });
     //Para los efectos de aparicion
     const config = { duration: 1000, delay: 150, easing: "ease" };
     ScrollReveal().reveal(".show", config);
-    return () => {};
+    return () => { };
   }, []);
 
   return (
@@ -45,6 +45,9 @@ const Contactanos: React.FC = () => {
                 <a href="https://www.instagram.com/famircentro/" target="_BLANK" rel="noreferrer" className="cts__icons">
                   <FontAwesomeIcon icon={faInstagram} />
                 </a>
+                <a href="https://wa.me/56973952562" target="_blank" rel="noreferrer" className="cts__icons">
+                  <FontAwesomeIcon icon={faWhatsapp} />
+                </a>
               </div>
               <IoLocationOutline className="me-2 fs-4 cts__icons-unique" />
               <p className="cts__parrafo lh-lg" style={{ fontSize: "0.875rem" }}>
@@ -60,7 +63,7 @@ const Contactanos: React.FC = () => {
               <br />
               <CgMail className="me-2 fs-4 cts__icons-unique" />
               <p className="cts__parrafo lh-lg" style={{ fontSize: "0.875rem" }}>
-                centrofamir@gmail.com
+                <a href="mailto:centrofamir@gmail.com" style={{color: "#212529"}} target="_blank" rel="noopener noreferrer">centrofamir@gmail.com</a>
               </p>
             </div>
             <div className="col-md-6 show">

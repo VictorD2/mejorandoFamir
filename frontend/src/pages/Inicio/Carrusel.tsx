@@ -11,7 +11,7 @@ import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 //Componentes
 import CarruselItem from "./CarruselItem";
 
-const Carrusel:React.FC = () => {
+const Carrusel: React.FC = () => {
   // Para esconder y mostrar las flechas
   const desaparecerFlechas = (e: React.MouseEvent<HTMLDivElement>) => {
     document.querySelectorAll(".icon__carrusel")?.forEach((elemento) => {
@@ -27,13 +27,13 @@ const Carrusel:React.FC = () => {
           <div className="carousel-item carrousel-item active" style={{ backgroundImage: `url(${fondo1})`, height: 600 }}>
             <div className="carrousel-text row h-100 align-items-center">
               <div className="col-12">
-                <h5 className="carrousel-title">All the courses you need</h5>
-                <p className="carrousel-subtitle">Welcome to our university</p>
+                <h5 className="carrousel-title">Todos los cursos que necesitas</h5>
+                <p className="carrousel-subtitle">Bienvenido a nuestro sitio web</p>
               </div>
             </div>
           </div>
-          <CarruselItem img={fondo2} title={"All the courses you need"} subtitle={"Welcome to our university"} />
-          <CarruselItem img={fondo1} title={"All the courses you need"} subtitle={`Welcome to our university`} />
+          <CarruselItem img={fondo2} title={"Todos los cursos que necesitas"} subtitle={"Bienvenido a nuestro sitio web"} />
+          <CarruselItem img={fondo1} title={"Todos los cursos que necesitas"} subtitle={`Bienvenido a nuestro sitio web`} />
         </div>
 
         {/* Botones */}

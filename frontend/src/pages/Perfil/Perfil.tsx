@@ -23,7 +23,7 @@ const Perfil: React.FC = () => {
         <div className="container bg-light mt-5" style={{ marginBottom: "4.5rem" }}>
           <div className="row p-5 justify-content-center">
             <div className="col-lg-2 col-md-3">
-              <img src={usuario.url_foto_usuario} alt="foto" className="BadgesListItem__avatar me-5" />
+              <img src={usuario.url_foto_usuario || "https://picsum.photos/1050/900"} alt="foto" className="BadgesListItem__avatar me-5 img-fluid" />
             </div>
             <div className="col-md-5">
               <div className="row">

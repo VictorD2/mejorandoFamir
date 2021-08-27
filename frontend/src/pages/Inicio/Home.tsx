@@ -41,7 +41,7 @@ const Home: React.FC = () => {
             </div>
             <div className="w-100 caracteristicas-item">
               <FontAwesomeIcon className="fs-3" icon={faPhoneAlt} />
-              <h5 className="caracteristicas-text">Amazing Teachers</h5>
+              <h5 className="caracteristicas-text">Contactanos</h5>
             </div>
           </div>
         </div>

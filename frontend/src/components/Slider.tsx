@@ -5,9 +5,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 
 //Imagenes
-import img1 from "../images/bg-1.jpg";
-import img2 from "../images/bg-2.jpg";
-import img3 from "../images/bg-3.jpg";
+import img1 from "../images/1A.jpg";
+import img2 from "../images/1B.jpg";
+import img3 from "../images/1C.jpg";
 
 const Slider: React.FC = () => {
   return (

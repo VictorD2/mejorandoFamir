@@ -43,7 +43,7 @@ const FormContact: React.FC = () => {
         <div className="mb-3">
           <input onChange={inputHandleChange} name="email" value={contacto.email} type="email" className="form-control cts__form-control" placeholder="Correo" />
         </div>
-        <textarea onChange={inputHandleChange} name="message" value={contacto.message} className="form-control cts__form-control" cols={30} rows={10} placeholder="Mensaje"></textarea>
+        <textarea onChange={inputHandleChange} style={{resize: "none"}} name="message" value={contacto.message} className="form-control cts__form-control" cols={30} rows={10} placeholder="Mensaje"></textarea>
         <Boton name="Contactar" />
       </form>
     </div>

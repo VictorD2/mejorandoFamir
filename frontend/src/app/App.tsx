@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { useUsuario, UsuarioProvider } from "../auth/UsuarioProvider";
+import { UsuarioProvider } from "../auth/UsuarioProvider";
 
 // Pages
 import Home from "../pages/Inicio/Home";
@@ -31,70 +31,57 @@ import Cursos from "../pages/Dashboard/Cursos/Cursos";
 import FormCurso from "../pages/Dashboard/Cursos/FormCurso";
 import VerCurso from "../pages/Dashboard/Cursos/VerCurso";
 
-// Componentes
-import PageLoading from "../partials/PageLoading";
-
 // Layout
 import LayoutUsuario from "../partials/LayoutUsuario";
 import LayoutDash from "../partials/LayoutDash";
 
 
 function App() {
-  const { loadUser } = useUsuario();
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    setLoading(true);
-    window.onload = () => setLoading(false);
-  }, []);
   return (
     <BrowserRouter>
-      {loading && loadUser ? (
-        <PageLoading />
-      ) : (
-        <Switch>
-          {/* Vistas */}
-          <LayoutUsuario exact path="/" component={Home} />
-          <LayoutUsuario exact path="/Perfil" component={Perfil} />
-          <LayoutUsuario exact path="/Perfil/Editar" component={EditPerfil} />
-          <LayoutUsuario exact path="/Nosotros" component={AboutUs} />
-          <LayoutUsuario exact path="/Contactanos" component={Contactanos} />
-          <LayoutUsuario exact path="/Clases/:tipo/:modalidad" component={Programa} />
-          <LayoutUsuario exact path="/Clase/:idCurso" component={CursoFullPage} />
-          <LayoutUsuario exact path="/Clase/:idCurso/Tarea/:idTarea" component={TareaFullPage} />
-          <LayoutUsuario exact path="/Clase/:idCurso/:idTema" component={TemaFullPage} />
-          <LayoutUsuario exact path="/Comprar/:idCurso" component={ComprarCurso} />
-          <Route exact component={Login} path="/Iniciar" />
-          <Route exact component={Register} path="/Registrarse" />
-          
-          {/* Dashboard */}
-          <LayoutDash exact path="/DashBoard" component={DashBoard} />
+      <Switch>
+        {/* Vistas */}
+        <LayoutUsuario exact path="/" component={Home} />
+        <LayoutUsuario exact path="/Perfil" component={Perfil} />
+        <LayoutUsuario exact path="/Perfil/Editar" component={EditPerfil} />
+        <LayoutUsuario exact path="/Nosotros" component={AboutUs} />
+        <LayoutUsuario exact path="/Contactanos" component={Contactanos} />
+        <LayoutUsuario exact path="/Clases/:tipo/:modalidad" component={Programa} />
+        <LayoutUsuario exact path="/Clase/:idCurso" component={CursoFullPage} />
+        <LayoutUsuario exact path="/Clase/:idCurso/Tarea/:idTarea" component={TareaFullPage} />
+        <LayoutUsuario exact path="/Clase/:idCurso/:idTema" component={TemaFullPage} />
+        <LayoutUsuario exact path="/Comprar/:idCurso" component={ComprarCurso} />
+        <Route exact component={Login} path="/Iniciar" />
+        <Route exact component={Register} path="/Registrarse" />
 
-          {/* Usuarios */}
-          <LayoutDash exact path="/DashBoard/Usuarios" component={Usuarios} />
+        {/* Dashboard */}
+        <LayoutDash exact path="/DashBoard" component={DashBoard} />
 
-          {/* Profesores */}
-          <LayoutDash exact path="/DashBoard/Profesores" component={Profesores} />
-          <LayoutDash exact path="/DashBoard/Profesores/nuevo" component={FormProfesor} />
-          <LayoutDash exact path="/DashBoard/Profesores/update/:id" component={FormProfesor} />
+        {/* Usuarios */}
+        <LayoutDash exact path="/DashBoard/Usuarios" component={Usuarios} />
 
-          {/* Comprobantes */}
-          <LayoutDash exact path="/DashBoard/Comprobantes" component={Comprobantes} />
+        {/* Profesores */}
+        <LayoutDash exact path="/DashBoard/Profesores" component={Profesores} />
+        <LayoutDash exact path="/DashBoard/Profesores/nuevo" component={FormProfesor} />
+        <LayoutDash exact path="/DashBoard/Profesores/update/:id" component={FormProfesor} />
 
-          {/* Contactos */}
-          <LayoutDash exact path="/DashBoard/Contacto" component={ContactoDash} />
+        {/* Comprobantes */}
+        <LayoutDash exact path="/DashBoard/Comprobantes" component={Comprobantes} />
 
-          {/* Cursos */}
-          <LayoutDash exact path="/DashBoard/:tipo/:modalidad/material/:id/Tarea/:idTarea" component={Tareas} />
-          <LayoutDash exact path="/DashBoard/:tipo/:modalidad/material/:id" component={MaterialCurso} />
-          <LayoutDash exact path="/DashBoard/:tipo/:modalidad/material/:id/:idTema" component={VerTema} />
-          <LayoutDash exact path="/DashBoard/:tipo/:modalidad/nuevo" component={FormCurso} />
-          <LayoutDash exact path="/DashBoard/:tipo/:modalidad/update/:id" component={FormCurso} />
-          <LayoutDash exact path="/DashBoard/:tipo/:modalidad" component={Cursos} />
-          <LayoutDash exact path="/DashBoard/:tipo/:modalidad/:idCurso" component={VerCurso} />
+        {/* Contactos */}
+        <LayoutDash exact path="/DashBoard/Contacto" component={ContactoDash} />
 
-          <Route component={NotFound} />
-        </Switch>
-      )}
+        {/* Cursos */}
+        <LayoutDash exact path="/DashBoard/:tipo/:modalidad/material/:id/Tarea/:idTarea" component={Tareas} />
+        <LayoutDash exact path="/DashBoard/:tipo/:modalidad/material/:id" component={MaterialCurso} />
+        <LayoutDash exact path="/DashBoard/:tipo/:modalidad/material/:id/:idTema" component={VerTema} />
+        <LayoutDash exact path="/DashBoard/:tipo/:modalidad/nuevo" component={FormCurso} />
+        <LayoutDash exact path="/DashBoard/:tipo/:modalidad/update/:id" component={FormCurso} />
+        <LayoutDash exact path="/DashBoard/:tipo/:modalidad" component={Cursos} />
+        <LayoutDash exact path="/DashBoard/:tipo/:modalidad/:idCurso" component={VerCurso} />
+
+        <Route component={NotFound} />
+      </Switch>
     </BrowserRouter>
   );
 }
