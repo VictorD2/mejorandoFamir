@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { UsuarioProvider } from "../auth/UsuarioProvider";
 
 // Pages
+import Inhabilitado from "../pages/Inhabilitado";
 import Home from "../pages/Inicio/Home";
 import EditPerfil from "../pages/Perfil/EditPerfil";
 import Perfil from "../pages/Perfil/Perfil";
@@ -35,13 +36,13 @@ import VerCurso from "../pages/Dashboard/Cursos/VerCurso";
 import LayoutUsuario from "../partials/LayoutUsuario";
 import LayoutDash from "../partials/LayoutDash";
 
-
 function App() {
   return (
     <BrowserRouter>
       <Switch>
         {/* Vistas */}
         <LayoutUsuario exact path="/" component={Home} />
+        <LayoutUsuario exact path="/Inhabilitado" component={Inhabilitado} />
         <LayoutUsuario exact path="/Perfil" component={Perfil} />
         <LayoutUsuario exact path="/Perfil/Editar" component={EditPerfil} />
         <LayoutUsuario exact path="/Nosotros" component={AboutUs} />

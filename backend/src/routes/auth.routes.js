@@ -51,7 +51,19 @@ router.get("/failedLogin", async (req, res) => {
 
 //Iniciar con Google
 router.get("/auth/google", passport.authenticate("google", { scope: ["email", "profile"] }));
-router.get("/auth/google/callback", passport.authenticate("google", { successRedirect: "/", failureRedirect: "/Iniciar" }));
+// router.get("/auth/google/callback", passport.authenticate("google", { successRedirect: "/", failureRedirect: "/Iniciar" }));
+router.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/Iniciar" }), function (req, res) {
+  try {
+    if (req.user.habilitado_u === 0) {
+      req.logOut();
+      return res.redirect("/Inhabilitado");
+    }
+    res.redirect("/");
+  } catch (error) {
+    console.log(error);
+    res.json({ error: error });
+  }
+});
 
 //Desconectarse
 router.get("/logout", (req, res) => {

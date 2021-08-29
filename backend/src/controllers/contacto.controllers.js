@@ -6,6 +6,7 @@ const llaves = require("../config");
 //.get("/")
 ctrlContacto.getContactos = async (req, res) => {
   try {
+
     if (req.query.keyword && req.query.page) {
       const rows = await pool.query(`SELECT * FROM contactos WHERE (nombre LIKE '%${req.query.keyword}%' OR correo LIKE '%${req.query.keyword}%') ORDER BY id_contacto DESC`);
       const cantidadDatos = 12;
@@ -35,6 +36,8 @@ ctrlContacto.getContactos = async (req, res) => {
 //.get("/count")
 ctrlContacto.getCount = async (req, res) => {
   try {
+    if (req.user.id_rango != "1") return res.json(0);
+
     if (req.query.keyword) {
       const rows = await pool.query(`SELECT COUNT(*) FROM contactos WHERE (nombre LIKE '%${req.query.keyword}%' OR correo LIKE '%${req.query.keyword}%')`);
       if (rows[0]["COUNT(*)"]) return res.json(rows[0]["COUNT(*)"]);
@@ -76,7 +79,7 @@ ctrlContacto.createContacto = async (req, res) => {
           <li>Nombre: ${newContacto.nombre}</li>
           <li>Correo: ${newContacto.correo}</li>
       </ul>
-      <p>${newContacto.mensaje}</p>`;
+    <p>${newContacto.mensaje}</p>`;
 
     let info = await mail.sendMail({
       from: `Famir Web <${llaves.USER_EMAIL}>`, // sender address,

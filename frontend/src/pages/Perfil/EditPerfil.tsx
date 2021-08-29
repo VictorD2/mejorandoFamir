@@ -25,6 +25,11 @@ const EditPerfil: React.FC = () => {
   const cardPass = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setProfileImg(usuario.url_foto_usuario + "");
+    return () => {};
+  }, [usuario.url_foto_usuario]);
+
+  useEffect(() => {
     window.scrollTo({ top: 0 });
     return () => {};
   }, []);

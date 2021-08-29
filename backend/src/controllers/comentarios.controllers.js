@@ -77,6 +77,10 @@ ctrlComentarios.createComentario = async (req, res) => {
 ctrlComentarios.deleteComentario = async (req, res) => {
   try {
     const id_comentario = req.params.id;
+    if (req.user.id_rango == "2") {
+      const comentario = await pool.query("SELECT * FROM comentario WHERE id_comentario = ?", [id_comentario]);
+      if (req.user.id_usuario != comentario[0].id_usuario) return res.json({ error: "No tienes permiso para esa acción." });
+    }
     const rows = await pool.query("DELETE FROM comentario WHERE id_comentario = ?", [id_comentario]);
 
     if (rows.affectedRows > 0) return res.json({ success: "Comentario eliminado." }); //Se logró borrar

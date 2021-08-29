@@ -9,6 +9,7 @@ router.get("/Perfil", [isLoggedIn], ctrlIndex.index);
 router.get("/Perfil/*", [isLoggedIn], ctrlIndex.index);
 router.get("/Iniciar", [isNotLoggedIn], ctrlIndex.index);
 router.get("/Registrarse", [isNotLoggedIn], ctrlIndex.index);
+router.get("/Inhabilitado", [isNotLoggedIn], ctrlIndex.index);
 router.get("/*", ctrlIndex.index);
 
 module.exports = router;

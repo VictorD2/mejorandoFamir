@@ -109,8 +109,8 @@ ctrlCursos.verificarSub = async (req, res) => {
 //.post('/')
 ctrlCursos.createCurso = async (req, res) => {
   try {
-    const { nombre_curso, descripcion, precio, duracion, horario, enlace, tipo, modalidad, capacidad, id_usuario,uri_carpeta_vimeo } = req.body;
-    const newCurso = { nombre_curso, descripcion, precio, capacidad, duracion, horario, enlace, tipo, modalidad, id_usuario,uri_carpeta_vimeo, habilitado: 1 };
+    const { nombre_curso, descripcion, precio, duracion, horario, enlace, tipo, modalidad, capacidad, id_usuario, uri_carpeta_vimeo } = req.body;
+    const newCurso = { nombre_curso, descripcion, precio, capacidad, duracion, horario, enlace, tipo, modalidad, id_usuario, uri_carpeta_vimeo, habilitado: 1 };
 
     if (modalidad === "Asincrónico") {
       delete newCurso.duracion;
@@ -134,15 +134,21 @@ ctrlCursos.createCurso = async (req, res) => {
 //.put('/:id')
 ctrlCursos.updateCurso = async (req, res) => {
   try {
-    const newCurso = req.body;
+    const { nombre_curso, descripcion, precio, duracion, horario, enlace, tipo, modalidad, capacidad, id_usuario, uri_carpeta_vimeo } = req.body;
+    const newCurso = { nombre_curso, descripcion, precio, capacidad, duracion, horario, enlace, tipo, modalidad, id_usuario, uri_carpeta_vimeo, habilitado: 1 };
+
+    if (modalidad === "Asincrónico") {
+      delete newCurso.duracion;
+      delete newCurso.horario;
+      delete newCurso.enlace;
+      delete newCurso.capacidad;
+    }
     delete newCurso.modulos;
     delete newCurso.fotoCurso;
 
     if (req.file) {
       const curso = await pool.query("SELECT * FROM curso WHERE id_curso = ?", [req.params.id]);
-
       await fs.unlink(path.join(__dirname, "../build" + curso[0].url_foto_curso));
-
       newCurso.url_foto_curso = `/uploads/fotosCursos/${req.file.filename}`;
     }
     const rows = await pool.query("UPDATE curso set ? WHERE id_curso = ?", [newCurso, req.params.id]);

@@ -12,7 +12,7 @@ import Buscador from "../../../components/Buscador";
 import { ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 
-const Usuarios:React.FC = () => {
+const Usuarios: React.FC = () => {
   const [estudiante, setEstudiante] = useState<Usuario>({});
   const [filtro, setFiltro] = useState<string>("");
 
@@ -88,12 +88,14 @@ const Usuarios:React.FC = () => {
                             <p className="card-text">Profesión: {estudiante.profesion}</p>
                             <p className="card-text">Correo : {estudiante.correo}</p>
                             <p className="card-text">
-                              Pais nacimiento : {estudiante.nombre_pais_nacimiento}
-                              <img src={estudiante.url_foto_nacimiento} className="img__pais register" alt={estudiante.nombre_pais_nacimiento} />
-                            </p>
+                              Pais nacimiento : 
+                              <img src={estudiante.url_foto_nacimiento} className="img__pais register mx-3" alt={estudiante.nombre_pais_nacimiento} />
+                              {estudiante.nombre_pais_nacimiento}
+                           </p>
                             <p className="card-text">
-                              Pais residencia : {estudiante.nombre_pais_residencia}
-                              <img src={estudiante.url_foto_residencia} className="img__pais register" alt={estudiante.nombre_pais_residencia} />
+                              Pais residencia :
+                              <img src={estudiante.url_foto_residencia} className="img__pais register mx-3" alt={estudiante.nombre_pais_residencia} />
+                              {estudiante.nombre_pais_residencia}
                             </p>
                             <p className="card-text">Telefono : {estudiante.telefono}</p>
                             <p className="card-text">RUT : {estudiante.rut}</p>

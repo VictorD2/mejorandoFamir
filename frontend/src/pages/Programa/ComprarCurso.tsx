@@ -70,8 +70,8 @@ const ComprarCurso: React.FC = () => {
     const form = new FormData();
     if (comprobante.comprobateFoto) form.append("fotoComprobante", comprobante.comprobateFoto[0]);
     const res = await comprobanteServices.crearComprobante(form, params.idCurso, usuario.id_usuario);
-    if (res.data.error) return swal({ title: "Advertencia", text: `${res.data.error}`, icon: "warning" });
     if (refInput.current) refInput.current.value = "";
+    if (res.data.error) return swal({ title: "Advertencia", text: `${res.data.error}`, icon: "warning" });
     swal({ title: "Enviado", text: `${res.data.success}`, icon: "success" });
   };
 

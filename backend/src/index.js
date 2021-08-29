@@ -2,12 +2,10 @@ const express = require("express");
 const morgan = require("morgan");
 const path = require("path");
 const cors = require("cors");
-const ctrlTema = require("./controllers/tema.controllers");
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session");
 const passport = require("passport");
 const { database } = require("./keys");
-const pool = require("./database");
 const llaves = require("./config");
 //Initialization
 const app = express();
@@ -49,7 +47,6 @@ app.use(async (req, res, next) => {
 });
 
 //Routes
-app.get("/video-lock", ctrlTema.getVideo);
 app.use("/api/v0/pais", require("./routes/pais.routes"));
 app.use("/api/v0/tareasMaterial", require("./routes/tarea_material.routes"));
 app.use("/api/v0/tareas", require("./routes/tareas.routes"));

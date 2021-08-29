@@ -1,4 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+
+//Services
+import * as profesoresServices from "../../services/ProfesoresServices";
 
 // Componentes
 import Badge from "../../components/Badge";
@@ -6,15 +9,27 @@ import CardTeacher from "../../components/CardTeacher";
 import Slider from "../../components/Slider";
 
 //Import de img de ejemplo
-import tea1 from "../../images/tea1.jpg";
-import tea2 from "../../images/tea2.jpg";
-import tea3 from "../../images/tea3.jpg";
-import tea4 from "../../images/tea4.jpg";
 
 import ScrollReveal from "scrollreveal";
-
+interface Profesor {
+  nombre?: string;
+  apellido?: string;
+  profesion?: string;
+  url_foto_profesor?: string;
+}
 const AboutUs: React.FC = () => {
-  
+  const [profesores, setProfesores] = useState<Profesor[]>([]);
+
+  const getProfesores = async () => {
+    const res = await profesoresServices.getAllPublic();
+    if (res.data.error) return;
+    setProfesores(res.data.profesores);
+  };
+  useEffect(() => {
+    getProfesores();
+    return () => {};
+  }, []);
+
   useEffect(() => {
     window.scrollTo({ top: 0 });
     //Para los efectos de aparicion
@@ -133,10 +148,9 @@ const AboutUs: React.FC = () => {
             <h3 className="fw-bold fs-1">Nuestros Docentes</h3>
           </div>
           <div className="row show" style={{ marginTop: "4.5rem" }}>
-            <CardTeacher img={tea1} name="Maria teresa" job="Ingeniera" />
-            <CardTeacher img={tea2} name="Simon Duval" job="Digital Proffesor" />
-            <CardTeacher img={tea3} name="James Hogan" job="HTML Proffesor" />
-            <CardTeacher img={tea4} name="Claudia Williams" job="Marketing Proffesor" />
+            {profesores.map((profesor, i) => {
+              return <CardTeacher key={i + 1} img={profesor.url_foto_profesor} apellido={profesor.apellido} name={profesor.nombre} job={profesor.profesion} />;
+            })}
           </div>
         </div>
       </div>

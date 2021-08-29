@@ -1,5 +1,7 @@
 const pool = require("../database");
 const ctrlComprobantes = {};
+const fs = require("fs-extra");
+const path = require("path");
 
 //.get('/count/:estado')
 ctrlComprobantes.getCount = async (req, res) => {
@@ -42,31 +44,49 @@ ctrlComprobantes.getComprobanteById = async (req, res) => {
 ctrlComprobantes.createComprobante = async (req, res) => {
   try {
     // Una cuenta
-    if (!req.user) return res.json({ error: "Necesita una cuenta para comprar" });
+    if (!req.user) {
+      await fs.unlink(path.join(__dirname + `../build/uploads/fotosComprobantes/${req.file.filename}`));
+      return res.json({ error: "Necesita una cuenta para comprar" });
+    }
 
     // Diferente usuario
-    if (req.user.id_usuario != req.body.id_usuario) return res.json({ error: "No tienes permiso para hacer eso" }); //Descomentar en producción
+    if (req.user.id_usuario != req.body.id_usuario) {
+      await fs.unlink(path.join(__dirname + `../build/uploads/fotosComprobantes/${req.file.filename}`));
+      return res.json({ error: "No tienes permiso para hacer eso" }); //Descomentar en producción
+    }
 
     // No foto
-    if (!req.file) return res.json({ error: "No ha subido una foto" });
+    if (!req.file) {
+      await fs.unlink(path.join(__dirname + `../build/uploads/fotosComprobantes/${req.file.filename}`));
+      return res.json({ error: "No ha subido una foto" });
+    }
 
     // Ya envió un comprobante
     const validacion = await pool.query('SELECT * FROM comprobante WHERE id_usuario = ? AND id_curso = ? AND estado = "NoVisto"', [req.body.id_usuario, req.body.id_curso]);
-    if (validacion[0]) return res.json({ error: "Ya ha enviado un comprobante de este curso, pronto lo revisaremos" });
+    if (validacion[0]) {
+      await fs.unlink(path.join(__dirname + `../build/uploads/fotosComprobantes/${req.file.filename}`));
+      return res.json({ error: "Ya ha enviado un comprobante de este curso, pronto lo revisaremos" });
+    }
 
     //Ya está inscrito al curso
     const validacion2 = await pool.query("SELECT * FROM usuario_curso WHERE id_usuario = ? AND id_curso = ?", [req.body.id_usuario, req.body.id_curso]);
-    if (validacion2[0]) return res.json({ error: "Ya está inscrito en este curso" });
+    if (validacion2[0]) {
+      await fs.unlink(path.join(__dirname + `../build/uploads/fotosComprobantes/${req.file.filename}`));
+      return res.json({ error: "Ya está inscrito en este curso" });
+    }
 
     // Capacidad Validación
     const curso = await pool.query("SELECT capacidad FROM curso WHERE id_curso = ?", [req.body.id_curso]);
     if (curso[0].capacidad) {
       const count = await pool.query("SELECT COUNT(*) FROM usuario_curso WHERE id_curso = ?", [req.body.id_curso]);
-      if (curso[0].capacidad <= count[0]["COUNT(*)"]) return res.json({ error: "Ya no hay cupos disponibles" });
+      if (curso[0].capacidad <= count[0]["COUNT(*)"]) {
+        await fs.unlink(path.join(__dirname + `../build/uploads/fotosComprobantes/${req.file.filename}`));
+        return res.json({ error: "Ya no hay cupos disponibles" });
+      }
     }
 
     const newComprobante = req.body;
-    newComprobante.id_usuario = 45;
+    newComprobante.id_usuario = req.user.id_usuario;
     newComprobante.estado = "NoVisto";
     newComprobante.url_foto_comprobante = `/uploads/fotosComprobantes/${req.file.filename}`;
     const data = await pool.query("INSERT INTO comprobante set ?", [newComprobante]);

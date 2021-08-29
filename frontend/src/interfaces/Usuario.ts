@@ -11,9 +11,10 @@ export interface Usuario {
   habilitado_u?: number;
   rut?: string;
   url_foto_usuario?: string;
-  url_foto_residencia?:string;
-  url_foto_nacimiento?:string;
-  nombre_pais_nacimiento?:string;
-  nombre_pais_residencia?:string;
+  url_foto_residencia?: string;
+  url_foto_nacimiento?: string;
+  nombre_pais_nacimiento?: string;
+  nombre_pais_residencia?: string;
   authenticate?: boolean;
+  url_foto_profesor?: File[];
 }

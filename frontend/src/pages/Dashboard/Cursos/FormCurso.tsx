@@ -73,6 +73,7 @@ const FormCurso: React.FC = () => {
   //Traer los datos del curso si esta en update
   const getCurso = async (id: string) => {
     const numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const numeros2 = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23];
     const res = await CursosServices.getCursoById(id);
     if (res.data.error) return history.push("/Dashboard");
     if (res.data.curso.horario) {
@@ -83,7 +84,7 @@ const FormCurso: React.FC = () => {
       let ceroDia = ``;
       if (numeros.includes(fecha.getDate())) ceroDia = "0";
       if (!(fecha.getMonth() + 1 === 10 || fecha.getMonth() + 1 === 11 || fecha.getMonth() + 1 === 12)) cero = `0`;
-      if (!(fecha.getHours() === 10 || fecha.getHours() === 11 || fecha.getHours() === 12)) ceroHora = `0`;
+      if (!numeros2.includes(fecha.getHours())) ceroHora = `0`;
       const horario = `${fecha.getFullYear()}-${cero}${fecha.getMonth() + 1}-${ceroDia}${fecha.getDate()}T${ceroHora}${fecha.getHours()}:${fecha.getMinutes()}`;
       res.data.curso.horario = horario;
     }
@@ -133,12 +134,16 @@ const FormCurso: React.FC = () => {
         }
         return history.push(`/Dashboard/${params.tipo}/${params.modalidad}`);
       });
+      return;
     }
 
     // Editar
     client.request({ method: "PATCH", path: curso.uri_carpeta_vimeo, query: { name: curso.nombre_curso } }, async (error, body, status_code, headers) => {
       if (error) return toast.error(error);
+      form.append("modalidad", curso.modalidad + "");
+      form.append("tipo", curso.tipo + "");
       form.append("uri_carpeta_vimeo", body.uri);
+      if (curso.foto_curso) form.append("fotoCurso", curso.foto_curso[0]);
       const res = await CursosServices.updateCurso(params.id, form, refProgresss.current);
       if (res.data.error) return toast.error(res.data.error);
       toast.success(res.data.success);

@@ -22,6 +22,7 @@ import "animate.css/animate.min.css";
 //Interfaces
 import { Usuario } from "../../../interfaces/Usuario";
 import { API } from "../../../config/config";
+import CardTeacher from "../../../components/CardTeacher";
 
 interface Params {
   id?: string;
@@ -41,12 +42,13 @@ const FormProfesor: React.FC = () => {
     telefono: "",
     id_pais_nacimiento: "AF",
     id_pais_residencia: "AF",
+    url_foto_profesor: [new File([""], "filename")],
   };
 
   const history = useHistory();
   const [profesor, setProfesor] = useState<Usuario>(initialState);
   const [paises, setPaises] = useState<Pais[]>([]);
-
+  const [urlFotoPrevia, setUrlFotoPrevia] = useState<string>("");
   const params = useParams<Params>();
 
   useEffect(() => {
@@ -66,21 +68,38 @@ const FormProfesor: React.FC = () => {
     const res = await profesorServices.getProfesorById(id);
     if (res.data.error) return history.push("/Dashboard/Profesores");
     setProfesor(res.data.profesor);
+    setUrlFotoPrevia(res.data.profesor.url_foto_profesor);
   };
 
   const limpieza = () => setProfesor({});
-
+  const handleInputFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setProfesor({ ...profesor, [e.target.name]: e.target.files });
+      const url = URL.createObjectURL(e.target.files[0]);
+      setUrlFotoPrevia(url);
+    }
+  };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setProfesor({ ...profesor, [e.target.name]: e.target.value });
   //Evento submit
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = new FormData();
+    form.append("nombre", profesor.nombre + "");
+    form.append("apellido", profesor.apellido + "");
+    form.append("telefono", profesor.telefono + "");
+    form.append("rut", profesor.rut + "");
+    form.append("profesion", profesor.profesion + "");
+    form.append("correo", profesor.correo + "");
+    form.append("id_pais_nacimiento", profesor.id_pais_nacimiento + "");
+    form.append("id_pais_residencia", profesor.id_pais_residencia + "");
+    if (profesor.url_foto_profesor) form.append("url_foto_profesor", profesor.url_foto_profesor[0]);
 
     if (!params.id) {
-      const res = await profesorServices.crearProfesor(profesor);
+      const res = await profesorServices.crearProfesor(form);
       if (res.data.error) return toast.error(res.data.error);
       return toast.success(res.data.success);
     }
-    const res = await profesorServices.updateProfesor(params.id, profesor);
+    const res = await profesorServices.updateProfesor(params.id, form);
     if (res.data.error) return toast.error(res.data.error);
     toast.success(res.data.success);
   };
@@ -137,7 +156,7 @@ const FormProfesor: React.FC = () => {
               <div className="col-lg-3 col-md-3 ms-auto"></div>
             </div>
             <div className="row mt-5">
-              <div className="col-md-6 ms-0 ms-lg-3">
+              <div className="col-md-6">
                 <form onSubmit={handleFormSubmit}>
                   <div className="form-floating mb-3">
                     <input onChange={handleInputChange} id="floatingInputNombre" className="form-control" type="text" placeholder="Nombre" name="nombre" required value={profesor.nombre} />
@@ -187,6 +206,18 @@ const FormProfesor: React.FC = () => {
                     <input onChange={handleInputChange} id="floatingInputRUT" className="form-control" type="text" placeholder="RUT" name="rut" required value={profesor.rut} />
                     <label htmlFor="floatingInputRUT">RUT</label>
                   </div>
+                  <div className="form-floating mb-3">
+                    {params.id ? (
+                      <>
+                        <input onChange={handleInputFileChange} id="floatingInputFoto" className="form-control" type="file" placeholder="Foto" name="url_foto_profesor" />
+                      </>
+                    ) : (
+                      <>
+                        <input onChange={handleInputFileChange} id="floatingInputFoto" className="form-control" type="file" placeholder="Foto" name="url_foto_profesor" required />
+                      </>
+                    )}
+                    <label htmlFor="floatingInputFoto">Foto Pública en la Página</label>
+                  </div>
                   <div className="mb-3">
                     {params.id ? (
                       <button className="btn btn__blue">
@@ -200,7 +231,12 @@ const FormProfesor: React.FC = () => {
                   </div>
                 </form>
               </div>
-              <div className="col-md-6"></div>
+              <div className="col-md-6 text-center" style={{ height: "40.51rem" }}>
+                <div className="shadow-lg p-3 rounded h-100 d-flex align-items-center justify-content-center flex-column">
+                  <h5 className="mb-5">Vista Previa</h5>
+                  <CardTeacher img={urlFotoPrevia} name={profesor.nombre} apellido={profesor.apellido} job={profesor.profesion} />
+                </div>
+              </div>
             </div>
           </div>
         </section>

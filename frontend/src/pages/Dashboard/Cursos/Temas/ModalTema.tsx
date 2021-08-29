@@ -46,10 +46,6 @@ const ModalTema: React.FC<Props> = (props) => {
   //Submit
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = new FormData();
-    form.append("titulo", tema.titulo);
-    form.append("descripcion", tema.descripcion);
-    form.append("id_modulo", "" + props.moduloModal.id_modulo);
     let client = new Vimeo(VimeoKeys.CLIENT_ID, VimeoKeys.CLIENT_SECRET, VimeoKeys.CLIENT_TOKEN);
     let file_name = new File([""], "filename");
     if (tema.video) file_name = tema.video[0];
@@ -89,21 +85,20 @@ const ModalTema: React.FC<Props> = (props) => {
           },
         },
         // Terminó de subirse
-        async function (uri) {
+        async (uri) => {
           // Privacidad del video
-          client.request({ method: "PATCH", path: uri, query: { privacy: { view: "disable" } } }, function (error, body, status_code, headers) {});
+          client.request({ method: "PATCH", path: uri, query: { privacy: { view: "disable" } } }, (error, body, status_code, headers) => {});
 
           // Whitelist
-          client.request({ method: "PUT", path: uri + "/privacy/domains/estudioochoamaldonado.com" }, function (error, body, status_code, headers) {
-            client.request({ method: "PATCH", path: uri, query: { privacy: { embed: "whitelist" } } }, function (error, body, status_code, headers) {});
+          client.request({ method: "PUT", path: uri + "/privacy/domains/prueba-naztec.herokuapp.com" }, (error, body, status_code, headers) => {
+            client.request({ method: "PATCH", path: uri, query: { privacy: { embed: "whitelist" } } }, (error, body, status_code, headers) => {});
           });
 
           // Meter el video en su carpeta correspondiente
           client.request({ method: "PUT", path: props.curso.uri_carpeta_vimeo + "/" + uri }, (error, body, status_code, headers) => {});
 
           // Own DB
-          form.append("url_video", "" + uri);
-          const res = await temaServices.crearTema(form);
+          const res = await temaServices.crearTema(tema, uri, props.moduloModal.id_modulo + "");
           props.setcount(props.count + 1);
           if (res.data.error) return toast.error(res.data.error);
 
@@ -120,7 +115,7 @@ const ModalTema: React.FC<Props> = (props) => {
         },
 
         // Va cargando
-        function (bytes_uploaded, bytes_total) {
+        (bytes_uploaded, bytes_total) => {
           let percentage = ((bytes_uploaded / bytes_total) * 100).toFixed(2);
           if (refProgresss.current) {
             refProgresss.current.style.width = `${percentage}%`;
@@ -128,7 +123,7 @@ const ModalTema: React.FC<Props> = (props) => {
           }
         },
         // Error
-        function (error) {
+        (error) => {
           toast.error(error);
           console.log("Failed because: " + error);
         }
@@ -143,14 +138,13 @@ const ModalTema: React.FC<Props> = (props) => {
         file_name, //Archivo
         tema.url_video, //Id del video a reemplazar
         { name: tema.titulo, description: tema.descripcion }, //Descripcion
-        async function (uri) {
+        async (uri) => {
           // Own DB
-          form.append("url_video", "" + uri);
-          const res = await temaServices.editarTema(tema.id_tema + "", form);
+          const res = await temaServices.editarTema(tema.id_tema + "", tema);
           props.setcount(props.count + 1);
           if (res.data.error) return toast.error(res.data.error);
 
-          client.request({ method: "PATCH", path: uri, query: {} }, function (error, body, status_code, headers) {
+          client.request({ method: "PATCH", path: uri, query: {} }, (error, body, status_code, headers) => {
             // console.log(uri + " will now require a password to be viewed on Vimeo.");
           });
           if (refBtnClose.current) refBtnClose.current.click();
@@ -166,7 +160,7 @@ const ModalTema: React.FC<Props> = (props) => {
         },
 
         // Va cargando
-        function (bytes_uploaded, bytes_total) {
+        (bytes_uploaded, bytes_total) => {
           let percentage = ((bytes_uploaded / bytes_total) * 100).toFixed(2);
           if (refProgresss.current) {
             refProgresss.current.style.width = `${percentage}%`;
@@ -174,14 +168,13 @@ const ModalTema: React.FC<Props> = (props) => {
           }
         },
         // Error
-        function (error) {
+        (error) => {
           toast.error(error);
           console.log("Failed because: " + error);
         }
       );
     } else {
-      form.append("id_tema", "" + tema.id_tema);
-      const res = await temaServices.editarTema(props.temaModal.id_tema + "", form);
+      const res = await temaServices.editarTema(props.temaModal.id_tema + "", tema);
       props.setcount(props.count + 1);
       if (refInput.current) refInput.current.value = "";
       if (res.data.error) return toast.error(res.data.error);

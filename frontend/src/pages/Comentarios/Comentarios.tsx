@@ -236,7 +236,7 @@ const Comentarios: React.FC = () => {
           <FaEnvelope className="mb-1" /> Enviar
         </button>
       </form>
-      <div className="m-2 pe-lg-4 pe-md-0" style={{ minHeight: "550px", maxHeight: "550px", overflowX: "hidden" }}>
+      <div className="m-2" style={{ minHeight: "550px", maxHeight: "550px", overflowX: "hidden" }}>
         {comentarios.map((comentarioItem) => {
           return (
             <div className="card my-3" key={comentarioItem.id_comentario}>

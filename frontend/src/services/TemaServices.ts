@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API } from "../config/config";
+import { Tema } from "../interfaces/Tema";
 const api = `${API}/api/v0/tema`;
 
 export const getVideo = async (id: string) => {
@@ -28,21 +29,15 @@ export const getTemaById = async (id: string) => {
 //   });
 // };
 // CREAR
-export const crearTema = async (form: FormData) => {
-  return await axios.post(`${api}`, form, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+export const crearTema = async (form: Tema, uri: string, id_modulo: string) => {
+  form.url_video = uri;
+  form.id_modulo = id_modulo;
+  return await axios.post(`${api}`, form);
 };
 
 // Editar
-export const editarTema = async (id: string, form: FormData) => {
-  return await axios.put(`${api}/${id}`, form, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+export const editarTema = async (id: string, form: Tema) => {
+  return await axios.put(`${api}/${id}`, form);
 };
 // export const editarTema = async (id: string, form: FormData, progressBar: any) => {
 //   return await axios.put(`${api}/${id}`, form, {
