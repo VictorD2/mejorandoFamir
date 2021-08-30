@@ -185,12 +185,7 @@ const Comentarios: React.FC = () => {
       ) : (
         <>
           <div className="w-100 d-flex justify-content-center p-2">
-            <button
-              onClick={() => {
-                setPage(page + 1);
-              }}
-              className="btn btn__blue"
-            >
+            <button onClick={() => { setPage(page + 1); }} className="btn btn__blue" >
               <FaChevronDown /> Ver más comentarios
             </button>
           </div>
