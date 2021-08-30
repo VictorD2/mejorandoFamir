@@ -15,7 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "animate.css/animate.min.css";
 
 import { useUsuario } from "../auth/UsuarioProvider";
-import exprRegular from "../encrypt/regularExpr";
+import exprRegular from "../helpers/encrypt/regularExpr";
 
 // Interfaces
 interface Usuario {

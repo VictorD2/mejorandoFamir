@@ -133,7 +133,7 @@ const ContactoDash: React.FC = () => {
               </div>
             </div>
             <div className="row mt-5">
-              <div className="table-responsive">
+              <div className="table-responsive p-4">
                 <table className="table table-striped table-light-gray table-bordered table-hover">
                   <caption>Cantidad de mensajes de contacto: {cantidad}</caption>
                   <thead>
