@@ -24,6 +24,7 @@ import { Curso } from "../../../interfaces/Curso";
 import { Usuario } from "../../../interfaces/Usuario";
 import { FaEdit, FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import Buscador from "../../../components/Buscador";
 
 const initialStateComprobante: Comprobante = {
   fecha_enviado: "",
@@ -40,7 +41,7 @@ const initialStateCurso: Curso = {
   nombre_curso: "",
   precio: 0,
   url_foto_curso: "",
-  uri_carpeta_vimeo:"",
+  uri_carpeta_vimeo: "",
 };
 
 const Comprobantes: React.FC = () => {
@@ -58,6 +59,10 @@ const Comprobantes: React.FC = () => {
   const [pageAceptados, setPageAceptados] = useState<number>(1);
   const [pageRechazados, setPageRechazados] = useState<number>(1);
 
+  const [filtro, setFiltro] = useState<string>("");
+
+  const buscar = (text: string) => setFiltro(text);
+
   const refBtnClose = useRef<HTMLButtonElement | null>();
 
   // Nuevos
@@ -69,7 +74,7 @@ const Comprobantes: React.FC = () => {
       setComprobante(initialStateComprobante);
       setCurso(initialStateCurso);
     };
-  }, [triggerComprobante, pageNuevos]);
+  }, [triggerComprobante, pageNuevos, filtro]);
 
   //Aceptados
   useEffect(() => {
@@ -80,7 +85,7 @@ const Comprobantes: React.FC = () => {
       setComprobante(initialStateComprobante);
       setCurso(initialStateCurso);
     };
-  }, [triggerComprobante, pageAceptados]);
+  }, [triggerComprobante, pageAceptados, filtro]);
 
   //Rechazados
   useEffect(() => {
@@ -91,27 +96,26 @@ const Comprobantes: React.FC = () => {
       setComprobante(initialStateComprobante);
       setCurso(initialStateCurso);
     };
-  }, [triggerComprobante, pageRechazados]);
+  }, [triggerComprobante, pageRechazados, filtro]);
 
   const getNuevosComprobantes = async () => {
-    const res = await comprobanteServices.getComprobantes("NoVisto", pageNuevos);
+    const res = await comprobanteServices.getComprobantes("NoVisto", pageNuevos, filtro);
     if (res.data.error) return;
     setComprobantesNuevos(res.data.comprobantes);
   };
   const getAceptadosComprobantes = async () => {
-    const res = await comprobanteServices.getComprobantes("Aceptado", pageAceptados);
+    const res = await comprobanteServices.getComprobantes("Aceptado", pageAceptados, filtro);
     if (res.data.error) return;
     setComprobantesAceptados(res.data.comprobantes);
   };
   const getRechazadosComprobantes = async () => {
-    const res = await comprobanteServices.getComprobantes("Rechazado", pageRechazados);
+    const res = await comprobanteServices.getComprobantes("Rechazado", pageRechazados, filtro);
     if (res.data.error) return;
     setComprobantesRechazados(res.data.comprobantes);
   };
 
   const cambiarDatosModal = async (id_comprobante?: number) => {
     const res = await comprobanteServices.getComprobanteById(id_comprobante);
-    console.log(res);
     if (res.data.error) return;
     setComprobante(res.data.comprobante);
 
@@ -184,35 +188,37 @@ const Comprobantes: React.FC = () => {
           <div className="container-fluid">
             <div className="row">
               <div className="col-lg-4 col-md-6"></div>
-              <div className="col-lg-3 col-md-3 ms-auto"></div>
+              <div className="col-lg-3 col-md-3 ms-auto">
+                <Buscador tooltip="Buscar por nombre, apellido, correo del usuario o nombre de curso" placeholder={`Buscar comprobante`} funcion={buscar} />
+              </div>
             </div>
             <div className="row mt-5">
               <ul className="nav nav-tabs mb-3" id="pills-tab" role="tablist">
                 <li className="nav-item" role="presentation">
-                  <button className="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-noVistos" type="button" role="tab" aria-controls="pills-noVistos" aria-selected="true">
+                  <button className="nav-link active" id="pills-noVistos-tab" data-bs-toggle="pill" data-bs-target="#pills-noVistos" type="button" role="tab" aria-controls="pills-noVistos" aria-selected="true">
                     Nuevos
                   </button>
                 </li>
                 <li className="nav-item" role="presentation">
-                  <button className="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-aceptados" type="button" role="tab" aria-controls="pills-aceptados" aria-selected="false">
+                  <button className="nav-link" id="pills-aceptados-tab" data-bs-toggle="pill" data-bs-target="#pills-aceptados" type="button" role="tab" aria-controls="pills-aceptados" aria-selected="false">
                     Aceptados
                   </button>
                 </li>
                 <li className="nav-item" role="presentation">
-                  <button className="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-rechazados" type="button" role="tab" aria-controls="pills-rechazados" aria-selected="false">
+                  <button className="nav-link" id="pills-rechazados-tab" data-bs-toggle="pill" data-bs-target="#pills-rechazados" type="button" role="tab" aria-controls="pills-rechazados" aria-selected="false">
                     Rechazados
                   </button>
                 </li>
               </ul>
               <div className="tab-content" id="pills-tabContent">
                 <div className="tab-pane fade show active" id="pills-noVistos" role="tabpanel" aria-labelledby="pills-noVistos-tab">
-                  <ListaComprobante estado="NoVisto" setPage={setPageNuevos} page={pageNuevos} comprobantes={comprobantesNuevos} cambiarDatosModal={cambiarDatosModal} />
+                  <ListaComprobante filtro={filtro} estado="NoVisto" setPage={setPageNuevos} page={pageNuevos} comprobantes={comprobantesNuevos} cambiarDatosModal={cambiarDatosModal} />
                 </div>
                 <div className="tab-pane fade" id="pills-aceptados" role="tabpanel" aria-labelledby="pills-aceptados-tab">
-                  <ListaComprobante estado="Aceptado" setPage={setPageAceptados} page={pageAceptados} comprobantes={comprobantesAceptados} cambiarDatosModal={cambiarDatosModal} />
+                  <ListaComprobante filtro={filtro} estado="Aceptado" setPage={setPageAceptados} page={pageAceptados} comprobantes={comprobantesAceptados} cambiarDatosModal={cambiarDatosModal} />
                 </div>
                 <div className="tab-pane fade" id="pills-rechazados" role="tabpanel" aria-labelledby="pills-rechazados-tab">
-                  <ListaComprobante estado="Rechazado" setPage={setPageRechazados} page={pageRechazados} comprobantes={comprobantesRechazados} cambiarDatosModal={cambiarDatosModal} />
+                  <ListaComprobante filtro={filtro} estado="Rechazado" setPage={setPageRechazados} page={pageRechazados} comprobantes={comprobantesRechazados} cambiarDatosModal={cambiarDatosModal} />
                 </div>
               </div>
             </div>

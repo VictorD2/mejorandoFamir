@@ -85,7 +85,7 @@ const Cursos: React.FC = () => {
                 </button>
               </div>
               <div className="col-lg-3 col-md-3 ms-auto">
-                <Buscador placeholder={`Buscar ${tipo} ${modalidad}`} funcion={buscar} />
+                <Buscador tooltip="Buscar por nombre del curso" placeholder={`Buscar ${tipo} ${modalidad}`} funcion={buscar} />
               </div>
             </div>
             <div className="row mt-5">

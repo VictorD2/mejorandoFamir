@@ -22,12 +22,13 @@ import { Usuario } from "../../interfaces/Usuario";
 import { Modulo } from "../../interfaces/Modulo";
 import { FiClock } from "react-icons/fi";
 import { AiOutlineLink } from "react-icons/ai";
+import { useUsuario } from "../../auth/UsuarioProvider";
 
 interface Params {
   idCurso: string;
 }
 const initialState: Curso = {
-  uri_carpeta_vimeo:"",
+  uri_carpeta_vimeo: "",
   descripcion: "",
   enlace: "",
   nombre_curso: "",
@@ -36,6 +37,8 @@ const initialState: Curso = {
   url_foto_curso: "",
 };
 const CursoFullPage: React.FC = () => {
+  const { usuario } = useUsuario();
+
   const params = useParams<Params>();
 
   const history = useHistory();
@@ -103,8 +106,16 @@ const CursoFullPage: React.FC = () => {
                   </span>
                 </div>
                 <div className="d-flex align-items-center mt-2">
-                  <FaDollarSign className="me-2" />
-                  <span className="me-1">Precio: {curso.precio}</span>
+                  {usuario.id_pais_residencia === "PE" ? (
+                    <>
+                      <span className="me-1">Precio: S/.{(curso.precio * 0.0052).toFixed(0)} SOLES</span>
+                    </>
+                  ) : (
+                    <>
+                      <FaDollarSign className="me-2" />
+                      <span className="me-1">Precio: {curso.precio} CLP</span>
+                    </>
+                  )}
                 </div>
                 {curso.modalidad === "Sincrónico" ? (
                   <>

@@ -13,8 +13,8 @@ interface Props {
   page: number;
   setPage: (page: number) => void;
   estado: string;
+  filtro: string;
 }
-
 const ListaComprobante: React.FC<Props> = (props) => {
   const [cantidadPaginas, setcantidadPaginas] = useState<number>(0);
   const [cantidad, setcantidad] = useState<number>(0);
@@ -25,10 +25,10 @@ const ListaComprobante: React.FC<Props> = (props) => {
       setcantidadPaginas(0);
       setcantidad(0);
     };
-  }, [props.comprobantes]);
+  }, [props.filtro]);
 
   const getCantidad = async () => {
-    const res = await comprobanteServices.getCantidad(props.estado);
+    const res = await comprobanteServices.getCantidad(props.estado, props.filtro);
     setcantidad(res.data);
     setcantidadPaginas(Math.ceil(res.data / 12));
   };
@@ -105,7 +105,12 @@ const ListaComprobante: React.FC<Props> = (props) => {
                   <></>
                 ) : (
                   <>
-                    <button onClick={() => { paginaAnterior(); }} className="btn btn__blue" >
+                    <button
+                      onClick={() => {
+                        paginaAnterior();
+                      }}
+                      className="btn btn__blue"
+                    >
                       <span aria-hidden="true">&laquo; Página Anterior</span>
                     </button>
                   </>
@@ -114,7 +119,12 @@ const ListaComprobante: React.FC<Props> = (props) => {
                   <></>
                 ) : (
                   <>
-                    <button onClick={() => { paginaSiguiente(); }} className="btn btn__blue ms-auto" >
+                    <button
+                      onClick={() => {
+                        paginaSiguiente();
+                      }}
+                      className="btn btn__blue ms-auto"
+                    >
                       <span aria-hidden="true">Página Siguiente &raquo;</span>
                     </button>
                   </>

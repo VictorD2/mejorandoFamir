@@ -129,7 +129,7 @@ const ContactoDash: React.FC = () => {
             <div className="row">
               <div className="col-lg-4 col-md-6"></div>
               <div className="col-lg-3 col-md-3 ms-auto">
-                <Buscador placeholder={`Buscar contacto`} funcion={buscar} />
+                <Buscador tooltip="Buscar por nombre o correo" placeholder={`Buscar contacto`} funcion={buscar} />
               </div>
             </div>
             <div className="row mt-5">
@@ -185,7 +185,12 @@ const ContactoDash: React.FC = () => {
                     <></>
                   ) : (
                     <>
-                      <button onClick={() => { paginaAnterior(); }} className="btn btn__blue" >
+                      <button
+                        onClick={() => {
+                          paginaAnterior();
+                        }}
+                        className="btn btn__blue"
+                      >
                         <span aria-hidden="true">&laquo; Página Anterior</span>
                       </button>
                     </>
@@ -194,7 +199,12 @@ const ContactoDash: React.FC = () => {
                     <></>
                   ) : (
                     <>
-                      <button onClick={() => { paginaSiguiente(); }} className="btn btn__blue ms-auto" >
+                      <button
+                        onClick={() => {
+                          paginaSiguiente();
+                        }}
+                        className="btn btn__blue ms-auto"
+                      >
                         <span aria-hidden="true">Página Siguiente &raquo;</span>
                       </button>
                     </>

@@ -19,7 +19,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "animate.css/animate.min.css";
 
-const Profesores:React.FC = () => {
+const Profesores: React.FC = () => {
   const history = useHistory();
 
   const [profesor, setProfesor] = useState<Usuario>({});
@@ -77,7 +77,7 @@ const Profesores:React.FC = () => {
                 </button>
               </div>
               <div className="col-lg-3 col-md-3 ms-auto">
-                <Buscador placeholder={`Buscar profesor`} funcion={buscar} />
+                <Buscador tooltip="Buscar por nombre, apellido o correo" placeholder={`Buscar profesor`} funcion={buscar} />
               </div>
             </div>
             <div className="row mt-5">

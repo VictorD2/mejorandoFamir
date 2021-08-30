@@ -75,7 +75,7 @@ const Programa: React.FC = () => {
       <Badge name={`${tipo} ${modalidad}`} />
       <div className="w-100 d-flex justify-content-between">
         <div className="ms-auto buscador px-4 pe-lg-5 col-12 col-lg-3 col-md-5 col-sm-5">
-          <Buscador placeholder={`Buscar ${tipo} ${modalidad}`} funcion={buscar} />
+          <Buscador tooltip="Buscar por nombre del curso" placeholder={`Buscar ${tipo} ${modalidad}`} funcion={buscar} />
         </div>
       </div>
       <div className="my-2 py-5">

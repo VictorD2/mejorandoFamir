@@ -26,7 +26,7 @@ interface Params {
   idCurso: string;
 }
 const initialState: Curso = {
-  uri_carpeta_vimeo:"",
+  uri_carpeta_vimeo: "",
   descripcion: "",
   enlace: "",
   horario: "",
@@ -75,7 +75,6 @@ const ComprarCurso: React.FC = () => {
     swal({ title: "Enviado", text: `${res.data.success}`, icon: "success" });
   };
 
-
   const getCurso = async () => {
     const res = await cursoServices.getCursoById(params.idCurso);
     if (res.data.error) return history.push("/");
@@ -101,7 +100,7 @@ const ComprarCurso: React.FC = () => {
               ) : (
                 <></>
               )}
-              <Fila titulo1={`nombre del ${curso.tipo}`} titulo2="Precio" subtitulo1={`${curso.nombre_curso}`} subtitulo2={`$ ${curso.precio}`} />
+              <Fila titulo1={`nombre del ${curso.tipo}`} titulo2="Precio" subtitulo1={`${curso.nombre_curso}`} subtitulo2={usuario.id_pais_residencia === "PE" ? `S/. ${(curso.precio * 0.0052).toFixed(0)} SOLES` : `$ ${curso.precio} CLP`} />
 
               <div className="border border-2 border-warning mt-5 p-4">
                 <p className="text-center fw-bold fs-5" style={{ color: "var(--verde-oscuro)" }}>
@@ -120,7 +119,7 @@ const ComprarCurso: React.FC = () => {
           </div>
           <div className="col-12 col-md-12 col-sm-12 col-lg-6">
             <Paso curso={curso} titulo={"PASO 01"} subtitulo={"DATOS DE PAGO"} descripcion={"Estos son los datos correspondientes"} />
-            <Paso titulo={"PASO 02"} subtitulo={"ENVÍA TU COMPROBANTE"} descripcion={"Envíanos tu comprobante de pago"} />
+            <Paso curso={curso} titulo={"PASO 02"} subtitulo={"ENVÍA TU COMPROBANTE"} descripcion={"Envíanos tu comprobante de pago"} />
 
             <form onSubmit={handleFormSubmit} className="mt-2 mb-5 w-100 d-flex align-items-center justify-content-center flex-row">
               <input ref={(node) => (refInput.current = node)} required onChange={handleFileChange} className="form-control w-75" type="file" name="comprobateFoto" />
@@ -129,7 +128,7 @@ const ComprarCurso: React.FC = () => {
               </button>
             </form>
 
-            <Paso titulo={"PASO 03"} subtitulo={"ESPERA TU CONFIRMACIÓN"} descripcion={"Una vez enviado tu comprobante de pago te enviaremos un correo de confirmación."} />
+            <Paso curso={curso} titulo={"PASO 03"} subtitulo={"ESPERA TU CONFIRMACIÓN"} descripcion={"Una vez enviado tu comprobante de pago te enviaremos un correo de confirmación."} />
           </div>
         </div>
       </div>
@@ -141,7 +140,7 @@ interface PropsPaso {
   titulo: string;
   subtitulo: string;
   descripcion: string;
-  curso?: Curso;
+  curso: Curso;
 }
 
 const Paso = (props: PropsPaso) => {
@@ -166,14 +165,15 @@ const Paso = (props: PropsPaso) => {
   );
 };
 interface PropsBanco {
-  curso?: Curso;
+  curso: Curso;
 }
 const DatosBanco = (props: PropsBanco) => {
+  const { usuario } = useUsuario();
   return (
     <div className="w-100 mt-3">
       <Fila titulo1={"BANCO"} titulo2={"TIPO DE CUENTA"} subtitulo1={"Banco Santander"} subtitulo2={"Cuenta Corriente"} />
       <Fila titulo1={"NÚMERO DE CUENTA"} titulo2={"RUT"} subtitulo1={"0-000-73-58932-0"} subtitulo2={"14.655.581-0"} />
-      <Fila titulo1={"NOMBRE DE TITULAR"} titulo2={"INVERSIÓN"} subtitulo1={"Mirtza Rodriguez R."} subtitulo2={"$ " + props.curso?.precio} />
+      <Fila titulo1={"NOMBRE DE TITULAR"} titulo2={"INVERSIÓN"} subtitulo1={"Mirtza Rodriguez R."} subtitulo2={usuario.id_pais_residencia === "PE" ? `S/. ${(props.curso.precio * 0.0052).toFixed(0)} SOLES` : `$ ${props.curso.precio} CLP`} />
     </div>
   );
 };

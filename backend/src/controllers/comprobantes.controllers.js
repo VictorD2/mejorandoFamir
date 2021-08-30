@@ -6,22 +6,45 @@ const path = require("path");
 //.get('/count/:estado')
 ctrlComprobantes.getCount = async (req, res) => {
   try {
-    const rows = await pool.query("SELECT COUNT(*) FROM comprobante WHERE estado = ?", [req.params.estado]);
+    let Joins = `JOIN usuario ON comprobante.id_usuario = usuario.id_usuario JOIN curso ON curso.id_curso=comprobante.id_curso`;
+
+    if (req.query.keyword) {
+      const rows = await pool.query(`SELECT COUNT(*) FROM comprobante ${Joins} WHERE estado = ? AND (nombre LIKE '%${req.query.keyword}%' OR apellido LIKE '%${req.query.keyword}%' OR correo LIKE '%${req.query.keyword}%' OR nombre_curso LIKE '%${req.query.keyword}%')`, [req.params.estado]);
+      if (rows[0]["COUNT(*)"]) return res.json(rows[0]["COUNT(*)"]);
+      return res.json(0);
+    }
+    const rows = await pool.query(`SELECT COUNT(*) FROM comprobante ${Joins} WHERE estado = ?`, [req.params.estado]);
     if (rows[0]["COUNT(*)"]) return res.json(rows[0]["COUNT(*)"]);
-    return res.json({ error: "Ocurrió un error" });
+    return res.json(0);
   } catch (error) {
     console.log(error);
-    return res.json({ error: "Ocurrió un error" });
+    return res.json(0);
   }
 };
 
 //.get('/:estado/:page')
 ctrlComprobantes.getComprobantes = async (req, res) => {
   try {
-    const cantidadDatos = 12;
-    const pagina = (req.params.page - 1) * cantidadDatos;
-    const rows = await pool.query("SELECT id_comprobante,estado,usuario.id_usuario,nombre,apellido,nombre_curso,url_foto_comprobante FROM comprobante JOIN usuario ON comprobante.id_usuario = usuario.id_usuario JOIN curso ON curso.id_curso=comprobante.id_curso WHERE estado = ? ORDER BY fecha_enviado DESC", [req.params.estado]);
-    return res.json({ success: "Datos obtenidos", comprobantes: rows.splice(pagina, cantidadDatos) });
+    let datosSQL = `id_comprobante,estado,usuario.id_usuario,nombre,apellido,nombre_curso,url_foto_comprobante`;
+    let Joins = `JOIN usuario ON comprobante.id_usuario = usuario.id_usuario JOIN curso ON curso.id_curso=comprobante.id_curso`;
+    if (req.query.keyword && req.params.page) {
+      const cantidadDatos = 12;
+      const pagina = (req.params.page - 1) * cantidadDatos;
+      const rows = await pool.query(`SELECT ${datosSQL} FROM comprobante ${Joins} WHERE estado = ? AND  (nombre LIKE '%${req.query.keyword}%' OR apellido LIKE '%${req.query.keyword}%' OR correo LIKE '%${req.query.keyword}%' OR nombre_curso LIKE '%${req.query.keyword}%') ORDER BY fecha_enviado DESC`, [req.params.estado]);
+      return res.json({ success: "Datos obtenidos", comprobantes: rows.splice(pagina, cantidadDatos) });
+    }
+    if (req.query.keyword) {
+      const rows = await pool.query(`SELECT ${datosSQL} FROM comprobante ${Joins} WHERE estado = ? AND  (nombre LIKE '%${req.query.keyword}%' OR apellido LIKE '%${req.query.keyword}%' OR correo LIKE '%${req.query.keyword}%' OR nombre_curso LIKE '%${req.query.keyword}%') ORDER BY fecha_enviado DESC`, [req.params.estado]);
+      return res.json({ success: "Datos obtenidos", comprobantes: rows });
+    }
+    if (req.params.page) {
+      const cantidadDatos = 12;
+      const pagina = (req.params.page - 1) * cantidadDatos;
+      const rows = await pool.query(`SELECT ${datosSQL} FROM comprobante ${Joins} WHERE estado = ? ORDER BY fecha_enviado DESC`, [req.params.estado]);
+      return res.json({ success: "Datos obtenidos", comprobantes: rows.splice(pagina, cantidadDatos) });
+    }
+    const rows = await pool.query(`SELECT ${datosSQL} FROM comprobante ${Joins} WHERE estado = ? ORDER BY fecha_enviado DESC`, [req.params.estado]);
+    return res.json({ success: "Datos obtenidos", comprobantes: rows });
   } catch (error) {
     console.log(error);
     return res.json({ error: "Ocurrió un error" });

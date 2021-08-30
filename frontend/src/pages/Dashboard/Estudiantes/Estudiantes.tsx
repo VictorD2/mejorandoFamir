@@ -59,7 +59,7 @@ const Usuarios: React.FC = () => {
             <div className="row">
               <div className="col-lg-4 col-md-6"></div>
               <div className="col-lg-3 col-md-3 ms-auto">
-                <Buscador placeholder={`Buscar estudiante`} funcion={buscar} />
+                <Buscador tooltip="Buscar por nombre, apellido o correo" placeholder={`Buscar estudiante`} funcion={buscar} />
               </div>
             </div>
             <div className="row mt-5">
