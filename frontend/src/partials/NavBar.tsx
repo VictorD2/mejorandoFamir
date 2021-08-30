@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Link, useHistory } from "react-router-dom";
 import Axios from "axios";
 import { API } from "../config/config";
@@ -40,6 +40,9 @@ const initialState: Usuario = {
   authenticate: false,
 };
 const NavBar: React.FC = () => {
+  const refSubItem = useRef<HTMLUListElement>(null);
+  const refNavLateralSubItem = useRef<HTMLUListElement>(null);
+  const refCloseButton = useRef<HTMLButtonElement>(null);
   const { usuario, loadUser, setUsuario } = useUsuario();
   const history = useHistory();
   // Para fijar el nav al scrollear la pagina
@@ -108,6 +111,19 @@ const NavBar: React.FC = () => {
     const subItem = document.getElementById("subItemsMenuSecondResponsive");
     subItem?.classList.toggle("d-none");
   };
+
+  const hiddenClick = () => {
+    refSubItem.current?.classList.toggle("d-none");
+  };
+
+  const navLateralHiddenClick = () => {
+    refNavLateralSubItem.current?.classList.toggle("d-none");
+    refCloseButton.current?.click();
+  };
+
+  const closeLateralNav = () => {
+    refCloseButton.current?.click();
+  }
 
   return (
     <React.Fragment>
@@ -212,7 +228,11 @@ const NavBar: React.FC = () => {
               >
                 Programa <RiArrowDownSFill className="fs-5" />
               </Link>
-              <ul className="content-lista d-none" id="itemsMenu">
+              <ul
+                className="content-lista d-none"
+                id="itemsMenu"
+                ref={refSubItem}
+              >
                 <li
                   onMouseEnter={disappearSubItemFirst}
                   onMouseLeave={disappearSubItemFirst}
@@ -231,7 +251,12 @@ const NavBar: React.FC = () => {
                     {/* <li><Link to="/Clases/Cursos/Asincronos">Asincrono</Link></li> */}
                     {/* <li><hr className="dropdown-divider" /></li> */}
                     <li>
-                      <Link to="/Clases/Cursos/Sincronicos">Sincrónico</Link>
+                      <Link
+                        to="/Clases/Cursos/Sincronicos"
+                        onClick={hiddenClick}
+                      >
+                        Sincrónico
+                      </Link>
                     </li>
                   </ul>
                 </li>
@@ -256,7 +281,10 @@ const NavBar: React.FC = () => {
                     id="subItemsMenuSecond"
                   >
                     <li>
-                      <Link to="/Clases/Talleres/Asincronicos">
+                      <Link
+                        to="/Clases/Talleres/Asincronicos"
+                        onClick={hiddenClick}
+                      >
                         Asincrónico
                       </Link>
                     </li>
@@ -264,7 +292,12 @@ const NavBar: React.FC = () => {
                       <hr className="dropdown-divider" />
                     </li>
                     <li>
-                      <Link to="/Clases/Talleres/Sincronicos">Sincrónico</Link>
+                      <Link
+                        to="/Clases/Talleres/Sincronicos"
+                        onClick={hiddenClick}
+                      >
+                        Sincrónico
+                      </Link>
                     </li>
                   </ul>
                 </li>
@@ -304,28 +337,29 @@ const NavBar: React.FC = () => {
         </a>
       </div>
       {/* Nav Lateral */}
-      <nav className="navigation-left moverIzquierda">
+      <nav className="navigation-left moverIzquierda" >
         <div className="w-100 d-flex justify-content-end">
           <button
             onClick={moverNavLateral}
             className="btn justify-content-end fs-3"
+            ref={refCloseButton}
           >
             <FontAwesomeIcon icon={faTimes} />
           </button>
         </div>
         <ul className="d-flex flex-column pt-5 navigation-list">
           <li className="item-list">
-            <Link className="item-link" to="/">
+            <Link className="item-link" to="/" onClick={closeLateralNav}>
               Inicio
             </Link>
           </li>
           <li className="item-list">
-            <Link className="item-link" to="/Nosotros">
+            <Link className="item-link" to="/Nosotros" onClick={closeLateralNav}>
               ¿Quienes Somos?
             </Link>
           </li>
           <li className="item-list">
-            <Link className="item-link" to="/Contactanos">
+            <Link className="item-link" to="/Contactanos" onClick={closeLateralNav}>
               Contáctanos
             </Link>
           </li>
@@ -338,7 +372,11 @@ const NavBar: React.FC = () => {
             >
               Programa <RiArrowDownSFill className="fs-5" />
             </Link>
-            <ul className="content-lista-res d-none" id="itemsMenuResponsive">
+            <ul
+              className="content-lista-res d-none"
+              id="itemsMenuResponsive"
+              ref={refNavLateralSubItem}
+            >
               <li onClick={disappearSubItemFirstResponsive}>
                 <Link to="#" role="button">
                   Curso <RiArrowDownSFill className="fs-5" />
@@ -351,7 +389,11 @@ const NavBar: React.FC = () => {
                 {/* <li><Link to="/curso/asincrono" role="button">Asincrono</Link></li>
                 <li><hr className="dropdown-divider" /></li> */}
                 <li>
-                  <Link to="/Clases/Cursos/Sincronicos" role="button">
+                  <Link
+                    to="/Clases/Cursos/Sincronicos"
+                    onClick={navLateralHiddenClick}
+                    role="button"
+                  >
                     Sincrónico
                   </Link>
                 </li>
@@ -371,7 +413,11 @@ const NavBar: React.FC = () => {
                 id="subItemsMenuSecondResponsive"
               >
                 <li>
-                  <Link to="/Clases/Talleres/Asincronicos" role="button">
+                  <Link
+                    to="/Clases/Talleres/Asincronicos"
+                    onClick={navLateralHiddenClick}
+                    role="button"
+                  >
                     Asincrónico
                   </Link>
                 </li>
@@ -379,7 +425,11 @@ const NavBar: React.FC = () => {
                   <hr className="dropdown-divider" />
                 </li>
                 <li>
-                  <Link to="/Clases/Talleres/Sincronicos" role="button">
+                  <Link
+                    to="/Clases/Talleres/Sincronicos"
+                    onClick={navLateralHiddenClick}
+                    role="button"
+                  >
                     Sincrónico
                   </Link>
                 </li>
