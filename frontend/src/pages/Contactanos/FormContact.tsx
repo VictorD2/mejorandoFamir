@@ -11,7 +11,10 @@ import { Contacto } from "../../interfaces/Contacto";
 import * as contactoServices from "../../services/ContactoServices";
 
 // Regular Expression
-import exprRegular from "../../encrypt/regularExpr";
+import exprRegular from "../../helpers/encrypt/regularExpr";
+
+// Method BadWords
+import badwords from "../../helpers/badWords/MethodBadWords";
 
 const initialState: Contacto = {
   name: "",
@@ -61,6 +64,17 @@ const FormContact: React.FC = () => {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (
+      !(
+        exprRegular.nombre.test(contacto.name) &&
+        exprRegular.correo.test(contacto.email) &&
+        contacto.message
+      )
+    )
+      return swal("Oops!", "Campos invalidos", "error");
+
+    if (badwords(contacto.message)) return badwords(contacto.message);
+
     const res = await contactoServices.createContacto(contacto);
     if (res.data.error)
       return swal({ title: "¡Ups!", text: res.data.error, icon: "error" });

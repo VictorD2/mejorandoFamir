@@ -3,21 +3,24 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useUsuario } from "../../auth/UsuarioProvider";
 
-//Iconos
+// Iconos
 import { FaEnvelope, FaTimes } from "react-icons/fa";
 import { FaChevronDown } from "react-icons/fa";
 
-//Toastify
+// Toastify
 import { toast } from "react-toastify";
 
-//Interfaces
+// Interfaces
 import { Comentario } from "../../interfaces/Comentario";
 
-//Services
+// Services
 import * as comentariosServices from "../../services/ComentariosServices";
 
-//Components
+// Components
 import CajaComentario from "./CajaComentario";
+
+// BadWords
+import badwords from "../../helpers/badWords/MethodBadWords";
 
 //TimeAgo
 import TimeAgo from "timeago-react";
@@ -37,115 +40,6 @@ interface Params {
   idTema: string;
 }
 const Comentarios: React.FC = () => {
-  const badWords = [
-    "Asesinato",
-    "asno",
-    "bastardo",
-    "bastarda",
-    "Bichotazo",
-    "Bollera",
-    "Bruto",
-    "Bruta",
-    "Cabrón",
-    "Caca",
-    "Cagada",
-    "Carajo",
-    "Crj",
-    "Chupada",
-    "Chupapollas",
-    "Chupetón",
-    "concha",
-    "Concha de tu madre",
-    "Cojudo",
-    "Coño",
-    "Conero",
-    "Coprofagía",
-    "Culo",
-    "csm",
-    "csmr",
-    "csmre",
-    "ctmre",
-    "ctmr",
-    "ctm",
-    "Drogas",
-    "Esperma",
-    "Fiesta de salchichas",
-    "Follador",
-    "Follar",
-    "Gilipichis",
-    "Gilipollas",
-    "Hacer una paja",
-    "Haciendo el amor",
-    "Heroína",
-    "Hija de puta",
-    "Hijaputa",
-    "Hijo de puta",
-    "Hijoputa",
-    "Huevón",
-    "Huevon",
-    "Idiota",
-    "Imbécil",
-    "infierno",
-    "Jilipollas",
-    "Joputa",
-    "Kapullo",
-    "Lameculos",
-    "Maciza",
-    "Macizorra",
-    "maldito",
-    "mal nacido",
-    "malnacido",
-    "Mamada",
-    "Marica",
-    "Maricón",
-    "Maricon",
-    "Mariconazo",
-    "martillo",
-    "Mierda",
-    "Mrd",
-    "Mierdoso",
-    "Musaraña",
-    "Nazi",
-    "Negra de mierda",
-    "Negro de mierda",
-    "Orina",
-    "Paja",
-    "Pedo",
-    "Pendejo",
-    "Pervertido",
-    "Perra",
-    "Pezón",
-    "Pinche",
-    "Pis",
-    "Prostituta",
-    "Puta",
-    "Pucta",
-    "Ptmr",
-    "Ptm",
-    "Ptmre",
-    "Puto",
-    "Racista",
-    "Ramera",
-    "Sádico",
-    "Semen",
-    "Sexo",
-    "Sexo oral",
-    "Soplagaitas",
-    "Soplapollas",
-    "Soplón",
-    "Soplon",
-    "Tetas grandes",
-    "Tarado",
-    "Tía buena",
-    "Travesti",
-    "Trio",
-    "Verga",
-    "Vagina",
-    "vete a la mierda",
-    "Vulva",
-    "Zorra",
-  ];
-
   const { usuario } = useUsuario();
 
   const params = useParams<Params>();
@@ -177,18 +71,18 @@ const Comentarios: React.FC = () => {
   //Funciones
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (comentario.comentario === "") return toast.warning("No ha escrito un comentario");
-    const vocales = ["a", "e", "i", "o", "u"];
-    for (let i = 0; i < badWords.length; i++) {
-      const element = badWords[i];
-      let elemento = element;
-      if (vocales.includes(elemento.charAt(elemento.length - 1))) elemento = element.slice(0, element.length - 1);
-      if (comentario.comentario.toLowerCase().includes(element.toLowerCase()) || comentario.comentario.toLowerCase().includes(elemento.toLowerCase())) {
-        return swal({ title: "Advertencia", text: `No se permiten este tipo de comentarios: ${element}`, icon: "warning" });
-      }
-    }
-    const res = await comentariosServices.crearComentario(comentario, params.idCurso, params.idTema);
-    if (res.data.error) return swal({ title: "Ups!", text: `${res.data.error}`, icon: "error" });
+    if (comentario.comentario === "")
+      return toast.warning("No ha escrito un comentario");
+
+    if (badwords(comentario.comentario)) return badwords(comentario.comentario);
+
+    const res = await comentariosServices.crearComentario(
+      comentario,
+      params.idCurso,
+      params.idTema
+    );
+    if (res.data.error)
+      return swal({ title: "Ups!", text: `${res.data.error}`, icon: "error" });
 
     swal({ title: "Hecho!", text: `${res.data.success}`, icon: "success" });
     toast.success(res.data.success);
@@ -198,13 +92,17 @@ const Comentarios: React.FC = () => {
   };
 
   const getCantidad = async () => {
-    const res = await comentariosServices.getCount(params.idCurso, params.idTema);
+    const res = await comentariosServices.getCount(
+      params.idCurso,
+      params.idTema
+    );
     setCantidad(res.data);
     setCantidad(Math.ceil(res.data / 4));
   };
 
   const eliminarComentario = async (id?: number) => {
-    if (!window.confirm("¿Está seguro que desea eliminar el comentario?")) return;
+    if (!window.confirm("¿Está seguro que desea eliminar el comentario?"))
+      return;
 
     const res = await comentariosServices.eliminarComentario(id + "");
     if (res.data.error) return toast.error(res.data.error);
@@ -215,7 +113,11 @@ const Comentarios: React.FC = () => {
   };
 
   const getComentarios = async () => {
-    const res = await comentariosServices.getAll(page, params.idCurso, params.idTema);
+    const res = await comentariosServices.getAll(
+      page,
+      params.idCurso,
+      params.idTema
+    );
     if (res.data.error) return;
 
     setComentarios(res.data.comentarios);
@@ -229,14 +131,26 @@ const Comentarios: React.FC = () => {
     <div className="w-100">
       <form onSubmit={handleFormSubmit} className="d-flex flex-column">
         <div className="form-floating w-100">
-          <textarea onChange={handleTextArea} name="comentario" value={comentario.comentario} className="form-control" id="floatingTextarea2" style={{ height: "100px" }}></textarea>
-          <label htmlFor="floatingTextarea2">Escribe tu aporte o comentario</label>
+          <textarea
+            onChange={handleTextArea}
+            name="comentario"
+            value={comentario.comentario}
+            className="form-control"
+            id="floatingTextarea2"
+            style={{ height: "100px" }}
+          ></textarea>
+          <label htmlFor="floatingTextarea2">
+            Escribe tu aporte o comentario
+          </label>
         </div>
         <button className="btn btn__blue mt-1 ms-auto">
           <FaEnvelope className="mb-1" /> Enviar
         </button>
       </form>
-      <div className="m-2 pe-lg-4 pe-md-0" style={{ minHeight: "550px", maxHeight: "550px", overflowX: "hidden" }}>
+      <div
+        className="m-2 pe-lg-4 pe-md-0"
+        style={{ minHeight: "550px", maxHeight: "550px", overflowX: "hidden" }}
+      >
         {comentarios.map((comentarioItem) => {
           return (
             <div className="card my-3" key={comentarioItem.id_comentario}>
@@ -244,7 +158,11 @@ const Comentarios: React.FC = () => {
                 <div className="author-info">
                   <div className="foto-author">
                     <figure className="figure">
-                      <img className="img-fluid" src={comentarioItem.url_foto_usuario} alt="Foto Perfil" />
+                      <img
+                        className="img-fluid"
+                        src={comentarioItem.url_foto_usuario}
+                        alt="Foto Perfil"
+                      />
                     </figure>
                   </div>
                   <div className="nombre-author">
@@ -253,29 +171,49 @@ const Comentarios: React.FC = () => {
                     </p>
                     {comentarioItem.id_rango === 1 ? (
                       <>
-                        <p className="mt-1" style={{ color: "var(--verde-oscuro)" }}>
+                        <p
+                          className="mt-1"
+                          style={{ color: "var(--verde-oscuro)" }}
+                        >
                           Administrador
                         </p>
                       </>
                     ) : (
                       <></>
                     )}
-                    <TimeAgo style={{ fontSize: "12px" }} className="text-black-50" datetime={new Date(comentarioItem.fecha)} live={false} locale="vi" />
+                    <TimeAgo
+                      style={{ fontSize: "12px" }}
+                      className="text-black-50"
+                      datetime={new Date(comentarioItem.fecha)}
+                      live={false}
+                      locale="vi"
+                    />
                   </div>
                   {usuario.id_rango === 1 ? (
                     <>
                       <div className="ms-auto">
-                        <button onClick={() => eliminarComentario(comentarioItem.id_comentario)} className="btn">
+                        <button
+                          onClick={() =>
+                            eliminarComentario(comentarioItem.id_comentario)
+                          }
+                          className="btn"
+                        >
                           <FaTimes />
                         </button>
                       </div>
                     </>
                   ) : (
                     <>
-                      {comentarioItem.id_usuario === parseInt(usuario.id_usuario + "") ? (
+                      {comentarioItem.id_usuario ===
+                      parseInt(usuario.id_usuario + "") ? (
                         <>
                           <div className="ms-auto">
-                            <button onClick={() => eliminarComentario(comentarioItem.id_comentario)} className="btn">
+                            <button
+                              onClick={() =>
+                                eliminarComentario(comentarioItem.id_comentario)
+                              }
+                              className="btn"
+                            >
                               <FaTimes />
                             </button>
                           </div>
