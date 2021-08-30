@@ -65,11 +65,11 @@ const Footer: React.FC = () => {
                     Contáctanos
                   </Link>
                 </li>
-                <li className="footer-as-list-item my-3 my-md-2 my-lg-4">
+                {/* <li className="footer-as-list-item my-3 my-md-2 my-lg-4">
                   <Link className="text-white-50 text-decoration-none text-uppercase" to="/Programa">
                     Programa
                   </Link>
-                </li>
+                </li> */}
               </ul>
             </div>
             {/* Tercera Fila */}
