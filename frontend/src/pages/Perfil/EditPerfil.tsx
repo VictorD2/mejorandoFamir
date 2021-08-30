@@ -39,7 +39,7 @@ const EditPerfil: React.FC = () => {
   };
   const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (password.confirmPassowrd === "" || password.newPassword === "" || password.oldPassword === "") return swal({ title: "Advertencia", text: "Campos incompletos", icon: "warning" });
+    if (password.confirmPassowrd === "" || password.newPassword === "") return swal({ title: "Advertencia", text: "Campos incompletos", icon: "warning" });
     if (password.newPassword !== password.confirmPassowrd) return swal({ title: "Advertencia", text: "Contraseñas no coinciden", icon: "warning" });
     const res = await axios.put(`${API}/api/v0/usuarios/password/${usuario.id_usuario}`, password);
     if (res.data.error) return swal({ title: "Ups!", text: res.data.error, icon: "error" });

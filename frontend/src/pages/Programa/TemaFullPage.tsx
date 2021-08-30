@@ -98,7 +98,7 @@ const TemaFullPage: React.FC = () => {
   return (
     <React.Fragment>
       <ToastContainer />
-      <div className="p-5" style={{ marginTop: "3rem", background: "#eef3f6" }}>
+      <div className="p-2 p-lg-5" style={{ marginTop: "3rem", background: "#eef3f6" }}>
         <div className="row">
           <div className="col-12 col-sm-7 col-lg-7 mb-5">
             {loadingVideo ? (

@@ -6,7 +6,7 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import Modulos from "./Modulos";
 
 //Iconos
-import { GiTeacher } from "react-icons/gi";
+import { GiTeacher, GiTwoCoins } from "react-icons/gi";
 import { FaCalendarAlt, FaDollarSign } from "react-icons/fa";
 import { GrShop } from "react-icons/gr";
 
@@ -108,6 +108,7 @@ const CursoFullPage: React.FC = () => {
                 <div className="d-flex align-items-center mt-2">
                   {usuario.id_pais_residencia === "PE" ? (
                     <>
+                      <GiTwoCoins className="me-2"/>
                       <span className="me-1">Precio: S/.{(curso.precio * 0.0052).toFixed(0)} SOLES</span>
                     </>
                   ) : (

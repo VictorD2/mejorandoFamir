@@ -81,8 +81,10 @@ const ListaComprobante: React.FC<Props> = (props) => {
                     </>
                   )}
                   <div className="card-body d-flex justify-content-between flex-column">
-                    <img src={comprobante.url_foto_comprobante} className="img-fluid" alt="" />
-                    <p className="m-0 mt-auto">
+                    <div style={{ height: "20rem" }}>
+                      <img src={comprobante.url_foto_comprobante} className="w-100 img-fluid h-100" alt="" />
+                    </div>
+                    <p className="mb-0 mt-3 overflow-hidden descripcion__curso" style={{ fontSize: "16px", minHeight: "22px", maxHeight: "22px" }}>
                       <span className="fw-bold">Estudiante:</span>
                       {comprobante.nombre} {comprobante.apellido}
                     </p>

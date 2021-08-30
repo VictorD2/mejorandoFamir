@@ -20,8 +20,8 @@ module.exports = {
 
   isAdminApi(req, res, next) {
     try {
-      // if (!req.user) return res.json({ error: "Necesitas una cuenta para esta acción" });
-      // if (req.user.id_rango != "1") return res.json({ error: "No tienes permiso para esta acción" });
+      if (!req.user) return res.json({ error: "Necesitas una cuenta para esta acción" });
+      if (req.user.id_rango != "1") return res.json({ error: "No tienes permiso para esta acción" });
       return next();
     } catch (error) {
       console.log(error);

@@ -236,8 +236,10 @@ const Comprobantes: React.FC = () => {
                     <div className="card mb-3">
                       <div className="row g-0">
                         <div className="col-md-6">
-                          <img src={comprobante.url_foto_comprobante} className="w-100" alt="..." />
-                          <p>
+                          <div style={{ height: "38rem", width: "100%" }}>
+                            <img style={{ objectFit: "contain" }} src={comprobante.url_foto_comprobante} className="w-100 h-100" alt="..." />
+                          </div>
+                          <p className="mb-0 mt-2">
                             <span className="text-uppercase fw-bold">Fecha Enviado: </span>
                             {new Date(comprobante.fecha_enviado).toLocaleString()}
                           </p>

@@ -143,7 +143,10 @@ const FormCurso: React.FC = () => {
   //Evento submit
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!(exprRegular.nombre.test(curso.nombre_curso) && exprRegular.precio.test(curso.precio + "") && exprRegular.digitos.test(curso.duracion + "") && exprRegular.digitos.test(curso.capacidad + "") && exprRegular.url.test(curso.enlace) && curso.descripcion && curso.horario && profesores && curso.url_foto_curso)) return toast.error("Campos invalidos");
+    if (!(exprRegular.nombre.test(curso.nombre_curso) && exprRegular.precio.test(curso.precio + "") && curso.descripcion)) return toast.error("Campos invalidos");
+    if (modalidad === "Asincronicos") {
+      if (!(exprRegular.digitos.test(curso.duracion + "") && exprRegular.digitos.test(curso.capacidad + "") && exprRegular.url.test(curso.enlace) && curso.horario)) return toast.error("Campos invalidos");
+    }
 
     let client = new Vimeo(VimeoKeys.CLIENT_ID, VimeoKeys.CLIENT_SECRET, VimeoKeys.CLIENT_TOKEN);
     const form = new FormData();
@@ -184,6 +187,7 @@ const FormCurso: React.FC = () => {
       if (error) return toast.error(error);
       form.append("uri_carpeta_vimeo", body.uri);
       if (curso.foto_curso) form.append("fotoCurso", curso.foto_curso[0]);
+      form.append("modalidad",modalidad);
       const res = await CursosServices.updateCurso(params.id, form, refProgresss.current);
       if (res.data.error) return toast.error(res.data.error);
       toast.success(res.data.success);

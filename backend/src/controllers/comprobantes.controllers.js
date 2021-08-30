@@ -68,33 +68,33 @@ ctrlComprobantes.createComprobante = async (req, res) => {
   try {
     // Una cuenta
     if (!req.user) {
-      await fs.unlink(path.join(__dirname + `../build/uploads/fotosComprobantes/${req.file.filename}`));
+      await fs.unlink(path.join(__dirname,`../build/uploads/fotosComprobantes/${req.file.filename}`));
       return res.json({ error: "Necesita una cuenta para comprar" });
     }
 
     // Diferente usuario
     if (req.user.id_usuario != req.body.id_usuario) {
-      await fs.unlink(path.join(__dirname + `../build/uploads/fotosComprobantes/${req.file.filename}`));
+      await fs.unlink(path.join(__dirname,`../build/uploads/fotosComprobantes/${req.file.filename}`));
       return res.json({ error: "No tienes permiso para hacer eso" }); //Descomentar en producción
     }
 
     // No foto
     if (!req.file) {
-      await fs.unlink(path.join(__dirname + `../build/uploads/fotosComprobantes/${req.file.filename}`));
+      await fs.unlink(path.join(__dirname,`../build/uploads/fotosComprobantes/${req.file.filename}`));
       return res.json({ error: "No ha subido una foto" });
     }
 
     // Ya envió un comprobante
     const validacion = await pool.query('SELECT * FROM comprobante WHERE id_usuario = ? AND id_curso = ? AND estado = "NoVisto"', [req.body.id_usuario, req.body.id_curso]);
     if (validacion[0]) {
-      await fs.unlink(path.join(__dirname + `../build/uploads/fotosComprobantes/${req.file.filename}`));
+      await fs.unlink(path.join(__dirname,`../build/uploads/fotosComprobantes/${req.file.filename}`));
       return res.json({ error: "Ya ha enviado un comprobante de este curso, pronto lo revisaremos" });
     }
 
     //Ya está inscrito al curso
     const validacion2 = await pool.query("SELECT * FROM usuario_curso WHERE id_usuario = ? AND id_curso = ?", [req.body.id_usuario, req.body.id_curso]);
     if (validacion2[0]) {
-      await fs.unlink(path.join(__dirname + `../build/uploads/fotosComprobantes/${req.file.filename}`));
+      await fs.unlink(path.join(__dirname,`../build/uploads/fotosComprobantes/${req.file.filename}`));
       return res.json({ error: "Ya está inscrito en este curso" });
     }
 
