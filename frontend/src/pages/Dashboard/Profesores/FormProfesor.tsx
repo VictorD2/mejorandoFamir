@@ -56,12 +56,14 @@ const FormProfesor: React.FC = () => {
   const [urlFotoPrevia, setUrlFotoPrevia] = useState<string>("");
 
   // References
+  const refInput = useRef<HTMLInputElement | null>();
   const refNameTeacher = useRef<HTMLDivElement>(null);
   const refSurnameTeacher = useRef<HTMLDivElement>(null);
   const refEmailTeacher = useRef<HTMLDivElement>(null);
   const refOccupationTeacher = useRef<HTMLDivElement>(null);
   const refPhoneTeacher = useRef<HTMLDivElement>(null);
   const refRutTeacher = useRef<HTMLDivElement>(null);
+  const refProgresss = useRef<HTMLDivElement | null>();
 
   // Params
   const params = useParams<Params>();
@@ -140,12 +142,24 @@ const FormProfesor: React.FC = () => {
 
     if (!(exprRegular.nombre.test(profesor.nombre + "") && exprRegular.nombre.test(profesor.apellido + "") && exprRegular.correo.test(profesor.correo + "") && exprRegular.nombre.test(profesor.profesion + "") && exprRegular.telefono.test(profesor.telefono + "") && exprRegular.rut.test(profesor.rut + "") && profesor.id_pais_nacimiento && profesor.id_pais_residencia)) return toast.error("Campos invalidos");
     if (!params.id) {
-      const res = await profesorServices.crearProfesor(form);
+      const res = await profesorServices.crearProfesor(form, refProgresss.current);
       if (res.data.error) return toast.error(res.data.error);
+      if (refInput.current) refInput.current.value = "";
+      if (refProgresss.current) {
+        refProgresss.current.innerHTML = "0%";
+        refProgresss.current.style.width = "0%";
+      }
+      setProfesor(initialState);
+      setUrlFotoPrevia("");
       return toast.success(res.data.success);
     }
-    const res = await profesorServices.updateProfesor(params.id, form);
+    const res = await profesorServices.updateProfesor(params.id, form, refProgresss.current);
     if (res.data.error) return toast.error(res.data.error);
+    if (refInput.current) refInput.current.value = "";
+    if (refProgresss.current) {
+      refProgresss.current.innerHTML = "0%";
+      refProgresss.current.style.width = "0%";
+    }
     toast.success(res.data.success);
   };
 
@@ -272,13 +286,18 @@ const FormProfesor: React.FC = () => {
                   <div className="form-floating mb-3">
                     {params.id ? (
                       <>
-                        <input onChange={handleInputFileChange} id="floatingInputFoto" className="form-control" type="file" placeholder="Foto" name="url_foto_profesor" />
+                        <input ref={(node) => (refInput.current = node)} onChange={handleInputFileChange} id="floatingInputFoto" className="form-control" type="file" placeholder="Foto" name="url_foto_profesor" />
                       </>
                     ) : (
                       <>
-                        <input onChange={handleInputFileChange} id="floatingInputFoto" className="form-control" type="file" placeholder="Foto" name="url_foto_profesor" required />
+                        <input ref={(node) => (refInput.current = node)} onChange={handleInputFileChange} id="floatingInputFoto" className="form-control" type="file" placeholder="Foto" name="url_foto_profesor" required />
                       </>
                     )}
+                    <div className="progress">
+                      <div className="progress-bar" ref={(node) => (refProgresss.current = node)} role="progressbar" style={{ width: "0%" }} aria-valuenow={0} aria-valuemin={0} aria-valuemax={100}>
+                        0%
+                      </div>
+                    </div>
                     <label htmlFor="floatingInputFoto">Foto Pública en la Página</label>
                   </div>
                   <div className="mb-3">

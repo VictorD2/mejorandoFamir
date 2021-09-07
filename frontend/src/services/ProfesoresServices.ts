@@ -17,17 +17,31 @@ export const getCount = async (keyword: string) => {
 export const getProfesorById = async (id: string) => {
   return await axios.get(`${api}/${id}`);
 };
-export const crearProfesor = async (profesor: FormData) => {
+export const crearProfesor = async (profesor: FormData, progressBar: any) => {
   return await axios.post(`${api}`, profesor, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
+    onUploadProgress(e) {
+      let progress = Math.round((e.loaded * 100.0) / e.total);
+      if (progressBar != null) {
+        progressBar.innerHTML = `${progress}%`;
+        progressBar.style.width = `${progress}%`;
+      }
+    },
   });
 };
-export const updateProfesor = async (id: string, profesor: FormData) => {
+export const updateProfesor = async (id: string, profesor: FormData, progressBar: any) => {
   return await axios.put(`${api}/${id}`, profesor, {
     headers: {
       "Content-Type": "multipart/form-data",
+    },
+    onUploadProgress(e) {
+      let progress = Math.round((e.loaded * 100.0) / e.total);
+      if (progressBar != null) {
+        progressBar.innerHTML = `${progress}%`;
+        progressBar.style.width = `${progress}%`;
+      }
     },
   });
 };

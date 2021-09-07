@@ -148,6 +148,15 @@ const Comentarios: React.FC = () => {
                     ) : (
                       <></>
                     )}
+                    {comentarioItem.id_rango === 3 ? (
+                      <>
+                        <p className="mt-1" style={{ color: "var(--verde-oscuro)" }}>
+                          Profesor
+                        </p>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                     <TimeAgo style={{ fontSize: "12px" }} className="text-black-50" datetime={new Date(comentarioItem.fecha)} live={false} locale="vi" />
                   </div>
                   {usuario.id_rango === 1 ? (
@@ -185,7 +194,12 @@ const Comentarios: React.FC = () => {
       ) : (
         <>
           <div className="w-100 d-flex justify-content-center p-2">
-            <button onClick={() => { setPage(page + 1); }} className="btn btn__blue" >
+            <button
+              onClick={() => {
+                setPage(page + 1);
+              }}
+              className="btn btn__blue"
+            >
               <FaChevronDown /> Ver más comentarios
             </button>
           </div>
