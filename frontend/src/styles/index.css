@@ -477,19 +477,21 @@ code {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .content__form {
   width: 38rem;
   height: 43rem;
-  overflow: hidden;
+  overflow: auto;
+  margin: 0;
 }
 
 .content__Login {
   width: 25rem;
   height: 37rem;
   overflow-x: hidden;
+  margin: 0;
 }
 
 .rgt__img {

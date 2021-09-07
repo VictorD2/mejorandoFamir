@@ -310,7 +310,7 @@ const Register: React.FC = () => {
                     </div>
                     {captchaValidation === false && <div className="text-center text-danger mt-2">Por favor acepta el captcha</div>}
                     <div className="col-md-12">
-                      <div className="rgt__button">
+                      <div className="rgt__button pb-4 p-lg-0">
                         <button type="submit" className="btn btn__more" style={{ padding: "0.7rem 2rem" }}>
                           Registrar
                         </button>
