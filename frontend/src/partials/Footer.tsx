@@ -102,16 +102,15 @@ const Footer: React.FC = () => {
               <div className="footer-contact">
                 <p className="text-white-50 my-5 d-flex justify-content-start align-items-center">
                   <IoLocationOutline color={"#7ed958"} className="mx-2 fs-4" />
-                  4127/ 5B-C Mislane<br /> Road, Gibraltar, UK
+                  Santiago de Chile<br /> Trujillo, Perú
                 </p>
               </div>
-              <div className="footer-contact">
-                <p className="text-white-50 my-5 d-flex justify-content-start align-items-center">
-                  <AiOutlinePhone color={"#7ed958"} className="mx-2 fs-4" />
-                  Main: 203-808-8613
-                  <br />
-                  Office: 203-808-8648
-                </p>
+              <div className="footer-contact d-flex text-white-50 my-5">
+                <AiOutlinePhone color={"#7ed958"} className="mx-2 fs-4 my-auto" />
+                <div className="d-grid">
+                  <p className="m-0">Chile: <a href="https://wa.me/56973952562" target="_BLANK" rel="noreferrer" className="text-decoration-none text-white-50">+56 973-952-562</a></p>
+                  <p className="m-0">Perú: <a href="https://wa.me/51991981242" target="_BLANK" rel="noreferrer" className="text-decoration-none text-white-50">+51 991-981-242</a></p>
+                </div>
               </div>
               <div className="footer-contact">
                 <p className="text-white-50 d-flex justify-content-start align-items-center">
