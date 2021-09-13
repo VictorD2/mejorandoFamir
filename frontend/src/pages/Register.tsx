@@ -198,7 +198,7 @@ const Register: React.FC = () => {
     <>
       <div className="rgt__main">
         <ToastContainer />
-        <div className="card content__form animate__animated animate__flipInY">
+        <div className="card content__form animate__animated animate__flipInY my-auto">
           <Link to="/" className="card-header rgt__header">
             <img className="rgt__img" src={logoRegister} alt="logo-register" />
             <h5 className="rgt__title">FAMIR CENTRO</h5>

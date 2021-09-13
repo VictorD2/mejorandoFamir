@@ -52,7 +52,7 @@ const Login: React.FC = () => {
     <>
       <ToastContainer />
       <div className="rgt__main">
-        <div className="card content__Login animate__animated animate__flipInY">
+        <div className="card content__Login animate__animated animate__flipInY my-auto">
           <Link to="/" className="card-header rgt__header">
             <img className="rgt__img" src={logoLogin} alt="logo-register" />
             <h5 className="rgt__title">FAMIR CENTRO</h5>
