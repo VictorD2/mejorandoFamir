@@ -90,7 +90,7 @@ const ModalTema: React.FC<Props> = (props) => {
           client.request({ method: "PATCH", path: uri, query: { privacy: { view: "disable" } } }, (error, body, status_code, headers) => {});
 
           // Whitelist
-          client.request({ method: "PUT", path: uri + "/privacy/domains/prueba-naztec.herokuapp.com" }, (error, body, status_code, headers) => {
+          client.request({ method: "PUT", path: uri + "/privacy/domains/famircentro.com" }, (error, body, status_code, headers) => {
             client.request({ method: "PATCH", path: uri, query: { privacy: { embed: "whitelist" } } }, (error, body, status_code, headers) => {});
           });
 

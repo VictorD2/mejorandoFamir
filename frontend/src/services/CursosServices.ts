@@ -14,6 +14,12 @@ export const getAllCursos = async (tipo: string, modalidad: string, page: number
   if (keyword.trim() !== "") return await axios.get(`${api}/${tipo}/${modalidad}?keyword=${keyword}&page=${page}`);
   return await axios.get(`${api}/${tipo}/${modalidad}?page=${page}`);
 };
+export const getTopCursos = async () => {
+  return await axios.get(`${api}/topCurso`);
+};
+export const footer = async () => {
+  return await axios.get(`${api}/footer`);
+};
 export const getCount = async (tipo: string, modalidad: string, keyword: string) => {
   if (keyword.trim() === "") return await axios.get(`${api}/count/${tipo}/${modalidad}`);
   return await axios.get(`${api}/count/${tipo}/${modalidad}?keyword=${keyword}`);

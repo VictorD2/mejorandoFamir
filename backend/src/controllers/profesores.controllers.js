@@ -47,7 +47,7 @@ ctrlProfesores.getProfesoresPublic = async (req, res) => {
 //.get("/count")
 ctrlProfesores.getCount = async (req, res) => {
   try {
-    if (req.user.id_rango != "1") return res.json(0);
+    // if (req.user.id_rango != "1") return res.json(0);
 
     if (req.query.keyword) {
       const rows = await pool.query(`SELECT COUNT(*) FROM usuario WHERE id_rango = 3 AND (nombre LIKE '%${req.query.keyword}%' OR apellido LIKE '%${req.query.keyword}%' OR correo LIKE '%${req.query.keyword}%')`);

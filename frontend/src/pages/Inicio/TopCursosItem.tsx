@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Link } from "react-router-dom";
-import { RiCoinsLine } from "react-icons/ri";
 interface Props {
   title: string;
   url: string;
@@ -12,19 +11,18 @@ interface Props {
   btnTitle: string;
 }
 const TopCursosItem: React.FC<Props> = (props) => {
+  const refDescripcion = useRef<HTMLParagraphElement | null>();
+
   return (
     <div className="col-12 col-lg-6 show">
-      <div className="d-flex top-cursos-item">
+      <div className="d-flex flex-column-reverse flex-lg-row top-cursos-item">
         <div className="info">
           <h5>{props.title}</h5>
           <p className="autor">
-            By {props.nombre_profesor} | {props.fecha}
+            Por {props.nombre_profesor} | {props.fecha}
           </p>
-          <p className="curso-description">{props.descripcion}</p>
-          <p className="mb-0 fw-bold">
-            <RiCoinsLine className="fs-5 me-1" />
-            Precio: {props.precio}
-          </p>
+          <p ref={(node) => (refDescripcion.current = node)}  className="curso-description overflow-hidden" style={{ minHeight: "140px", maxHeight: "140px" }}>{props.descripcion}  </p>
+
           <Link to={props.url} className="btn btn__more mt-5">
             {props.btnTitle}
           </Link>

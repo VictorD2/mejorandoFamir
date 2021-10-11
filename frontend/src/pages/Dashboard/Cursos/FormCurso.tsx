@@ -91,11 +91,13 @@ const FormCurso: React.FC = () => {
       const fecha = new Date(res.data.curso.horario);
       let cero = ``;
       let ceroHora = ``;
+      let ceroMinuto = ``;
       let ceroDia = ``;
       if (numeros.includes(fecha.getDate())) ceroDia = "0";
       if (!(fecha.getMonth() + 1 === 10 || fecha.getMonth() + 1 === 11 || fecha.getMonth() + 1 === 12)) cero = `0`;
       if (!numeros2.includes(fecha.getHours())) ceroHora = `0`;
-      const horario = `${fecha.getFullYear()}-${cero}${fecha.getMonth() + 1}-${ceroDia}${fecha.getDate()}T${ceroHora}${fecha.getHours()}:${fecha.getMinutes()}`;
+      if (!numeros2.includes(fecha.getMinutes())) ceroMinuto = `0`;
+      const horario = `${fecha.getFullYear()}-${cero}${fecha.getMonth() + 1}-${ceroDia}${fecha.getDate()}T${ceroHora}${fecha.getHours()}:${ceroMinuto}${fecha.getMinutes()}`;
       res.data.curso.horario = horario;
     }
     setCurso(res.data.curso);

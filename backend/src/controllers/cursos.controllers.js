@@ -106,6 +106,34 @@ ctrlCursos.verificarSub = async (req, res) => {
   }
 };
 
+//.get('topCurso')
+ctrlCursos.topCurso = async (req, res) => {
+  try {
+    const consulta = `
+    SELECT uc.id_curso,COUNT(*),c.nombre_curso, c.horario AS horario_curso,c.url_foto_curso, c.descripcion AS descripcion_curso,u.nombre AS nombre_profesor,u.apellido AS apellido_profesor
+    FROM  usuario_curso uc 
+    JOIN curso c ON c.id_curso=uc.id_curso 
+    JOIN usuario u ON u.id_usuario=uc.id_usuario 
+    GROUP BY uc.id_curso 
+    ORDER BY COUNT(*) DESC LIMIT 4`;
+    const rows = await pool.query(consulta);
+    return res.json(rows);
+  } catch (error) {
+    console.log(error);
+    return res.json({ error: "Ocurrió un error" });
+  }
+};
+//.get('footer')
+ctrlCursos.footer = async (req, res) => {
+  try {
+    const consulta = `SELECT id_curso,url_foto_curso FROM curso ORDER BY id_curso DESC LIMIT 6`;
+    const rows = await pool.query(consulta);
+    return res.json(rows);
+  } catch (error) {
+    console.log(error);
+    return res.json({ error: "Ocurrió un error" });
+  }
+};
 //.post('/')
 ctrlCursos.createCurso = async (req, res) => {
   try {
@@ -134,7 +162,7 @@ ctrlCursos.createCurso = async (req, res) => {
 //.put('/:id')
 ctrlCursos.updateCurso = async (req, res) => {
   try {
-    const { nombre_curso, descripcion, precio, duracion, horario, enlace,modalidad, capacidad, id_usuario, uri_carpeta_vimeo } = req.body;
+    const { nombre_curso, descripcion, precio, duracion, horario, enlace, modalidad, capacidad, id_usuario, uri_carpeta_vimeo } = req.body;
     const newCurso = { nombre_curso, descripcion, precio, capacidad, duracion, horario, enlace, id_usuario, uri_carpeta_vimeo, habilitado: 1 };
 
     if (modalidad === "Asincrónico") {

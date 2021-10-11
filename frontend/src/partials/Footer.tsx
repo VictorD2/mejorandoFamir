@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 //Imagenes
@@ -11,8 +11,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { IoLocationOutline } from "react-icons/io5";
 import { AiOutlinePhone } from "react-icons/ai";
-
+import * as cursosServices from "../services/CursosServices";
+interface CursoFooter {
+  id_curso: number;
+  url_foto_curso: string;
+}
 const Footer: React.FC = () => {
+  const [cursos, setCursos] = useState<CursoFooter[]>([]);
+  const getCursos = async () => {
+    const res = await cursosServices.footer();
+    setCursos(res.data);
+  };
+  useEffect(() => {
+    getCursos();
+    return () => setCursos([]);
+  }, []);
   return (
     <>
       <div style={{ background: "#232323" }}>
@@ -76,24 +89,13 @@ const Footer: React.FC = () => {
             <div className="col-12 col-md-6 col-lg-3 my-4 my-md-2 my-lg-3 footer-section">
               <h6 className="footer-subtitle text-white text-uppercase">Cursos</h6>
               <div className="row px-2">
-                <div className="col-4 col-sm-4 col-md-4 col-lg-4 my-3 my-md-2 my-lg-1">
-                  <img className="img-fluid img-thumbnail" src={logo} alt="Logo Famir Centro" />
-                </div>
-                <div className="col-4 col-sm-4 col-md-4 col-lg-4 my-3 my-md-2 my-lg-1">
-                  <img className="img-fluid img-thumbnail" src={logo} alt="Logo Famir Centro" />
-                </div>
-                <div className="col-4 col-sm-4 col-md-4 col-lg-4 my-3 my-md-2 my-lg-1">
-                  <img className="img-fluid img-thumbnail" src={logo} alt="Logo Famir Centro" />
-                </div>
-                <div className="col-4 col-sm-4 col-md-4 col-lg-4 my-3 my-md-2 my-lg-1">
-                  <img className="img-fluid img-thumbnail" src={logo} alt="Logo Famir Centro" />
-                </div>
-                <div className="col-4 col-sm-4 col-md-4 col-lg-4 my-3 my-md-2 my-lg-1">
-                  <img className="img-fluid img-thumbnail" src={logo} alt="Logo Famir Centro" />
-                </div>
-                <div className="col-4 col-sm-4 col-md-4 col-lg-4 my-3 my-md-2 my-lg-1">
-                  <img className="img-fluid img-thumbnail" src={logo} alt="Logo Famir Centro" />
-                </div>
+                {cursos.map((cursoItem) => {
+                  return (
+                    <div key={cursoItem.id_curso} className="col-6 col-sm-6 col-md-6 col-lg-6 my-3 my-md-2 my-lg-1">
+                      <img className="img-fluid" src={cursoItem.url_foto_curso} alt="Logo Famir Centro" />
+                    </div>
+                  );
+                })}
               </div>
             </div>
             {/* Cuarta Fila */}
@@ -102,20 +104,33 @@ const Footer: React.FC = () => {
               <div className="footer-contact">
                 <p className="text-white-50 my-5 d-flex justify-content-start align-items-center">
                   <IoLocationOutline color={"#7ed958"} className="mx-2 fs-4" />
-                  Santiago de Chile<br /> Trujillo, Perú
+                  Santiago de Chile
+                  <br /> Trujillo, Perú
                 </p>
               </div>
               <div className="footer-contact d-flex text-white-50 my-5">
                 <AiOutlinePhone color={"#7ed958"} className="mx-2 fs-4 my-auto" />
                 <div className="d-grid">
-                  <p className="m-0">Chile: <a href="https://wa.me/56973952562" target="_BLANK" rel="noreferrer" className="text-decoration-none text-white-50">+56 973-952-562</a></p>
-                  <p className="m-0">Perú: <a href="https://wa.me/51991981242" target="_BLANK" rel="noreferrer" className="text-decoration-none text-white-50">+51 991-981-242</a></p>
+                  <p className="m-0">
+                    Chile:{" "}
+                    <a href="https://wa.me/56973952562" target="_BLANK" rel="noreferrer" className="text-decoration-none text-white-50">
+                      +56 973-952-562
+                    </a>
+                  </p>
+                  <p className="m-0">
+                    Perú:{" "}
+                    <a href="https://wa.me/51991981242" target="_BLANK" rel="noreferrer" className="text-decoration-none text-white-50">
+                      +51 991-981-242
+                    </a>
+                  </p>
                 </div>
               </div>
               <div className="footer-contact">
                 <p className="text-white-50 d-flex justify-content-start align-items-center">
                   <CgMail color={"#7ed958"} className="mx-2 fs-4" />
-                  <a href="mailto:centrofamir@gmail.com" className="text-white-50" target="_blank" rel="noopener noreferrer">centrofamir@gmail.com</a>
+                  <a href="mailto:centrofamir@gmail.com" className="text-white-50" target="_blank" rel="noopener noreferrer">
+                    centrofamir@gmail.com
+                  </a>
                 </p>
               </div>
             </div>
@@ -125,7 +140,9 @@ const Footer: React.FC = () => {
 
       <div style={{ background: "#232323", color: "#FFFFFF80", height: "84px", borderTop: "1px solid #FFFFFF80 " }}>
         <div className="container h-100 d-flex justify-content-center align-items-center">
-          <p className="m-0">© 2021 <span style={{ color: "#7ed958" }}>NAZ-TEC</span>. All right reserved.</p>
+          <p className="m-0">
+            © 2021 <span style={{ color: "#7ed958" }}>NAZ-TEC</span>. All right reserved.
+          </p>
         </div>
       </div>
     </>
