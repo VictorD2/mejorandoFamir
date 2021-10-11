@@ -246,9 +246,9 @@ const Register: React.FC = () => {
                     </div>
                     <div className="col-md-6">
                       <div className="input-group mb-3">
-                        <p className="w-100 mb-0">Pais de Nacimiento</p>
+                        <p className="w-100 mb-0">País de Nacimiento</p>
                         <label className="input-group-text" htmlFor="inputGroupSelect01">
-                          <img src={paisNaci.url_foto_pais} className="img__pais register" alt="" />
+                          <img src={paisNaci.url_foto_pais} className="img__pais register" alt="País de Nacimiento" />
                         </label>
                         <select value={usuarioR.id_pais_nacimiento} onChange={handleInputChange} className="form-control rgt__form-control" name="id_pais_nacimiento" id="inputGroupSelect01">
                           {paises.map((pais) => {
@@ -263,9 +263,9 @@ const Register: React.FC = () => {
                     </div>
                     <div className="col-md-6">
                       <div className="input-group mb-3">
-                        <p className="w-100 mb-0"> Pais de Residencia</p>
+                        <p className="w-100 mb-0"> País de Residencia</p>
                         <label className="input-group-text" htmlFor="inputGroupSelect02">
-                          <img src={paisResi.url_foto_pais} className="img__pais register" alt="" />
+                          <img src={paisResi.url_foto_pais} className="img__pais register" alt="País de Residencia" />
                         </label>
                         <select value={usuarioR.id_pais_residencia} onChange={handleInputChange} className="form-control rgt__form-control" name="id_pais_residencia" id="inputGroupSelect02">
                           {paises.map((pais) => {

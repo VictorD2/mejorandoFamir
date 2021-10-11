@@ -607,7 +607,8 @@ code {
 }
 
 .img__pais {
-  width: 50px;
+  width: 55px;
+  height: 24px;
   margin-top: 1rem;
   margin-left: 1rem;
 }
