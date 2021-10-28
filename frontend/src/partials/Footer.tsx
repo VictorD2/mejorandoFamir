@@ -20,6 +20,7 @@ const Footer: React.FC = () => {
   const [cursos, setCursos] = useState<CursoFooter[]>([]);
   const getCursos = async () => {
     const res = await cursosServices.footer();
+    if (res.data.error) return setCursos([]);
     setCursos(res.data);
   };
   useEffect(() => {

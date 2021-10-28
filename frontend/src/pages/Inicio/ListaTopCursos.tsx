@@ -16,6 +16,7 @@ const ListaTopCursos: React.FC = () => {
 
   const getTopCursos = async () => {
     const res = await cursoServices.getTopCursos();
+    if (res.data.error) return setTopCurso([]);
     for (let i = 0; i < res.data.length; i++) {
       const newDescripcion = res.data[i].descripcion_curso.replace(/\n/g, "<br/>");
       res.data[i].descripcion_curso = newDescripcion;
