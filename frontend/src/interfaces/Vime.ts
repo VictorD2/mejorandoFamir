@@ -1,0 +1,6 @@
+const VimeoKeys = {
+    CLIENT_ID: "539d7d19e9c9a78cc0e119b64baa122f2d3d1252",
+    CLIENT_SECRET: "LGYWPtCba+GbgNxZCLX6yiBKdkkCHWZeQQXoZuiOwyU4Gs2oH3b0UXqFyN91QD9ylSNKQDU8iCbWBp1TZfbzwM321SNnbVqBhUfEKtCnpATZpXi7fSYjT595NaoK1fsJ",
+    CLIENT_TOKEN: "8de0d4040fc53651a8bda919129997b9",
+  };
+  export default VimeoKeys;
