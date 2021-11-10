@@ -16,6 +16,8 @@ import CursoFullPage from "../pages/Programa/CursoFullPage";
 import TareaFullPage from "../pages/Programa/TareaFullPage";
 import TemaFullPage from "../pages/Programa/TemaFullPage";
 import ComprarCurso from "../pages/Programa/ComprarCurso";
+import PoliticaPrivacidad from "../pages/Reglamentos/PoliticaPrivacidad";
+import TerminosCondiciones from "../pages/Reglamentos/TerminosCondiciones";
 import NotFound from "../pages/NotFound";
 
 // Dashboard
@@ -47,6 +49,8 @@ function App() {
         <LayoutUsuario exact path="/Perfil/Editar" component={EditPerfil} />
         <LayoutUsuario exact path="/Nosotros" component={AboutUs} />
         <LayoutUsuario exact path="/Contactanos" component={Contactanos} />
+        <LayoutUsuario exact path="/Politica-de-Privacidad" component={PoliticaPrivacidad} />
+        <LayoutUsuario exact path="/Terminos-y-Condiciones" component={TerminosCondiciones} />
         <LayoutUsuario exact path="/Clases/:tipo/:modalidad" component={Programa} />
         <LayoutUsuario exact path="/Clase/:idCurso" component={CursoFullPage} />
         <LayoutUsuario exact path="/Clase/:idCurso/Tarea/:idTarea" component={TareaFullPage} />

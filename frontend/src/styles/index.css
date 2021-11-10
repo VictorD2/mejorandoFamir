@@ -14,7 +14,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace !important;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace !important;
 }
 
 /* START SCROLLBAR */
@@ -109,7 +110,11 @@ code {
   color: #000;
   align-items: center;
   background: var(--azul-claro);
-  background: -webkit-linear-gradient(to left, var(--azul-claro), var(--azul-claro));
+  background: -webkit-linear-gradient(
+    to left,
+    var(--azul-claro),
+    var(--azul-claro)
+  );
   background: linear-gradient(to left, var(--azul-claro), var(--azul-oscuro));
   width: 30%;
   font-size: 14px;
@@ -381,6 +386,11 @@ code {
   margin-top: 1.5rem;
 }
 
+.text-font {
+  font-size: 14px;
+  color: #606060;
+}
+
 .Main__container {
   margin-left: 11.5rem;
   margin-right: 11.5rem;
@@ -471,7 +481,11 @@ code {
 * Estilos de Register
 */
 .rgt__main {
-  background: linear-gradient(to bottom right, var(--azul-oscuro), var(--azul-claro));
+  background: linear-gradient(
+    to bottom right,
+    var(--azul-oscuro),
+    var(--azul-claro)
+  );
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -539,17 +553,59 @@ code {
 
 .btn-instagram {
   transition: all 5s;
-  background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-  background: -webkit-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  background: -moz-linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  );
+  background: -webkit-linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  );
+  background: linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  );
   color: #ffffff;
 }
 
 .btn-instagram:hover {
   color: #ffffff;
-  background: -moz-linear-gradient(45deg, #b97327 0%, #bd532d 25%, #ad2035 50%, #a51d53 75%, #a11675 100%);
-  background: -webkit-linear-gradient(45deg, #b97327 0%, #bd532d 25%, #ad2035 50%, #a51d53 75%, #a11675 100%);
-  background: linear-gradient(45deg, #b97327 0%, #bd532d 25%, #ad2035 50%, #a51d53 75%, #a11675 100%);
+  background: -moz-linear-gradient(
+    45deg,
+    #b97327 0%,
+    #bd532d 25%,
+    #ad2035 50%,
+    #a51d53 75%,
+    #a11675 100%
+  );
+  background: -webkit-linear-gradient(
+    45deg,
+    #b97327 0%,
+    #bd532d 25%,
+    #ad2035 50%,
+    #a51d53 75%,
+    #a11675 100%
+  );
+  background: linear-gradient(
+    45deg,
+    #b97327 0%,
+    #bd532d 25%,
+    #ad2035 50%,
+    #a51d53 75%,
+    #a11675 100%
+  );
 }
 
 .line__login {
@@ -898,7 +954,11 @@ code {
   align-items: center;
   justify-content: center;
   background: var(--verde-claro);
-  background: -webkit-linear-gradient(to left, var(--azul-claro), var(--azul-claro));
+  background: -webkit-linear-gradient(
+    to left,
+    var(--azul-claro),
+    var(--azul-claro)
+  );
   background: linear-gradient(to left, var(--azul-claro), var(--azul-oscuro));
 }
 .caracteristicas-item {
@@ -928,7 +988,11 @@ code {
   margin-right: 20px;
   border-radius: 50%;
   background: var(--verde-claro);
-  background: -webkit-linear-gradient(to left, var(--verde-claro), var(--verde-claro));
+  background: -webkit-linear-gradient(
+    to left,
+    var(--verde-claro),
+    var(--verde-claro)
+  );
   background: linear-gradient(to left, var(--verde-claro), var(--verde-oscuro));
 }
 .lista-cursos {
@@ -1480,7 +1544,10 @@ code {
   width: inherit;
   height: inherit;
   border-radius: 999px;
-  box-shadow: inset 30px 0 0 rgba(209, 242, 165, 0.4), inset 0 30px 0 rgba(239, 250, 180, 0.4), inset -30px 0 0 rgba(255, 196, 140, 0.4), inset 0 -30px 0 rgba(245, 105, 145, 0.4);
+  box-shadow: inset 30px 0 0 rgba(209, 242, 165, 0.4),
+    inset 0 30px 0 rgba(239, 250, 180, 0.4),
+    inset -30px 0 0 rgba(255, 196, 140, 0.4),
+    inset 0 -30px 0 rgba(245, 105, 145, 0.4);
   animation: shadowsdancing 4s infinite;
 }
 .error-container > span:nth-of-type(2):before {
@@ -1496,19 +1563,34 @@ code {
 }
 @keyframes shadowsdancing {
   0% {
-    box-shadow: inset 30px 0 0 rgba(209, 242, 165, 0.4), inset 0 30px 0 rgba(239, 250, 180, 0.4), inset -30px 0 0 rgba(255, 196, 140, 0.4), inset 0 -30px 0 rgba(245, 105, 145, 0.4);
+    box-shadow: inset 30px 0 0 rgba(209, 242, 165, 0.4),
+      inset 0 30px 0 rgba(239, 250, 180, 0.4),
+      inset -30px 0 0 rgba(255, 196, 140, 0.4),
+      inset 0 -30px 0 rgba(245, 105, 145, 0.4);
   }
   25% {
-    box-shadow: inset 30px 0 0 rgba(245, 105, 145, 0.4), inset 0 30px 0 rgba(209, 242, 165, 0.4), inset -30px 0 0 rgba(239, 250, 180, 0.4), inset 0 -30px 0 rgba(255, 196, 140, 0.4);
+    box-shadow: inset 30px 0 0 rgba(245, 105, 145, 0.4),
+      inset 0 30px 0 rgba(209, 242, 165, 0.4),
+      inset -30px 0 0 rgba(239, 250, 180, 0.4),
+      inset 0 -30px 0 rgba(255, 196, 140, 0.4);
   }
   50% {
-    box-shadow: inset 30px 0 0 rgba(255, 196, 140, 0.4), inset 0 30px 0 rgba(245, 105, 145, 0.4), inset -30px 0 0 rgba(209, 242, 165, 0.4), inset 0 -30px 0 rgba(239, 250, 180, 0.4);
+    box-shadow: inset 30px 0 0 rgba(255, 196, 140, 0.4),
+      inset 0 30px 0 rgba(245, 105, 145, 0.4),
+      inset -30px 0 0 rgba(209, 242, 165, 0.4),
+      inset 0 -30px 0 rgba(239, 250, 180, 0.4);
   }
   75% {
-    box-shadow: inset 30px 0 0 rgba(239, 250, 180, 0.4), inset 0 30px 0 rgba(255, 196, 140, 0.4), inset -30px 0 0 rgba(245, 105, 145, 0.4), inset 0 -30px 0 rgba(209, 242, 165, 0.4);
+    box-shadow: inset 30px 0 0 rgba(239, 250, 180, 0.4),
+      inset 0 30px 0 rgba(255, 196, 140, 0.4),
+      inset -30px 0 0 rgba(245, 105, 145, 0.4),
+      inset 0 -30px 0 rgba(209, 242, 165, 0.4);
   }
   100% {
-    box-shadow: inset 30px 0 0 rgba(209, 242, 165, 0.4), inset 0 30px 0 rgba(239, 250, 180, 0.4), inset -30px 0 0 rgba(255, 196, 140, 0.4), inset 0 -30px 0 rgba(245, 105, 145, 0.4);
+    box-shadow: inset 30px 0 0 rgba(209, 242, 165, 0.4),
+      inset 0 30px 0 rgba(239, 250, 180, 0.4),
+      inset -30px 0 0 rgba(255, 196, 140, 0.4),
+      inset 0 -30px 0 rgba(245, 105, 145, 0.4);
   }
 }
 @keyframes colordancing {
