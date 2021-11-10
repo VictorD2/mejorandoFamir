@@ -12,7 +12,7 @@ const app = express();
 require("./lib/passport");
 
 //Settings
-app.set("port", process.env.PORT || 4000);
+app.set("port", process.env.PORT || 50000);
 
 // Middleware
 app.use(
