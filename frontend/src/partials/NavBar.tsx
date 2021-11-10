@@ -136,11 +136,11 @@ const NavBar: React.FC = () => {
                 <div className="header-content h-100 d-flex align-items-center justify-content-between">
                   <div className="logo-content align-self-cemter justify-content-start">
                     <Link className="logo-link" to="/">
-                      <img className="logo" src={logo} alt="Logo FamirCentro" />
+                      <img className="logo" src={logo} alt="FamirCentro" />
                       <img
                         className="logo-responsive"
                         src={logoResponsive}
-                        alt="Logo FamirCentro"
+                        alt="FamirCentro"
                       />
                     </Link>
                   </div>
