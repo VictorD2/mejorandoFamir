@@ -79,11 +79,16 @@ const Footer: React.FC = () => {
                     Contáctanos
                   </Link>
                 </li>
-                {/* <li className="footer-as-list-item my-3 my-md-2 my-lg-4">
-                  <Link className="text-white-50 text-decoration-none text-uppercase" to="/Programa">
-                    Programa
+                <li className="footer-as-list-item my-3 my-md-2 my-lg-4">
+                  <Link className="text-white-50 text-decoration-none text-uppercase" to="/Politica-de-Privacidad">
+                    Política de Privacidad
                   </Link>
-                </li> */}
+                </li>
+                <li className="footer-as-list-item my-3 my-md-2 my-lg-4">
+                  <Link className="text-white-50 text-decoration-none text-uppercase" to="/Terminos-y-Condiciones">
+                    Términos y Condiciones
+                  </Link>
+                </li>
               </ul>
             </div>
             {/* Tercera Fila */}
