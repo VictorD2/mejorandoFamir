@@ -55,6 +55,7 @@ const ComprarCurso: React.FC = () => {
   const refInput = useRef<HTMLInputElement | null>();
 
   const [curso, setCurso] = useState<Curso>(initialState);
+  const [cargandoCurso, setCargandoCurso] = useState<boolean>(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -81,6 +82,7 @@ const ComprarCurso: React.FC = () => {
     const resIns = await comprobanteServices.getCountUsuarioCursoByCursoId(params.idCurso);
     setCupos(res.data.curso.capacidad - resIns.data);
     setCurso(res.data.curso);
+    setCargandoCurso(true);
   };
 
   return (
@@ -90,17 +92,20 @@ const ComprarCurso: React.FC = () => {
       <div className="container mt-5" style={{ marginBottom: "4.5rem" }}>
         <div className="row">
           <div className="col-12 col-md-12 col-sm-12 col-lg-6 mb-5">
-            <img className="img-fluid" src={curso.url_foto_curso} alt={`Foto Curso ${curso.nombre_curso}`} />
+            {cargandoCurso ? <img className="img-fluid" src={curso.url_foto_curso} alt={`Foto Curso ${curso.nombre_curso}`} /> : <div className="cargandoDatos"></div>}
             <div className="w-100 mt-4">
               <h6 className="fs-4 fw-bold text-uppercase">DATOS DEL {curso.tipo}</h6>
-              {curso.modalidad === "Sincrónico" ? (
+              {cargandoCurso ? (
                 <>
-                  <Fila titulo1={"Cupos disponibles: "} titulo2="" subtitulo1={`${cupos}`} subtitulo2={``} />
+                  {curso.modalidad === "Sincrónico" ? <Fila titulo1={"Cupos disponibles: "} titulo2="" subtitulo1={`${cupos}`} subtitulo2={``} /> : <></>}
+                  <Fila titulo1={`nombre del ${curso.tipo}`} titulo2="Precio" subtitulo1={`${curso.nombre_curso}`} subtitulo2={usuario.id_pais_residencia === "PE" ? `S/. ${(curso.precio * 0.0052).toFixed(0)} SOLES` : `$ ${curso.precio} CLP`} />
                 </>
               ) : (
-                <></>
+                <>
+                  <div className="cargandoDatos mb-2" style={{ height: "50px" }}></div>
+                  <div className="cargandoDatos mb-2" style={{ height: "50px" }}></div>
+                </>
               )}
-              <Fila titulo1={`nombre del ${curso.tipo}`} titulo2="Precio" subtitulo1={`${curso.nombre_curso}`} subtitulo2={usuario.id_pais_residencia === "PE" ? `S/. ${(curso.precio * 0.0052).toFixed(0)} SOLES` : `$ ${curso.precio} CLP`} />
 
               <div className="border border-2 border-warning mt-5 p-4">
                 <p className="text-center fw-bold fs-5" style={{ color: "var(--verde-oscuro)" }}>

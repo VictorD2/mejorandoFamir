@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import ScrollReveal from "scrollreveal";
 
+// Icons
+import { BsChevronCompactDown } from "react-icons/bs";
+
 // Componentes
 import Badge from "../../components/Badge";
 import CursoItem from "../../components/Cursos/CursoItem";
@@ -29,6 +32,9 @@ const Programa: React.FC = () => {
   const [tipo, setTipo] = useState<string>("");
   const [modalidad, setModalidad] = useState<string>("");
   const [cursos, setCursos] = useState<Curso[]>([]);
+  const [cargandoDatos, setCargandoDatos] = useState<boolean>(false);
+
+  const [cantidadPaginas, setCantidadPaginas] = useState<number>(0);
 
   const [filtro, setFiltro] = useState<string>("");
 
@@ -42,14 +48,32 @@ const Programa: React.FC = () => {
 
     for (let index = 0; index < res.data.length; index++) res.data[index].descripcion = formatingDescripcion(res.data[index].descripcion);
     setCursos(res.data.cursos);
+    setCargandoDatos(true)
   };
+
+  const cargarMasCursos = async () => {
+    const res = await cursosServices.getAllCursos(params.tipo, params.modalidad, page + 1, filtro);
+    if (res.data.error) return;
+    for (let index = 0; index < res.data.length; index++) res.data[index].descripcion = formatingDescripcion(res.data[index].descripcion);
+    setPage(page + 1);
+    const newCursos: Curso[] = res.data.cursos;
+    setCursos(cursos.concat(newCursos));
+  };
+
+  const getCantidad = async () => {
+    const res = await cursosServices.getCount(params.tipo, params.modalidad, filtro);
+    setCantidadPaginas(Math.ceil(res.data / 12));
+  };
+
   const formatingDescripcion = (descripcion: string): string => {
     return descripcion.replace(/\n/g, "<br/>");
   };
+
   const settings = () => {
     params.modalidad === "Sincronicos" ? setModalidad("Sincrónicos") : setModalidad("Asincrónicos");
     params.tipo === "Talleres" ? setTipo("Talleres") : setTipo("Cursos");
   };
+
   useEffect(() => {
     if (filtro === "") window.scrollTo({ top: 0 });
     if (!modalidades.includes(params.modalidad) || !modalidades.includes(params.tipo) || (params.tipo === "Cursos" && params.modalidad === "Asincrónicos")) return history.push("/");
@@ -60,6 +84,15 @@ const Programa: React.FC = () => {
     };
   }, [params.modalidad, params.tipo, filtro]);
 
+  useEffect(() => {
+    setPage(1);
+    setCantidadPaginas(0);
+    getCantidad();
+    return () => {
+      setCantidadPaginas(0);
+      setPage(1);
+    };
+  }, [params.modalidad, params.tipo, filtro]);
   useEffect(() => {
     const config = {
       duration: 1000,
@@ -80,9 +113,52 @@ const Programa: React.FC = () => {
       </div>
       <div className="my-2 py-5">
         <div className="row m-0 py-5 px-lg-5 px-sm-5 px-2 justify-content-around" style={{ backgroundColor: "#eff3f5" }}>
-          {cursos.map((curso) => {
-            return <CursoItem key={curso.id_curso} curso={curso} />;
-          })}
+          {cargandoDatos ? (
+            <>
+              {cursos.map((curso) => {
+                return <CursoItem key={curso.id_curso} curso={curso} />;
+              })}
+            </>
+          ) : (
+            <>
+              <div className="cargandoDatos mt-3 ms-1 col-12 col-sm-6 col-md-4 col-lg-3">
+
+              </div>
+              <div className="cargandoDatos mt-3 ms-1 col-12 col-sm-6 col-md-4 col-lg-3">
+
+              </div>
+              <div className="cargandoDatos mt-3 ms-1 col-12 col-sm-6 col-md-4 col-lg-3">
+
+              </div>
+              <div className="cargandoDatos mt-3 ms-1 col-12 col-sm-6 col-md-4 col-lg-3">
+
+              </div>
+              <div className="cargandoDatos mt-3 ms-1 col-12 col-sm-6 col-md-4 col-lg-3">
+
+              </div>
+              <div className="cargandoDatos mt-3 ms-1 col-12 col-sm-6 col-md-4 col-lg-3">
+
+              </div>
+            </>
+          )}
+        </div>
+        <div className="text-center pt-3">
+          {cantidadPaginas === 0 || cantidadPaginas === page ? (
+            <></>
+          ) : (
+            <>
+              <button
+                onClick={() => {
+                  cargarMasCursos();
+                }}
+                className="btn"
+                style={{ color: "var(--azul-oscuro)" }}
+              >
+                <p className="m-0">Ver más cursos</p>
+                <BsChevronCompactDown />
+              </button>
+            </>
+          )}
         </div>
       </div>
     </React.Fragment>

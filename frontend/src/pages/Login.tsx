@@ -84,7 +84,7 @@ const Login: React.FC = () => {
                 </div>
               </div>
               <div className="col-12 mt-2">
-                <a href="auth/google" className="btn btn-danger w-100 icon__social">
+                <a href="https://famircentro.com/auth/google" className="btn btn-danger w-100 icon__social">
                   <FontAwesomeIcon icon={faGoogle} className="fs-3" />
                   <span className="ms-3">Iniciar sesión con Google</span>
                 </a>

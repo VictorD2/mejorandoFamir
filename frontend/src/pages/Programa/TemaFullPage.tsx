@@ -53,6 +53,7 @@ const TemaFullPage: React.FC = () => {
   const history = useHistory();
 
   const [tema, setTema] = useState<Tema>({ titulo: "", descripcion: "", url_video: "" });
+  const [cargandoTema, setCargandoTema] = useState<boolean>(false);
 
   const refDesc = useRef<HTMLParagraphElement | null>();
 
@@ -75,6 +76,7 @@ const TemaFullPage: React.FC = () => {
     const resMaterial = await materialServices.getMaterialByTemaId(params.idTema);
     if (res.data.error) return;
     setMaterial(resMaterial.data.material);
+    setCargandoTema(true);
   };
   const authentificar = async () => {
     // const datos = await axios.get(`${API}/api/v0/usuarios/whoami`);
@@ -96,62 +98,64 @@ const TemaFullPage: React.FC = () => {
   }, []);
 
   return (
-    <React.Fragment>
+    <>
       <ToastContainer />
       <div className="p-2 p-lg-5" style={{ marginTop: "3rem", background: "#eef3f6" }}>
         <div className="row">
           <div className="col-12 col-sm-7 col-lg-7 mb-5">
             {loadingVideo ? (
               // width="550" height="470"
+              <div className="w-100">
+                <iframe className="w-100 bg-white d-flex align-items-center video__reproductor" title={tema.titulo} src={`https://player.vimeo.com/video/${tema.url_video}`} frameBorder={0} allowFullScreen />
+              </div>
+            ) : (
+              <div className="d-flex justify-content-center align-items-center bg-dark w-100" style={{ height: 430 }}>
+                <div className="loader"></div>
+              </div>
+            )}
+            {cargandoTema ? <div className="fw-bold fs-4 mt-2 text-capitalize">{tema?.titulo}</div> : <div className="cargandoDatos mt-2" style={{ height: "40px" }}></div>}
+            {cargandoTema ? (
               <>
-                <div className="w-100">
-                  <iframe className="w-100 bg-white d-flex align-items-center video__reproductor" title={tema.titulo} src={`https://player.vimeo.com/video/${tema.url_video}`} frameBorder={0} allowFullScreen />
+                <ul className="nav nav-pills mb-3 mt-3" id="pills-tab" role="tablist">
+                  <li className="nav-item" role="presentation">
+                    <button className="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-info" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                      Información
+                    </button>
+                  </li>
+                  <li className="nav-item" role="presentation">
+                    <button className="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-material" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+                      Material
+                    </button>
+                  </li>
+                </ul>
+                <div className="tab-content" id="pills-tabContent">
+                  <div style={{ textAlign: "justify" }} ref={(node) => (refDesc.current = node)} className="tab-pane fade show active" id="pills-info" role="tabpanel" aria-labelledby="pills-home-tab"></div>
+                  <div className="tab-pane fade" id="pills-material" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    {material.map((material) => {
+                      return (
+                        <div key={material.id_material_clase} className="d-flex my-1">
+                          <div className="list-group-item list-group-item-action btn__blue">
+                            <a className="text-decoration-none d-flex justify-content-between" rel="noreferrer" href={material.url_material} target="_blank" download={material.nombre_material}>
+                              <p className="text-nowrap text-truncate text-white m-0">{material.nombre_material}</p>
+                              <FaDownload className="mt-1 text-white" />
+                            </a>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </>
             ) : (
-              <>
-                <div className="d-flex justify-content-center align-items-center bg-dark w-100" style={{ height: 430 }}>
-                  <div className="loader"></div>
-                </div>
-              </>
+              <div className="cargandoDatos mt-3 mb-3"></div>
             )}
-            <div className="fw-bold fs-4 mt-2 text-capitalize">{tema?.titulo}</div>
-            <ul className="nav nav-pills mb-3 mt-3" id="pills-tab" role="tablist">
-              <li className="nav-item" role="presentation">
-                <button className="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-info" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
-                  Información
-                </button>
-              </li>
-              <li className="nav-item" role="presentation">
-                <button className="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-material" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
-                  Material
-                </button>
-              </li>
-            </ul>
-            <div className="tab-content" id="pills-tabContent">
-              <div style={{ textAlign: "justify" }} ref={(node) => (refDesc.current = node)} className="tab-pane fade show active" id="pills-info" role="tabpanel" aria-labelledby="pills-home-tab"></div>
-              <div className="tab-pane fade" id="pills-material" role="tabpanel" aria-labelledby="pills-profile-tab">
-                {material.map((material) => {
-                  return (
-                    <div key={material.id_material_clase} className="d-flex my-1">
-                      <div className="list-group-item list-group-item-action btn__blue">
-                        <a className="text-decoration-none d-flex justify-content-between" rel="noreferrer" href={material.url_material} target="_blank" download={material.nombre_material}>
-                          <p className="text-nowrap text-truncate text-white m-0">{material.nombre_material}</p>
-                          <FaDownload className="mt-1 text-white" />
-                        </a>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
           </div>
           <div className="col-12 col-sm-5 col-lg-5">
             <Comentarios />
           </div>
         </div>
       </div>
-    </React.Fragment>
+    </>
   );
 };
 

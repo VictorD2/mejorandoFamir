@@ -46,6 +46,7 @@ const Comentarios: React.FC = () => {
 
   const [comentario, setComentario] = useState<Comentario>(initialState);
   const [comentarios, setComentarios] = useState<Comentario[]>([]);
+  const [cargandoComentarios, setCargandoComentarios] = useState<boolean>(false);
 
   const [page, setPage] = useState<number>(1);
   const [cantidad, setCantidad] = useState<number>(0);
@@ -107,6 +108,7 @@ const Comentarios: React.FC = () => {
     if (res.data.error) return;
 
     setComentarios(res.data.comentarios);
+    setCargandoComentarios(true);
   };
 
   const handleTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -125,6 +127,16 @@ const Comentarios: React.FC = () => {
         </button>
       </form>
       <div className="m-2" style={{ minHeight: "550px", maxHeight: "550px", overflowX: "hidden" }}>
+        {cargandoComentarios ? (
+          <></>
+        ) : (
+          <>
+            <div className="cargandoDatos mb-2"style={{height:"200px"}}> </div>
+            <div className="cargandoDatos mb-2"style={{height:"200px"}}> </div>
+            <div className="cargandoDatos mb-2"style={{height:"200px"}}> </div>
+            <div className="cargandoDatos mb-2"style={{height:"200px"}}> </div>
+          </>
+        )}
         {comentarios.map((comentarioItem) => {
           return (
             <div className="card my-3" key={comentarioItem.id_comentario}>
@@ -140,43 +152,35 @@ const Comentarios: React.FC = () => {
                       {comentarioItem.nombre} {comentarioItem.apellido}
                     </p>
                     {comentarioItem.id_rango === 1 ? (
-                      <>
-                        <p className="mt-1" style={{ color: "var(--verde-oscuro)" }}>
-                          Administrador
-                        </p>
-                      </>
+                      <p className="mt-1" style={{ color: "var(--verde-oscuro)" }}>
+                        Administrador
+                      </p>
                     ) : (
-                      <></>
+                      ""
                     )}
                     {comentarioItem.id_rango === 3 ? (
-                      <>
-                        <p className="mt-1" style={{ color: "var(--verde-oscuro)" }}>
-                          Profesor
-                        </p>
-                      </>
+                      <p className="mt-1" style={{ color: "var(--verde-oscuro)" }}>
+                        Profesor
+                      </p>
                     ) : (
-                      <></>
+                      ""
                     )}
                     <TimeAgo style={{ fontSize: "12px" }} className="text-black-50" datetime={new Date(comentarioItem.fecha)} live={false} locale="vi" />
                   </div>
                   {usuario.id_rango === 1 ? (
-                    <>
-                      <div className="ms-auto">
-                        <button onClick={() => eliminarComentario(comentarioItem.id_comentario)} className="btn">
-                          <FaTimes />
-                        </button>
-                      </div>
-                    </>
+                    <div className="ms-auto">
+                      <button onClick={() => eliminarComentario(comentarioItem.id_comentario)} className="btn">
+                        <FaTimes />
+                      </button>
+                    </div>
                   ) : (
                     <>
                       {comentarioItem.id_usuario === parseInt(usuario.id_usuario + "") ? (
-                        <>
-                          <div className="ms-auto">
-                            <button onClick={() => eliminarComentario(comentarioItem.id_comentario)} className="btn">
-                              <FaTimes />
-                            </button>
-                          </div>
-                        </>
+                        <div className="ms-auto">
+                          <button onClick={() => eliminarComentario(comentarioItem.id_comentario)} className="btn">
+                            <FaTimes />
+                          </button>
+                        </div>
                       ) : (
                         <></>
                       )}

@@ -9,7 +9,7 @@ ctrlComentarios.getComentarios = async (req, res) => {
       if (req.query.page) {
         const cantidadDatos = 4;
         const pagina = parseInt(req.query.page) * cantidadDatos;
-        const rows = await pool.query("SELECT id_comentario,id_rango,comentario,fecha,nombre,apellido,url_foto_usuario,comentario.id_usuario FROM comentario JOIN usuario ON comentario.id_usuario=usuario.id_usuario WHERE id_tema = ? ORDER BY id_comentario DESC", [req.params.idTema]);
+        const rows = await pool.query(`SELECT id_comentario,id_rango,comentario,fecha,nombre,apellido,url_foto_usuario,comentario.id_usuario FROM comentario JOIN usuario ON comentario.id_usuario=usuario.id_usuario WHERE id_tema = ? ORDER BY id_comentario DESC LIMIT ${cantidadDatos * req.query.page}`, [req.params.idTema]);
         return res.json({ success: "Datos obtenidos", comentarios: rows.splice(0, pagina) });
       }
       const rows = await pool.query("SELECT id_comentario,id_rango,comentario,fecha,nombre,apellido,url_foto_usuario,comentario.id_usuario FROM comentario JOIN usuario ON comentario.id_usuario=usuario.id_usuario WHERE id_tema = ? ORDER BY id_comentario DESC", [req.params.idTema]);

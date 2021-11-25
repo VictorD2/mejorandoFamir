@@ -29,6 +29,8 @@ const FormEditPerfil: React.FC = () => {
   const { setUsuario } = useUsuario();
 
   const [usuarioPerfil, setUsuarioPerfil] = useState<Usuario>(initialState);
+  const [cargandoUsuario, setCargandoUsuario] = useState<boolean>(false);
+
   const [paises, setPaises] = useState<Pais[]>([]);
   const [paisNaci, setPaisNaci] = useState<Pais>({ nombre_pais: "Afganistan", id_pais: "AF", url_foto_pais: "/uploads/paises/afganistan.png" });
   const [paisResi, setPaisResi] = useState<Pais>({ nombre_pais: "Afganistan", id_pais: "AF", url_foto_pais: "/uploads/paises/afganistan.png" });
@@ -46,6 +48,7 @@ const FormEditPerfil: React.FC = () => {
       setUsuarioPerfil(datos.data.user);
       setPaisNaci({ ...paisNaci, url_foto_pais: datos.data.user.url_foto_nacimiento });
       setPaisResi({ ...paisResi, url_foto_pais: datos.data.user.url_foto_residencia });
+      setCargandoUsuario(true);
     }
     const res = await axios.get(`${API}/api/v0/pais`);
     if (res.data.error) return;
@@ -97,74 +100,87 @@ const FormEditPerfil: React.FC = () => {
       <div className="card-header">
         <h4 className="fw-bold m-0 p-1">Tus Datos</h4>
       </div>
-      <div className="card-body">
-        <form onSubmit={handleSubmitForm}>
-          <div className="row">
-            <div className="col-12 col-sm-6 mb-3">
-              <label htmlFor="nombre">Nombres</label>
-              <input onChange={handleInputChange} type="text" id="nombre" name="nombre" className="form-control rgt__form-control" value={usuarioPerfil.nombre} />
-            </div>
-            <div className="col-12 col-sm-6 mb-3">
-              <label htmlFor="correo">Correo</label>
-              <input onChange={handleInputChange} type="text" id="correo" name="correo" className="form-control rgt__form-control" value={usuarioPerfil.correo} />
-            </div>
-            <div className="col-12 col-sm-6 mb-3">
-              <label htmlFor="apellido">Apellidos</label>
-              <input onChange={handleInputChange} type="text" id="apellido" name="apellido" className="form-control rgt__form-control" value={usuarioPerfil.apellido} />
-            </div>
-            <div className="col-12 col-sm-6 mb-3">
-              <label htmlFor="profesion">Profesión</label>
-              <input onChange={handleInputChange} type="text" id="profesion" name="profesion" className="form-control rgt__form-control" value={usuarioPerfil.profesion} />
-            </div>
-            <div className="col-md-6">
-              <div className="input-group mb-3">
-                <p className="w-100 mb-0"> Pais de Nacimiento</p>
-                <label className="input-group-text" htmlFor="inputGroupSelect01">
-                  <img src={paisNaci.url_foto_pais} className="img__pais register" alt="" />
-                </label>
-                <select value={usuarioPerfil.id_pais_nacimiento} onChange={handleInputChange} className="form-control rgt__form-control" name="id_pais_nacimiento" id="inputGroupSelect01">
-                  {paises.map((pais) => {
-                    return (
-                      <option key={pais.id_pais} value={pais.id_pais}>
-                        {pais.nombre_pais}
-                      </option>
-                    );
-                  })}
-                </select>
+      {cargandoUsuario ? (
+        <div className="card-body">
+          <form onSubmit={handleSubmitForm}>
+            <div className="row">
+              <div className="col-12 col-sm-6 mb-3">
+                <label htmlFor="nombre">Nombres</label>
+                <input onChange={handleInputChange} type="text" id="nombre" name="nombre" className="form-control rgt__form-control" value={usuarioPerfil.nombre} />
               </div>
-            </div>
-            <div className="col-md-6">
-              <div className="input-group mb-3">
-                <p className="w-100 mb-0"> Pais de Residencia</p>
-                <label className="input-group-text" htmlFor="inputGroupSelect02">
-                  <img src={paisResi.url_foto_pais} className="img__pais register" alt="" />
-                </label>
-                <select value={usuarioPerfil.id_pais_residencia} onChange={handleInputChange} className="form-control rgt__form-control" name="id_pais_residencia" id="inputGroupSelect02">
-                  {paises.map((pais) => {
-                    return (
-                      <option key={pais.id_pais} value={pais.id_pais}>
-                        {pais.nombre_pais}
-                      </option>
-                    );
-                  })}
-                </select>
+              <div className="col-12 col-sm-6 mb-3">
+                <label htmlFor="correo">Correo</label>
+                <input onChange={handleInputChange} type="text" id="correo" name="correo" className="form-control rgt__form-control" value={usuarioPerfil.correo} />
               </div>
-            </div>
+              <div className="col-12 col-sm-6 mb-3">
+                <label htmlFor="apellido">Apellidos</label>
+                <input onChange={handleInputChange} type="text" id="apellido" name="apellido" className="form-control rgt__form-control" value={usuarioPerfil.apellido} />
+              </div>
+              <div className="col-12 col-sm-6 mb-3">
+                <label htmlFor="profesion">Profesión</label>
+                <input onChange={handleInputChange} type="text" id="profesion" name="profesion" className="form-control rgt__form-control" value={usuarioPerfil.profesion} />
+              </div>
+              <div className="col-md-6">
+                <div className="input-group mb-3">
+                  <p className="w-100 mb-0"> Pais de Nacimiento</p>
+                  <label className="input-group-text" htmlFor="inputGroupSelect01">
+                    <img src={paisNaci.url_foto_pais} className="img__pais register" alt="" />
+                  </label>
+                  <select value={usuarioPerfil.id_pais_nacimiento} onChange={handleInputChange} className="form-control rgt__form-control" name="id_pais_nacimiento" id="inputGroupSelect01">
+                    {paises.map((pais) => {
+                      return (
+                        <option key={pais.id_pais} value={pais.id_pais}>
+                          {pais.nombre_pais}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="input-group mb-3">
+                  <p className="w-100 mb-0"> Pais de Residencia</p>
+                  <label className="input-group-text" htmlFor="inputGroupSelect02">
+                    <img src={paisResi.url_foto_pais} className="img__pais register" alt="" />
+                  </label>
+                  <select value={usuarioPerfil.id_pais_residencia} onChange={handleInputChange} className="form-control rgt__form-control" name="id_pais_residencia" id="inputGroupSelect02">
+                    {paises.map((pais) => {
+                      return (
+                        <option key={pais.id_pais} value={pais.id_pais}>
+                          {pais.nombre_pais}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+              </div>
 
-            <div className="col-12 col-sm-6 mb-3">
-              <label htmlFor="telefono">Teléfono Móvil</label>
-              <input onChange={handleInputChange} type="text" id="telefono" name="telefono" className="form-control rgt__form-control" value={usuarioPerfil.telefono} />
+              <div className="col-12 col-sm-6 mb-3">
+                <label htmlFor="telefono">Teléfono Móvil</label>
+                <input onChange={handleInputChange} type="text" id="telefono" name="telefono" className="form-control rgt__form-control" value={usuarioPerfil.telefono} />
+              </div>
+              <div className="col-12 col-sm-6 mb-3">
+                <label htmlFor="rut">RUT / DNI</label>
+                <input onChange={handleInputChange} type="text" id="rut" name="rut" className="form-control rgt__form-control" value={usuarioPerfil.rut} />
+              </div>
+              <button type="submit" className="btn btn__more w-50 mx-auto mt-5" style={{ padding: "0.4rem", textTransform: "none" }}>
+                Guardar cambios
+              </button>
             </div>
-            <div className="col-12 col-sm-6 mb-3">
-              <label htmlFor="rut">RUT / DNI</label>
-              <input onChange={handleInputChange} type="text" id="rut" name="rut" className="form-control rgt__form-control" value={usuarioPerfil.rut} />
-            </div>
-            <button type="submit" className="btn btn__more w-50 mx-auto mt-5" style={{ padding: "0.4rem", textTransform: "none" }}>
-              Guardar cambios
-            </button>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
+      ) : (
+        <div className="row">
+          <div className="cargandoDatos mx-1 col-lg-5 col-5 mb-3" style={{ height: "60px" }}></div>
+          <div className="cargandoDatos mx-1 col-lg-5 col-5 mb-3" style={{ height: "60px" }}></div>
+          <div className="cargandoDatos mx-1 col-lg-5 col-5 mb-3" style={{ height: "60px" }}></div>
+          <div className="cargandoDatos mx-1 col-lg-5 col-5 mb-3" style={{ height: "60px" }}></div>
+          <div className="cargandoDatos mx-1 col-lg-5 col-5 mb-3" style={{ height: "60px" }}></div>
+          <div className="cargandoDatos mx-1 col-lg-5 col-5 mb-3" style={{ height: "60px" }}></div>
+          <div className="cargandoDatos mx-1 col-lg-5 col-5 mb-3" style={{ height: "60px" }}></div>
+          <div className="cargandoDatos mx-1 col-lg-5 col-5 mb-3" style={{ height: "60px" }}></div>
+        </div>
+      )}
     </div>
   );
 };

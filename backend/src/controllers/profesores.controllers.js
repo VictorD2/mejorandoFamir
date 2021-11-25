@@ -10,9 +10,9 @@ ctrlProfesores.getProfesores = async (req, res) => {
     let Joins = `JOIN pais AS pais_r ON pais_r.id_pais = usuario.id_pais_residencia JOIN pais AS pais_n ON pais_n.id_pais = usuario.id_pais_nacimiento`;
 
     if (req.query.keyword && req.query.page) {
-      const data = await pool.query(`SELECT ${datosSQL} FROM usuario ${Joins} WHERE id_rango = '3' AND (nombre LIKE '%${req.query.keyword}%' OR apellido LIKE '%${req.query.keyword}%' OR correo LIKE '%${req.query.keyword}%')  ORDER BY id_usuario DESC`);
       const cantidadDatos = 12;
       const pagina = (parseInt(req.query.page) - 1) * cantidadDatos;
+      const data = await pool.query(`SELECT ${datosSQL} FROM usuario ${Joins} WHERE id_rango = '3' AND (nombre LIKE '%${req.query.keyword}%' OR apellido LIKE '%${req.query.keyword}%' OR correo LIKE '%${req.query.keyword}%')  ORDER BY id_usuario DESC  LIMIT ${cantidadDatos * req.query.page}`);
       return res.json({ success: "Datos obtenidos", profesores: data.splice(pagina, cantidadDatos) });
     }
     if (req.query.keyword) {
@@ -20,9 +20,9 @@ ctrlProfesores.getProfesores = async (req, res) => {
       return res.json({ success: "Datos obtenidos", profesores: data });
     }
     if (req.query.page) {
-      const data = await pool.query(`SELECT ${datosSQL} FROM usuario ${Joins} WHERE id_rango = '3'  ORDER BY id_usuario DESC`);
       const cantidadDatos = 12;
       const pagina = (parseInt(req.query.page) - 1) * cantidadDatos;
+      const data = await pool.query(`SELECT ${datosSQL} FROM usuario ${Joins} WHERE id_rango = '3'  ORDER BY id_usuario DESC  LIMIT ${cantidadDatos * req.query.page}`);
       return res.json({ success: "Datos obtenidos", profesores: data.splice(pagina, cantidadDatos) });
     }
     const data = await pool.query(`SELECT ${datosSQL} FROM usuario ${Joins} WHERE id_rango = '3'  ORDER BY id_usuario DESC`);
@@ -47,7 +47,7 @@ ctrlProfesores.getProfesoresPublic = async (req, res) => {
 //.get("/count")
 ctrlProfesores.getCount = async (req, res) => {
   try {
-    // if (req.user.id_rango != "1") return res.json(0);
+    if (req.user.id_rango != "1") return res.json(0);
 
     if (req.query.keyword) {
       const rows = await pool.query(`SELECT COUNT(*) FROM usuario WHERE id_rango = 3 AND (nombre LIKE '%${req.query.keyword}%' OR apellido LIKE '%${req.query.keyword}%' OR correo LIKE '%${req.query.keyword}%')`);

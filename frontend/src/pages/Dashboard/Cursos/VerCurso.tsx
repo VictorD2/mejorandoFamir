@@ -24,7 +24,7 @@ import { FiClock } from "react-icons/fi";
 
 const initialState: Curso = {
   nombre_curso: "",
-  uri_carpeta_vimeo:"",
+  uri_carpeta_vimeo: "",
   descripcion: "",
   precio: 0,
   duracion: 0,
@@ -59,8 +59,11 @@ const VerCurso: React.FC = () => {
   const [modalidad, setModalidad] = useState<string>("");
 
   const [curso, setCurso] = useState<Curso>(initialState);
+  const [cargandoCurso, setCargandoCurso] = useState<boolean>(false);
   const [profesor, setProfesor] = useState<Usuario>(initialStateProfesor);
+  const [cargandoProfesor, setCargandoProfesor] = useState<boolean>(false);
   const [estudiantes, setEstudiantes] = useState<Usuario[]>([]);
+  const [cargandoEstudiantes, setCargandoEstudiantes] = useState<boolean>(false);
   const [inscritos, setInscritos] = useState<number>(0);
 
   const refDescripcion = useRef<HTMLParagraphElement | null>();
@@ -88,17 +91,20 @@ const VerCurso: React.FC = () => {
 
     const newDescripcion = res.data.curso.descripcion.replace(/\n/g, "<br/>");
     res.data.curso.descripcion = newDescripcion;
-    if (refDescripcion.current) refDescripcion.current.innerHTML = res.data.curso.descripcion;
-
+    
     setCurso(res.data.curso);
-
+    setCargandoCurso(true);
+    
     const resProfesor = await profesoresServices.getProfesorById(res.data.curso.id_usuario);
     if (res.data.error) return;
     setProfesor(resProfesor.data.profesor);
+    setCargandoProfesor(true);
 
     const resEstudiante = await comprobanteServices.getUsuarioCursoByIdCurso(res.data.curso.id_curso);
     if (resEstudiante.data.error) return;
     setEstudiantes(resEstudiante.data.usuariosCursos);
+    setCargandoEstudiantes(true);
+    if (refDescripcion.current) refDescripcion.current.innerHTML = res.data.curso.descripcion;
   };
 
   return (
@@ -142,111 +148,133 @@ const VerCurso: React.FC = () => {
         <section className="content">
           <div className="container-fluid">
             <div className="row mt-4">
-              <div className="col-12 col-sm-6 text-center">
-                <img src={curso.url_foto_curso} className="img-fluid" alt="" />
-              </div>
+              <div className="col-12 col-sm-6 text-center">{cargandoCurso ? <img src={curso.url_foto_curso} className="img-fluid" alt="" /> : <div className="cargandoDatos"></div>}</div>
               <div className="col-12 col-sm-6">
                 <div className="d-flex align-items-center mb-3">
-                  <p className="m-0 card-text fw-bold">
-                    <GiTeacher className="mb-1" /> Docente:
-                  </p>
-                  <p className="m-0 ps-2 fw-normal">
-                    {profesor.nombre} {profesor.apellido}
-                  </p>
+                  {cargandoProfesor ? (
+                    <>
+                      <p className="m-0 card-text fw-bold">
+                        <GiTeacher className="mb-1" /> Docente:
+                      </p>
+                      <p className="m-0 ps-2 fw-normal">
+                        {profesor.nombre} {profesor.apellido}
+                      </p>
+                    </>
+                  ) : (
+                    <div className="cargandoDatos" style={{ height: "30px" }}></div>
+                  )}
                 </div>
-                <div className="d-flex align-items-center mb-3">
-                  <p className="m-0 card-text fw-bold">
-                    <FaDollarSign className="mb-1" /> Precio:
-                  </p>
-                  <p className="m-0 ps-2 fw-normal">{curso.precio}</p>
-                </div>
-                {params.modalidad === "Sincronicos" ? (
+                {cargandoCurso ? (
                   <>
                     <div className="d-flex align-items-center mb-3">
-                      <p className="m-0 card-text fw-bold">Enlace: </p>
-                      <a href={curso.enlace} className="m-0 ps-3 fw-normal w-50" target="_BLANK" rel="noreferrer">
-                        <p className="m-0 text-truncate w-100">{curso.enlace}</p>
-                      </a>
-                    </div>
-                    <div className="d-flex align-items-center mb-3">
-                      <p className="m-0 card-text fw-bold">Capacidad: </p>
-                      <p className="m-0 ps-2 fw-normal">{curso.capacidad} estudiantes</p>
-                    </div>
-                    <div className="d-flex align-items-center mb-3">
-                      <p className="m-0 card-text fw-bold">Cantidad de estudiantes inscritos: </p>
-                      <p className="m-0 ps-2 fw-normal">{inscritos} estudiantes</p>
-                    </div>
-                    <div className="d-flex align-items-center mb-3">
                       <p className="m-0 card-text fw-bold">
-                        <FiClock className="mb-1" /> Duración:
+                        <FaDollarSign className="mb-1" /> Precio:
                       </p>
-                      <p className="m-0 ps-2 fw-normal">{curso.duracion} horas</p>
+                      <p className="m-0 ps-2 fw-normal">{curso.precio}</p>
                     </div>
-                    <div className="d-flex align-items-center mb-3">
-                      <p className="m-0 card-text fw-bold">
-                        <FaCalendarAlt className="mb-1" /> Horario:
-                      </p>
-                      <p className="m-0 ps-2 fw-normal">{new Date(curso.horario).toLocaleString()}</p>
-                    </div>
+                    {params.modalidad === "Sincronicos" ? (
+                      <>
+                        <div className="d-flex align-items-center mb-3">
+                          <p className="m-0 card-text fw-bold">Enlace: </p>
+                          <a href={curso.enlace} className="m-0 ps-3 fw-normal w-50" target="_BLANK" rel="noreferrer">
+                            <p className="m-0 text-truncate w-100">{curso.enlace}</p>
+                          </a>
+                        </div>
+                        <div className="d-flex align-items-center mb-3">
+                          <p className="m-0 card-text fw-bold">Capacidad: </p>
+                          <p className="m-0 ps-2 fw-normal">{curso.capacidad} estudiantes</p>
+                        </div>
+                        <div className="d-flex align-items-center mb-3">
+                          <p className="m-0 card-text fw-bold">Cantidad de estudiantes inscritos: </p>
+                          <p className="m-0 ps-2 fw-normal">{inscritos} estudiantes</p>
+                        </div>
+                        <div className="d-flex align-items-center mb-3">
+                          <p className="m-0 card-text fw-bold">
+                            <FiClock className="mb-1" /> Duración:
+                          </p>
+                          <p className="m-0 ps-2 fw-normal">{curso.duracion} horas</p>
+                        </div>
+                        <div className="d-flex align-items-center mb-3">
+                          <p className="m-0 card-text fw-bold">
+                            <FaCalendarAlt className="mb-1" /> Horario:
+                          </p>
+                          <p className="m-0 ps-2 fw-normal">{new Date(curso.horario).toLocaleString()}</p>
+                        </div>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                    <p className="card-text">Habilitado : {curso.habilitado === 1 ? <FaCheck className="text-success mb-1 ms-1" /> : <FaTimes className="text-danger mb-1 ms-1" />}</p>
                   </>
                 ) : (
-                  <></>
+                  <>
+                    <div className="cargandoDatos mb-4" style={{ height: "40px" }}></div>
+                    <div className="cargandoDatos mb-4" style={{ height: "40px" }}></div>
+                    <div className="cargandoDatos mb-4" style={{ height: "40px" }}></div>
+                    <div className="cargandoDatos mb-4" style={{ height: "40px" }}></div>
+                  </>
                 )}
-                <p className="card-text">Habilitado : {curso.habilitado === 1 ? <FaCheck className="text-success mb-1 ms-1" /> : <FaTimes className="text-danger mb-1 ms-1" />}</p>
               </div>
+
               <div className="col-12 col-sm-12 mt-3">
                 <p className="m-0 card-text fw-bold text-uppercase">Descripción: </p>
-                <p ref={(node) => (refDescripcion.current = node)} style={{ textAlign: "justify" }}></p>
+                {cargandoCurso ? <p ref={(node) => (refDescripcion.current = node)} style={{ textAlign: "justify" }}></p> : <div className="cargandoDatos"></div>}
               </div>
 
               <div className="col-12 col-sm-12 mt-3">
                 <p className="m-0 card-text fw-bold text-uppercase">Lista de Estudiantes Inscritos: </p>
                 <div className="table-responsive">
-                  <table className="table table-light-gray table-bordered table-hover mt-3">
-                    <thead>
-                      <tr>
-                        <th>
-                          <FaRegImage /> Foto
-                        </th>
-                        <th>Nombre del Estudiante</th>
-                        <th>
-                          <CgMail /> Correo Electrónico
-                        </th>
-                        <th>
-                          <FaPhoneAlt /> Número de Teléfono
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {estudiantes.length === 0 ? (
-                        <>
+                  {cargandoEstudiantes ? (
+                    <>
+                      <table className="table table-light-gray table-bordered table-hover mt-3">
+                        <thead>
                           <tr>
-                            <td>No hay estudiantes inscritos aún</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <th>
+                              <FaRegImage /> Foto
+                            </th>
+                            <th>Nombre del Estudiante</th>
+                            <th>
+                              <CgMail /> Correo Electrónico
+                            </th>
+                            <th>
+                              <FaPhoneAlt /> Número de Teléfono
+                            </th>
                           </tr>
-                        </>
-                      ) : (
-                        <>
-                          {estudiantes.map((estudiante) => {
-                            return (
-                              <tr key={estudiante.id_usuario}>
-                                <td style={{ width: "100px", height: "100%" }}>
-                                  <img alt="Foto Perfil" className="img-fluid" src={estudiante.url_foto_usuario} />
-                                </td>
-                                <td className="py-auto">
-                                  {estudiante.nombre} {estudiante.apellido}
-                                </td>
-                                <td className="py-auto">{estudiante.correo}</td>
-                                <td className="py-auto">{estudiante.telefono}</td>
+                        </thead>
+                        <tbody>
+                          {estudiantes.length === 0 ? (
+                            <>
+                              <tr>
+                                <td>No hay estudiantes inscritos aún</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                               </tr>
-                            );
-                          })}
-                        </>
-                      )}
-                    </tbody>
-                  </table>
+                            </>
+                          ) : (
+                            <>
+                              {estudiantes.map((estudiante) => {
+                                return (
+                                  <tr key={estudiante.id_usuario}>
+                                    <td style={{ width: "100px", height: "100%" }}>
+                                      <img alt="Foto Perfil" className="img-fluid" src={estudiante.url_foto_usuario} />
+                                    </td>
+                                    <td className="py-auto">
+                                      {estudiante.nombre} {estudiante.apellido}
+                                    </td>
+                                    <td className="py-auto">{estudiante.correo}</td>
+                                    <td className="py-auto">{estudiante.telefono}</td>
+                                  </tr>
+                                );
+                              })}
+                            </>
+                          )}
+                        </tbody>
+                      </table>
+                    </>
+                  ) : (
+                    <div className="cargandoDatos mb-5"></div>
+                  )}
                 </div>
               </div>
             </div>

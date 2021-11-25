@@ -27,12 +27,13 @@ app.use(
 app.use(express.json()); /* El servidor accepta json */
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
-app.use(
-  cors({
-    origin: llaves.API, //Asi el frontend puede hacer peticiones
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: llaves.API, //Asi el frontend puede hacer peticiones
+//     credentials: true,
+//   })
+// );
+app.use(cors());
 app.use(passport.initialize()); /* Inicializa passport */
 app.use(passport.session({ cookie: { maxAge: 3600 } }));
 

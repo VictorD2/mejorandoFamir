@@ -76,7 +76,7 @@ const FormCurso: React.FC = () => {
   const cargaProfesores = async () => {
     const res = await ProfesoresServices.getAll(0, "");
     if (res.data.error) return;
-    if (!params.id) setCurso({ ...curso, id_usuario: res.data.profesores[0].id_usuario }); //Por si estoy en create
+    if (!params.id) setCurso({ ...curso, id_usuario: res.data.profesores[0]?.id_usuario || 0 }); //Por si estoy en create
     setProfesores(res.data.profesores);
   };
 
@@ -96,7 +96,7 @@ const FormCurso: React.FC = () => {
       if (numeros.includes(fecha.getDate())) ceroDia = "0";
       if (!(fecha.getMonth() + 1 === 10 || fecha.getMonth() + 1 === 11 || fecha.getMonth() + 1 === 12)) cero = `0`;
       if (!numeros2.includes(fecha.getHours())) ceroHora = `0`;
-      if (!numeros2.includes(fecha.getMinutes())) ceroMinuto = `0`;
+      if (!numeros.includes(fecha.getMinutes())) ceroMinuto = `0`;
       const horario = `${fecha.getFullYear()}-${cero}${fecha.getMonth() + 1}-${ceroDia}${fecha.getDate()}T${ceroHora}${fecha.getHours()}:${ceroMinuto}${fecha.getMinutes()}`;
       res.data.curso.horario = horario;
     }
@@ -189,7 +189,7 @@ const FormCurso: React.FC = () => {
       if (error) return toast.error(error);
       form.append("uri_carpeta_vimeo", body.uri);
       if (curso.foto_curso) form.append("fotoCurso", curso.foto_curso[0]);
-      form.append("modalidad",modalidad);
+      form.append("modalidad", modalidad);
       const res = await CursosServices.updateCurso(params.id, form, refProgresss.current);
       if (res.data.error) return toast.error(res.data.error);
       toast.success(res.data.success);

@@ -28,6 +28,7 @@ const TareaFullPage: React.FC = () => {
   const refInput = useRef<HTMLInputElement | null>();
   const params = useParams<Params>();
   const history = useHistory();
+  const [cargandoTarea, setCargandoTarea] = useState<boolean>(false);
   const [tarea, setTarea] = useState<Tarea>(initialStateTarea);
   const [tareaMaterial, setTareaMaterial] = useState<MaterialTarea>(initialStateTareaMaterial);
   useEffect(() => {
@@ -43,6 +44,7 @@ const TareaFullPage: React.FC = () => {
     const newDescripcion = res.data.tarea.descripcion_tarea.replace(/\n/g, "<br/>");
     if (refDescripcion.current) refDescripcion.current.innerHTML = newDescripcion;
     setTarea(res.data.tarea);
+    setCargandoTarea(true);
   };
   const authentificar = async () => {
     const res = await cursosServices.verificarSuscribcion(params.idCurso);
@@ -74,9 +76,9 @@ const TareaFullPage: React.FC = () => {
         <div className="row">
           <div className="col-12 ps-3 ps-lg-5 col-sm-12 col-lg-12 mb-5">
             <div className="column-detail">
-              <h3 className="fw-bold">{tarea.titulo_tarea}</h3>
+              {cargandoTarea ? <h3 className="fw-bold">{tarea.titulo_tarea}</h3> : <div className="cargandoDatos" style={{ height: "50px" }}></div>}
               <p className="m-0 mt-5 fw-bold">Instrucciones:</p>
-              <p ref={(node) => (refDescripcion.current = node)} style={{ textAlign: "justify" }} className="m-0"></p>
+              {cargandoTarea ? <p ref={(node) => (refDescripcion.current = node)} style={{ textAlign: "justify" }} className="m-0"></p> : <div className="cargandoDatos" style={{ height: "200px" }}></div>}
               <div className="row mt-5">
                 <form onSubmit={handleFormSubmit}>
                   <div className="row">

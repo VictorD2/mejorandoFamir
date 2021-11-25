@@ -30,7 +30,7 @@ ctrlComprobantes.getComprobantes = async (req, res) => {
     if (req.query.keyword && req.params.page) {
       const cantidadDatos = 12;
       const pagina = (req.params.page - 1) * cantidadDatos;
-      const rows = await pool.query(`SELECT ${datosSQL} FROM comprobante ${Joins} WHERE estado = ? AND  (nombre LIKE '%${req.query.keyword}%' OR apellido LIKE '%${req.query.keyword}%' OR correo LIKE '%${req.query.keyword}%' OR nombre_curso LIKE '%${req.query.keyword}%') ORDER BY fecha_enviado DESC`, [req.params.estado]);
+      const rows = await pool.query(`SELECT ${datosSQL} FROM comprobante ${Joins} WHERE estado = ? AND  (nombre LIKE '%${req.query.keyword}%' OR apellido LIKE '%${req.query.keyword}%' OR correo LIKE '%${req.query.keyword}%' OR nombre_curso LIKE '%${req.query.keyword}%') ORDER BY fecha_enviado DESC LIMIT ${cantidadDatos * req.params.page}`, [req.params.estado]);
       return res.json({ success: "Datos obtenidos", comprobantes: rows.splice(pagina, cantidadDatos) });
     }
     if (req.query.keyword) {
@@ -40,7 +40,7 @@ ctrlComprobantes.getComprobantes = async (req, res) => {
     if (req.params.page) {
       const cantidadDatos = 12;
       const pagina = (req.params.page - 1) * cantidadDatos;
-      const rows = await pool.query(`SELECT ${datosSQL} FROM comprobante ${Joins} WHERE estado = ? ORDER BY fecha_enviado DESC`, [req.params.estado]);
+      const rows = await pool.query(`SELECT ${datosSQL} FROM comprobante ${Joins} WHERE estado = ? ORDER BY fecha_enviado DESC LIMIT ${cantidadDatos * req.params.page}`, [req.params.estado]);
       return res.json({ success: "Datos obtenidos", comprobantes: rows.splice(pagina, cantidadDatos) });
     }
     const rows = await pool.query(`SELECT ${datosSQL} FROM comprobante ${Joins} WHERE estado = ? ORDER BY fecha_enviado DESC`, [req.params.estado]);

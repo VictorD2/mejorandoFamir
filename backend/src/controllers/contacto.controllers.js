@@ -8,9 +8,9 @@ ctrlContacto.getContactos = async (req, res) => {
   try {
 
     if (req.query.keyword && req.query.page) {
-      const rows = await pool.query(`SELECT * FROM contactos WHERE (nombre LIKE '%${req.query.keyword}%' OR correo LIKE '%${req.query.keyword}%') ORDER BY id_contacto DESC`);
       const cantidadDatos = 12;
       const pagina = (parseInt(req.query.page) - 1) * cantidadDatos;
+      const rows = await pool.query(`SELECT * FROM contactos WHERE (nombre LIKE '%${req.query.keyword}%' OR correo LIKE '%${req.query.keyword}%') ORDER BY id_contacto DESC LIMIT ${cantidadDatos * req.query.page}`);
       return res.json({ success: "Datos obtenidos", contactos: rows.splice(pagina, cantidadDatos) });
     }
 
@@ -20,9 +20,9 @@ ctrlContacto.getContactos = async (req, res) => {
     }
 
     if (req.query.page) {
-      const rows = await pool.query("SELECT * FROM contactos ORDER BY id_contacto DESC");
       const cantidadDatos = 12;
       const pagina = (parseInt(req.query.page) - 1) * cantidadDatos;
+      const rows = await pool.query(`SELECT * FROM contactos ORDER BY id_contacto DESC LIMIT ${cantidadDatos * req.query.page}`);
       return res.json({ success: "Datos obtenidos", contactos: rows.splice(pagina, cantidadDatos) });
     }
     const rows = await pool.query("SELECT * FROM contactos ORDER BY id_contacto DESC");
